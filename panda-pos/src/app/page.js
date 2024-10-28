@@ -7,17 +7,16 @@ export default function Home() {
       <main className={styles.main}>
         <Image
           className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
+          src="/1200px-Panda_Express_logo.svg.png"
+          alt="Panda Express logo"
+          width={250}
+          height={258}
           priority
         />
         <ol>
-          <li>
-            Get started by editing <code>src/app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
+          
+            All Aboard The Panda Express! 
+          
         </ol>
 
         <div className={styles.ctas}>
@@ -34,7 +33,7 @@ export default function Home() {
               width={20}
               height={20}
             />
-            Deploy now
+            Login Cashier/Employee 
           </a>
           <a
             href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
@@ -42,7 +41,7 @@ export default function Home() {
             rel="noopener noreferrer"
             className={styles.secondary}
           >
-            Read our docs
+            Start an Order 
           </a>
         </div>
       </main>
