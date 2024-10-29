@@ -50,7 +50,7 @@ app.post('/api/verifyEmployeeLogin', async (req, res) => {
             values: [username, password],
         };
         // query returns rows
-        const result = await client.query(query);
+        const result = await pool.query(query);
 
         // sends 200 status if employee login is verified
         // sends 401 status if employee login is not verified
@@ -75,7 +75,7 @@ app.post('/api/verifyManagerLogin', async (req, res) => {
             values: [username, password],
         };
         // query returns rows
-        const result = await client.query(query);
+        const result = await pool.query(query);
 
         // sends 200 status if manager login is verified
         // sends 401 status if manager login is not verified
