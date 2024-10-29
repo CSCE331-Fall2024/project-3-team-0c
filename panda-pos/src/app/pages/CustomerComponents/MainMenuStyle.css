@@ -1,4 +1,4 @@
-HomeContent.css
+/* HomeContent.css */
 .grid-container {
     display: grid;
     grid-template-rows: repeat(6, auto);
@@ -21,7 +21,13 @@ HomeContent.css
 }
 
 .button-row {
-    justify-content: space-between; /* Space buttons evenly */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* Space buttons evenly */
+}
+
+.button-side{
+    justify-content: center;
 }
 
 .right-align {
