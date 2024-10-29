@@ -24,14 +24,29 @@ app.get('/customer', async (req, res) => {
 
     try {  // Insert the new order into the database
         if (numItems == 1) {
-            const query = {
+            const orderItemQuery = {
                 text: 'INSERT INTO order_item(order_item_id, order_id, price_id, menu_item1_id) VALUES((SELECT MAX(order_item_id)+1 FROM order_item), $1, $2, $3);',
                 values: [orderID, priceID, menuItem1],
             };
         }
-        // TODO - Handle multiple items per order
+        const result = await pool.query(orderItemQuery);
 
-        const result = await pool.query(query);
+        // TODO - Handle multiple items per order
+        
+        const priceQuery = {  // Get the price of the newly added order item
+            text: 'SELECT price FROM prices WHERE price_id = $1;',
+            values: orderID,
+        };
+
+        const price = await pool.query(query).price;
+
+        const orderPriceQuery = {  // Update order cost
+            text: 'UPDATE orders SET cost = cost + $1::money WHERE order_id = $2',
+            values: [price, orderID],
+        };
+
+        // TODO update inventory
+
         // TODO - add better error handling
         res.status(200).json({ success: true, message: 'Order added'});
 
