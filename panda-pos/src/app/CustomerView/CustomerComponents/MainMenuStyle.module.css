@@ -24,10 +24,12 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start; /* Space buttons evenly */
+    gap: 10px;
 }
 
 .button-side{
     justify-content: center;
+    gap: 10px;
 }
 
 .right-align {
