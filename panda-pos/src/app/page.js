@@ -19,10 +19,10 @@ const HomePage = () => {
     <div style={{ textAlign: "center", fontFamily: "Arial, sans-serif", padding: "20px" }}>
       <h1>All Aboard The Panda Express!</h1>
       <Image
-        src="/path/to/your/image.png" 
+        src= "/photos/pandaLogo.png"
         alt="Panda Express Logo"
         width={300} 
-        height={200} 
+        height={300} 
       />
       
       <nav>
