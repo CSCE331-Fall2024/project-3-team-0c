@@ -34,7 +34,7 @@
     justify-content: flex-end; /* Right align the last button */
 }
 
-button {
+.button {
     padding: 10px 15px; /* Add some padding to buttons */
     margin: 5px; /* Add some margin between buttons */
 }

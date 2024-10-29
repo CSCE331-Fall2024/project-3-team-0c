@@ -1,30 +1,29 @@
-// HomeContent.js
 import React from 'react';
-import './MainMenuStyle.css'; 
+import styles from './MainMenuStyle.module.css'; 
 import zoom_in from '../../photos/zoom_in_logo.png';
 import zoom_out from '../../photos/zoom_out_logo.png';
 
-const MainMenuComponent = ({message}) => {
+const MainMenuComponent = ({ message }) => {
     return (
-        <div className="grid-container">
-            <div className="row zoom-controls">
+        <div className={styles['grid-container']}>
+            <div className={styles['row'] + ' ' + styles['zoom-controls']}>
                 <button>
-                    <img src={zoom_in} alt="Zoom in" className="button-image" />
+                    <img src={zoom_in} alt="Zoom in" className={styles['button-image']} />
                 </button>
                 <button>
-                    <img src={zoom_out} alt="Zoom out" className="button-image" />
+                    <img src={zoom_out} alt="Zoom out" className={styles['button-image']} />
                 </button>
             </div>
-            <div className="row center-text">
+            <div className={styles['row'] + ' ' + styles['center-text']}>
                 <p>{message}</p>
             </div>
-            <div className="row button-side">
+            <div className={styles['row'] + ' ' + styles['button-side']}>
                 <button>White Rice</button>
                 <button>Fried Rice</button>
                 <button>Super Greens</button>
                 <button>Chow Mein</button>
             </div>
-            <div className="row button-row">
+            <div className={styles['row'] + ' ' + styles['button-row']}>
                 <button>Orange Chicken</button>
                 <button>Honey Sesame Chicken</button>
                 <button>Broccoli Beef</button>
@@ -37,7 +36,7 @@ const MainMenuComponent = ({message}) => {
                 <button>Beijing Beef</button>
                 <button>Honey Walnut Shrimp</button>
             </div>
-            <div className="row right-align">
+            <div className={styles['row'] + ' ' + styles['right-align']}>
                 <button>Add To Cart</button>
             </div>
         </div>
