@@ -1,0 +1,62 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+  }
+  
+  .main {
+    text-align: center;
+    width: 300px;
+    margin: 0 auto;
+  }
+  
+  .title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .loginForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .label {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    font-size: 16px;
+  }
+  
+  .input {
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  .buttonGroup {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .button {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: none;
+    background-color: #0070f3;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .footer {
+    margin-top: 20px;
+    font-size: 14px;
+  }
+  
+  .link {
+    color: #0070f3;
+    text-decoration: none;
+  }
+  

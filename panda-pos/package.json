@@ -2,7 +2,6 @@
   "name": "panda-pos",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,9 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "^15.0.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.27.0"
+    "react": "19.0.0-rc-02c0e824-20241028",
+    "react-dom": "19.0.0-rc-02c0e824-20241028",
+    "next": "15.0.2"
   }
 }
