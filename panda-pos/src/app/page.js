@@ -2,8 +2,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
-
+//creates home page for intial default page
 const HomePage = () => {
+  // buttons style def for buttons used on home page
   const buttonStyle = {
     display: "inline-block",
     textDecoration: "none",
@@ -14,7 +15,7 @@ const HomePage = () => {
     fontWeight: "bold",
     margin: "10px 0",
   };
-
+  //creates a gui with option to start an order or login as worker, and has the logo
   return (
     <div style={{ textAlign: "center", fontFamily: "Arial, sans-serif", padding: "20px" }}>
       <h1>All Aboard The Panda Express!</h1>

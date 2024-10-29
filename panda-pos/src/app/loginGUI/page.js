@@ -6,9 +6,12 @@ import styles from "./Login.module.css";
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
+ // const [message, setMessage] = useState("");
 
-
+/*
+* handles employee login button logic
+* @author Jaden
+*/
   const handleEmployeeLogin = async () => {
     try {
       const response = await fetch("http://localhost:3001/api/verifyEmployeeLogin", {
@@ -31,7 +34,9 @@ function Login() {
     }
   };
 
-  // Function to handle manager login
+  /*
+  * handles manager login button logic
+  */
   const handleManagerLogin = async () => {
     try {
       const response = await fetch("http://localhost:3001/api/verifyManagerLogin", {
@@ -54,6 +59,10 @@ function Login() {
     }
   };
 
+
+  /*
+  * returns the login gui for users to choose to login as manager or cashier
+  */
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -85,7 +94,7 @@ function Login() {
             />
           </label>
           <div className={styles.buttonGroup}>
-            <button className={styles.button} onClick={handleManagerLogin}>Login as Manager</button>
+            <button className={styles.button} onClick={handleManagerLogin}>Login as Manager</button>   
             <button className={styles.button} onClick={handleEmployeeLogin}>Login as Employee</button>
           </div>
         </div>
