@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styles from './MainMenuStyle.module.css';
+import Image from 'next/image';
 
-const CartComponent = ( {message}) => {
+const CartComponent = ({ message }) => {
     const [items, setItems] = useState([
         'Orange Chicken',
         'Honey Sesame Chicken',
@@ -16,8 +17,20 @@ const CartComponent = ( {message}) => {
     return (
         <div className={styles['grid-container']}>
             <div className={styles['row'] + ' ' + styles['zoom-controls']}>
-                <button>Zoom In</button>
-                <button>Zoom Out</button>
+                <Image
+                    src="/photos/zoom_in_logo.png"
+                    alt="Zoom In"
+                    className={styles['zoom-icon']}
+                    width={24}
+                    height={24}
+                />
+                <Image
+                    src="/photos/zoom_out_logo.png"
+                    alt="Zoom Out"
+                    className={styles['zoom-icon']}
+                    width={24}
+                    height={24}
+                />
             </div>
             <div className={styles['row'] + ' ' + styles['center-text']}>
                 <p>{message}</p>

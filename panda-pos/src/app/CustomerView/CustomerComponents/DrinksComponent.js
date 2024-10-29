@@ -1,19 +1,27 @@
 // HomeContent.js
 import React from 'react';
 import styles from './MainMenuStyle.module.css';
-// import zoom_in from '../../photos/zoom_in_logo.png';
-// import zoom_out from '../../photos/zoom_out_logo.png';
+import Image from 'next/image';
 
-const DrinksComponent = ({message}) => {
+
+const DrinksComponent = ({ message }) => {
     return (
         <div className={styles['grid-container']}>
             <div className={styles['row'] + ' ' + styles['zoom-controls']}>
-                <button>
-                    {/* <img src={zoom_in} alt="Zoom in" className="button-image" /> */}
-                </button>
-                <button>
-                    {/* <img src={zoom_out} alt="Zoom out" className="button-image" /> */}
-                </button>
+                <Image
+                    src="/photos/zoom_in_logo.png"
+                    alt="Zoom In"
+                    className={styles['zoom-icon']}
+                    width={24}
+                    height={24}
+                />
+                <Image
+                    src="/photos/zoom_out_logo.png"
+                    alt="Zoom Out"
+                    className={styles['zoom-icon']}
+                    width={24}
+                    height={24}
+                />
             </div>
             <div className={styles['row'] + ' ' + styles['button-row']}>
                 <button>Water Bottle</button>

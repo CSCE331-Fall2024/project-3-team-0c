@@ -7,12 +7,20 @@ const MainMenuComponent = ({ message }) => {
     return (
         <div className={styles['grid-container']}>
             <div className={styles['row'] + ' ' + styles['zoom-controls']}>
-                <button>zoomin
-                {/* <Image src="/photos/zoom_in_logo.png" alt="Zoom in" className={styles['button-image']} /> */}
-                </button>
-                <button>zoomout
-                {/* <Image src="/photos/zoom_out_logo.png" alt="Zoom out" className={styles['button-image']} /> */}
-                </button>
+            <Image 
+        src="/photos/zoom_in_logo.png"
+        alt="Zoom In" 
+        className={styles['zoom-icon']} 
+        width={24} 
+        height={24} 
+    />
+    <Image 
+        src="/photos/zoom_out_logo.png"
+        alt="Zoom Out" 
+        className={styles['zoom-icon']} 
+        width={24}
+        height={24} 
+    />
             </div>
             <div className={styles['row'] + ' ' + styles['center-text']}>
                 <p>{message}</p>
