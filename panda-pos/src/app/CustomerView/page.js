@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import styles from './CustomerViewStyle.module.css'; // Import CSS module
-import MainMenuComponent from './CustomerComponents/MainMenuComponent';
+import MainMenuComponent from '../CustomerComponents/MainMenuComponent';
 
 const CustomerView = () => {
     const [time, setTime] = useState(new Date().toLocaleTimeString());
