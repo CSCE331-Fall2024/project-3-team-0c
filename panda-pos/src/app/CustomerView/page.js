@@ -50,18 +50,17 @@ const CustomerView = () => {
                 <div className={styles.time}>{time}</div>
                 <h1 className={styles.title}>Customer View</h1>
             </header>
-            <hr className={styles.separator} />
-                <nav className={styles.navigation}>
-                    <button className={styles.navButton} onClick={() => setActiveSection('Bowl')}>Bowl</button>
-                    <button className={styles.navButton} onClick={() => setActiveSection('Plate')}>Plate</button>
-                    <button className={styles.navButton} onClick={() => setActiveSection('Bigger Plate')}>Bigger Plate</button>
-                    <button className={styles.navButton} onClick={() => setActiveSection('Appetizers')}>Appetizers</button>
-                    <button className={styles.navButton} onClick={() => setActiveSection('Drinks')}>Drinks</button>
-                    <button className={styles.navButton} onClick={() => setActiveSection('A La Carte')}>A la Carte</button>
-                    <button className={styles.navButton} onClick={() => setActiveSection('Go To Cart')}>Go To Cart</button>
-                </nav>
-                <div className={styles.dataContent}>
-                    {renderContent()}
+            <nav className={styles.navigation}>
+                <button className={styles.navButton} onClick={() => setActiveSection('Bowl')}>Bowl</button>
+                <button className={styles.navButton} onClick={() => setActiveSection('Plate')}>Plate</button>
+                <button className={styles.navButton} onClick={() => setActiveSection('Bigger Plate')}>Bigger Plate</button>
+                <button className={styles.navButton} onClick={() => setActiveSection('Appetizers')}>Appetizers</button>
+                <button className={styles.navButton} onClick={() => setActiveSection('Drinks')}>Drinks</button>
+                <button className={styles.navButton} onClick={() => setActiveSection('A La Carte')}>A la Carte</button>
+                <button className={styles.navButton} onClick={() => setActiveSection('Go To Cart')}>Go To Cart</button>
+            </nav>
+            <div className={styles.dataContent}>
+                {renderContent()}
             </div>
         </div>
     );
