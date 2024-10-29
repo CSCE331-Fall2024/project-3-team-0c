@@ -36,7 +36,8 @@
     border-right: 1px solid #ccc;
     padding: 10px;
     width: 200px; 
-     flex-direction: column;
+    height: 100%;
+    flex-direction: column;
 }
 
 .navigation button {

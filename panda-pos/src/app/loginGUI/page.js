@@ -1,4 +1,5 @@
 "use client"; 
+import Image from 'next/image';
 import React, { useState } from "react";
 
 import styles from "./Login.module.css";
@@ -56,6 +57,13 @@ function Login() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
+      <Image
+        src= "/photos/pandaLogo.png"
+        alt="Panda Express Logo"
+        width={200} 
+        height={200} 
+      />
+      
         <h1 className={styles.title}>PANDA EXPRESS Sign In</h1>
         <div className={styles.loginForm}>
           <label className={styles.label}>
