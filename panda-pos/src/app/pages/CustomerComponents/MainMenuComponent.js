@@ -1,17 +1,17 @@
 import React from 'react';
 import styles from './MainMenuStyle.module.css'; 
-import zoom_in from '../../photos/zoom_in_logo.png';
-import zoom_out from '../../photos/zoom_out_logo.png';
+import Image from 'next/image';
+
 
 const MainMenuComponent = ({ message }) => {
     return (
         <div className={styles['grid-container']}>
             <div className={styles['row'] + ' ' + styles['zoom-controls']}>
                 <button>
-                    <img src={zoom_in} alt="Zoom in" className={styles['button-image']} />
+                <Image src="/photos/zoom_in_logo.png" alt="Zoom in" className={styles['button-image']} />
                 </button>
                 <button>
-                    <img src={zoom_out} alt="Zoom out" className={styles['button-image']} />
+                <Image src="/photos/zoom_out_logo.png" alt="Zoom out" className={styles['button-image']} />
                 </button>
             </div>
             <div className={styles['row'] + ' ' + styles['center-text']}>
