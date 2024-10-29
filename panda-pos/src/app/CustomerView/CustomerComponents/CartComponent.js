@@ -55,7 +55,7 @@ const CartComponent = ({ message }) => {
             </div>
 
             <div className={styles['row'] + ' ' + styles['right-align']}>
-                <button>Check Out</button>
+                <button className={styles.button}>Check Out</button>
             </div>
         </div>
     );

@@ -57,11 +57,13 @@
     border-right: 1px solid #ccc;
     padding-right: 20px;
     width: 200px;
+    padding-bottom: 30px;
     justify-content: space-between;
     height: 100%; /* This should work now with the above settings */
 }
 
 .navigation button {
+   
     display: block;
     margin-bottom: 20px; /* Use a single margin for bottom */
     width: 100%;
@@ -71,6 +73,7 @@
     background-color: #E03C31; /* Panda Express red */
     color: white; /* White text */
     font-size: 16px; /* Adjust font size */
+    
     font-weight: bold; /* Make text bold */
     cursor: pointer; /* Change cursor on hover */
     transition: background-color 0.3s ease; /* Smooth transition for hover effect */

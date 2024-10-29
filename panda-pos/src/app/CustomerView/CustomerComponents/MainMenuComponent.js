@@ -46,7 +46,7 @@ const MainMenuComponent = ({ message }) => {
                 <button className={styles.button}>Honey Walnut Shrimp</button>
             </div>
             <div className={styles['row'] + ' ' + styles['right-align']}>
-                <button>Add To Cart</button>
+                <button className={styles.button}>Add To Cart</button>
             </div>
         </div>
     );
