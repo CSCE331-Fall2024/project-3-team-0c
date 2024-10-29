@@ -1,7 +1,8 @@
 // Imports express.js
 const express = require('express');
-// Imports Client class from PostegreSQL
-const { Client } = require('pg');
+// // Imports Client class from PostegreSQL
+// const { Client } = require('pg');
+
 // Creating Express app
 const app = express();
 // Set port that server runs on and that will be used to make HTTP requests to the server
@@ -27,10 +28,17 @@ const pool = new Pool({
     ssl: {rejectUnauthorized: false}
 });
 
-// Connect to PostgreSQL
-client.connect()
-    .then(() => console.log('Connected to PostgreSQL'))
-    .catch(err => console.error('Connection error', err.stack));
+// Add process hook to shutdown pool
+process.on('SIGINT', function() {
+    pool.end();
+    console.log('Application successfully shutdown');
+    process.exit(0);
+});
+
+// // Connect to PostgreSQL
+// client.connect()
+//     .then(() => console.log('Connected to PostgreSQL'))
+//     .catch(err => console.error('Connection error', err.stack));
 
 // Endpoint to verify employee login
 app.post('/api/verifyEmployeeLogin', async (req, res) => {
@@ -41,8 +49,11 @@ app.post('/api/verifyEmployeeLogin', async (req, res) => {
             text: 'SELECT * FROM employee WHERE employee_id = $1 AND password = $2',
             values: [username, password],
         };
+        // query returns rows
         const result = await client.query(query);
 
+        // sends 200 status if employee login is verified
+        // sends 401 status if employee login is not verified
         if (result.rows.length > 0) {
             res.status(200).json({ success: true, message: 'Employee login verified' });
         } else {
@@ -63,8 +74,11 @@ app.post('/api/verifyManagerLogin', async (req, res) => {
             text: 'SELECT * FROM employee WHERE is_manager = true AND employee_id = $1 AND password = $2',
             values: [username, password],
         };
+        // query returns rows
         const result = await client.query(query);
 
+        // sends 200 status if manager login is verified
+        // sends 401 status if manager login is not verified
         if (result.rows.length > 0) {
             res.status(200).json({ success: true, message: 'Manager login verified' });
         } else {
