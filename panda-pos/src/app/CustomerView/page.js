@@ -51,7 +51,6 @@ const CustomerView = () => {
                 <h1 className={styles.title}>Customer View</h1>
             </header>
             <hr className={styles.separator} />
-            <div className={styles.mainContent}>
                 <nav className={styles.navigation}>
                     <button className={styles.navButton} onClick={() => setActiveSection('Bowl')}>Bowl</button>
                     <button className={styles.navButton} onClick={() => setActiveSection('Plate')}>Plate</button>
@@ -63,7 +62,6 @@ const CustomerView = () => {
                 </nav>
                 <div className={styles.dataContent}>
                     {renderContent()}
-                </div>
             </div>
         </div>
     );
