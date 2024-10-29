@@ -1,4 +1,4 @@
-/* HomeContent.css */
+HomeContent.css
 .grid-container {
     display: grid;
     grid-template-rows: repeat(6, auto);
