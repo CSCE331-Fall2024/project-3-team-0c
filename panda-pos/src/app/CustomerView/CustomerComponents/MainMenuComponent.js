@@ -27,23 +27,23 @@ const MainMenuComponent = ({ message }) => {
                 <p>{message}</p>
             </div>
             <div className={styles['row'] + ' ' + styles['button-side']}>
-                <button>White Rice</button>
-                <button>Fried Rice</button>
-                <button>Super Greens</button>
-                <button>Chow Mein</button>
+                <button className={styles.button}>White Rice</button>
+                <button className={styles.button}>Fried Rice</button>
+                <button className={styles.button}>Super Greens</button>
+                <button className={styles.button}>Chow Mein</button>
             </div>
             <div className={styles['row'] + ' ' + styles['button-row']}>
-                <button>Orange Chicken</button>
-                <button>Honey Sesame Chicken</button>
-                <button>Broccoli Beef</button>
-                <button>Kung Pao Chicken</button>
-                <button>Black Pepper Angus Steak</button>
-                <button>Sweet Fire Chicken Breast</button>
-                <button>Grilled Teriyaki Chicken</button>
-                <button>Black Pepper Chicken</button>
-                <button>Mushroom Chicken</button>
-                <button>Beijing Beef</button>
-                <button>Honey Walnut Shrimp</button>
+                <button className={styles.button}>Orange Chicken</button>
+                <button className={styles.button}>Honey Sesame Chicken</button>
+                <button className={styles.button}>Broccoli Beef</button>
+                <button className={styles.button}>Kung Pao Chicken</button>
+                <button className={styles.button}>Black Pepper Angus Steak</button>
+                <button className={styles.button}>Sweet Fire Chicken Breast</button>
+                <button className={styles.button}>Grilled Teriyaki Chicken</button>
+                <button className={styles.button}>Black Pepper Chicken</button>
+                <button className={styles.button}>Mushroom Chicken</button>
+                <button className={styles.button}>Beijing Beef</button>
+                <button className={styles.button}>Honey Walnut Shrimp</button>
             </div>
             <div className={styles['row'] + ' ' + styles['right-align']}>
                 <button>Add To Cart</button>

@@ -24,12 +24,12 @@ const AppetizersComponent = ({ message }) => {
                 </button>
             </div>
             <div className={styles['row'] + ' ' + styles['button-row']}>
-                <button>Veggie Spring Roll</button>
-                <button>Chicken Spring Roll</button>
-                <button>Cream Cheese Ragoon</button>
+                <button className={styles.button}>Veggie Spring Roll</button>
+                <button className={styles.button}>Chicken Spring Roll</button>
+                <button className={styles.button}>Cream Cheese Ragoon</button>
             </div>
             <div className={styles['row'] + ' ' + styles['right-align']}>
-                <button>Add To Cart</button>
+                <button className={styles.button}>Add To Cart</button>
             </div>
         </div>
     );

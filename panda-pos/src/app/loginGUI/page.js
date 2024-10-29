@@ -73,7 +73,7 @@ function Login() {
           height={200}
         />
 
-        <h1 className={styles.title}>PANDA EXPRESS Sign In</h1>
+        <h1 className={styles.title}>Sign in to PANDA-of-Sales        </h1>
         <div className={styles.loginForm}>
           <label className={styles.label}>
             Username:

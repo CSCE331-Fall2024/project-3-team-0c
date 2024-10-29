@@ -25,11 +25,11 @@ const DrinksComponent = ({ message }) => {
                 </button>
             </div>
             <div className={styles['row'] + ' ' + styles['button-row']}>
-                <button>Water Bottle</button>
-                <button>Fountain Drink</button>
+                <button className={styles.button}>Water Bottle</button>
+                <button className={styles.button}>Fountain Drink</button>
             </div>
             <div className={styles['row'] + ' ' + styles['right-align']}>
-                <button>Add To Cart</button>
+                <button className={styles.button}>Add To Cart</button>
             </div>
         </div>
     );

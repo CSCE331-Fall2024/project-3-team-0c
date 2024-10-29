@@ -47,9 +47,25 @@
 }
 
 .button {
-    padding: 10px 15px; /* Add some padding to buttons */
-    margin: 5px; /* Add some margin between buttons */
-    margin-right: 10px;
+    padding: 12px 20px; /* Add more padding for a bigger button */
+    margin: 5px; /* Maintain margin between buttons */
+    border-radius: 5px; /* Slightly rounded corners */
+    border: none; /* Remove the border */
+    background-color: #0070f3; /* Primary color */
+    color: white; /* Text color */
+    font-size: 16px; /* Larger font size */
+    font-weight: bold; /* Bold text */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+.button:hover {
+    background-color: #005bb5; /* Darker shade on hover */
+    transform: scale(1.05); /* Slightly enlarge the button */
+}
+
+.button:active {
+    transform: scale(0.95); /* Slightly shrink the button when clicked */
 }
 
 .button-image {
