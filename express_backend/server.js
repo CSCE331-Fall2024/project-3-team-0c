@@ -1,20 +1,33 @@
-// server.js
+// Imports express.js
 const express = require('express');
+// Imports Client class from PostegreSQL
 const { Client } = require('pg');
+// Creating Express app
 const app = express();
+// Set port that server runs on and that will be used to make HTTP requests to the server
 const port = 3001;
+// Middleware for parsing JSON requests -- makes it easier to deal wih JSON data
+app.use(express.json()); 
 
-app.use(express.json()); // Middleware for parsing JSON requests
-
-// PostgreSQL client setup
-const client = new Client({
-    user: 'team_0c',
-    host: 'csce-315-db.engr.tamu.edu',
-    database: 'team_0c_db',
-    password: 'magmar56',
-    port: 5432,
+// // PostgreSQL client setup
+// const client = new Client({
+//     user: 'team_0c',
+//     host: 'csce-315-db.engr.tamu.edu',
+//     database: 'team_0c_db',
+//     password: 'magmar56',
+//     port: 5432,
+// });
+// Create pool
+const pool = new Pool({
+    user: process.env.PSQL_USER,
+    host: process.env.PSQL_HOST,
+    database: process.env.PSQL_DATABASE,
+    password: process.env.PSQL_PASSWORD,
+    port: process.env.PSQL_PORT,
+    ssl: {rejectUnauthorized: false}
 });
 
+// Connect to PostgreSQL
 client.connect()
     .then(() => console.log('Connected to PostgreSQL'))
     .catch(err => console.error('Connection error', err.stack));
