@@ -11,10 +11,10 @@ function Login() {
   /*
   * handles employee login button logic
   * @author Jaden
-  */
-  const handleEmployeeLogin = async () => {
+  */    
+  const handleEmployeeLogin = async () => {                                             //need to incorporate authentification api next sprint
     try {
-      const response = await fetch("http://localhost:3001/api/verifyEmployeeLogin", {
+      const response = await fetch("http://localhost:3001/api/verifyEmployeeLogin", {  //for posting to express backend server for authentification
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -28,7 +28,7 @@ function Login() {
       } else {
         setMessage("Invalid employee credentials.");
       }
-    } catch (error) {
+    } catch (error) {                                         //handle errors
       setMessage("An error occurred. Please try again.");
       console.error(error);
     }
@@ -37,9 +37,9 @@ function Login() {
   /*
   * handles manager login button logic
   */
-  const handleManagerLogin = async () => {
+  const handleManagerLogin = async () => {                                              //need to incorporate authentification api next sprint
     try {
-      const response = await fetch("http://localhost:3001/api/verifyManagerLogin", {
+      const response = await fetch("http://localhost:3001/api/verifyManagerLogin", {    //for posting to express backend server for authentification
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +53,7 @@ function Login() {
       } else {
         setMessage("Invalid manager credentials.");
       }
-    } catch (error) {
+    } catch (error) {                                       //handles errors
       setMessage("An error occurred. Please try again.");
       console.error(error);
     }
@@ -62,6 +62,7 @@ function Login() {
 
   /*
   * returns the login gui for users to choose to login as manager or cashier
+  * takes in username / password 
   */
   return (
     <div className={styles.page}>

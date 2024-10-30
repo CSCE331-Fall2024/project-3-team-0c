@@ -1,6 +1,7 @@
 // src/views/ManagerView.js
 import React from 'react';
 
+//more work to be done -- sprint 2...
 function ManagerView() {
   return (
     <div>

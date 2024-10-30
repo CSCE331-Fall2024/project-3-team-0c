@@ -1,6 +1,7 @@
 // src/views/CashierView.js
 import React from 'react';
 
+///lot more work to be done in  this file  --- sprint 2...
 function CashierView() {
   return (
     <div>

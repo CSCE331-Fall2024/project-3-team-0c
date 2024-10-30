@@ -2,6 +2,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import styles from './page.module.css'; 
 
+
+/*
+* home welcome page front end code below with logo included
+*/
 const HomePage = () => {
   return (
     <div className={styles.container}>
@@ -20,7 +24,7 @@ const HomePage = () => {
             <Link href="/CustomerView" className={styles.button}>Start an Order</Link>
           </li>
           <li className={styles.navItem}>
-            <Link href="/loginGUI" className={styles.button}>Log in Manager/Cashier</Link>
+            <Link href="/loginGUI" className={styles.button}>Log in Manager/Cashier</Link> 
           </li> 
         </ul>
       </nav>

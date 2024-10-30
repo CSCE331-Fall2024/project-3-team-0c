@@ -1,4 +1,4 @@
-"use client";
+"use client";   
 import React, { useEffect, useState } from 'react';
 import styles from './CustomerViewStyle.module.css'; // Import CSS module
 import MainMenuComponent from './CustomerComponents/MainMenuComponent';
@@ -17,6 +17,11 @@ const CustomerView = () => {
         return () => clearInterval(timer);
     }, []);
 
+
+    /*
+    * Provide instructions for each type of order on each rednering clicked
+    * based on the tab clicked provide different food options
+    */
     const renderContent = () => {
         let instructionmessage = "";
         switch (activeSection) {
@@ -44,6 +49,10 @@ const CustomerView = () => {
         }
     };
 
+    /*
+    * create customer view template 
+    * all items are available with organization tabs for bowl, plate, etc.
+    */
     return (
         <div className={styles.customerView}>
             <header className={styles.header}>
