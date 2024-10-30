@@ -1,10 +1,12 @@
 import {app, pool} from 'server.js';  // Get app and database connection from server.js
 
 app.get('/customer', async (req, res) => {
+    // Record order item details
     var orderID = req.body.orderID;
     var priceID = req.body.priceID;
     var menuItem1 = req.body.menuItem1;
 
+    // Keep track of how many items are in this order for later sql queries
     var numItems = 1;
 
     // Check if there are more than 1 menu items in the order. If so, save them
