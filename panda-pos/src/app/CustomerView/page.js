@@ -26,13 +26,13 @@ const CustomerView = () => {
         let instructionmessage = "";
         switch (activeSection) {
             case 'Bowl':
-                instructionmessage = "Bowl: Select 1 side and 1 entree."
+                instructionmessage = ""
                 return <MainMenuComponent message={instructionmessage}/>;
             case 'Plate':
-                instructionmessage = "Plate: Select 1 side and 2 entrees."
+                instructionmessage = ""
                 return <MainMenuComponent message={instructionmessage}/>;
             case 'Bigger Plate':
-                instructionmessage = "Bigger Plate: Select 1 side and 3 entrees."
+                instructionmessage = ""
                 return <MainMenuComponent message={instructionmessage}/>;
             case 'Appetizers':
                 return <AppetizersComponent/>;
@@ -45,7 +45,8 @@ const CustomerView = () => {
                 instructionmessage = "Checkout"
                 return <CartComponent message={instructionmessage}/>;
             default:
-                return <div>Select an option</div>;
+                instructionmessage = ""
+                return <MainMenuComponent message={instructionmessage}/>;
         }
     };
 
