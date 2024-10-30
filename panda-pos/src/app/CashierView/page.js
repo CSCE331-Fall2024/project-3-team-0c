@@ -2,6 +2,7 @@
 import React from 'react';
 
 ///lot more work to be done in  this file  --- sprint 2...
+// Front end for Cashier-specific view
 function CashierView() {
   return (
     <div>
