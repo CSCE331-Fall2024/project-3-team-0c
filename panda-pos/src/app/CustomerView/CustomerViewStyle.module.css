@@ -1,0 +1,103 @@
+ /* 
+ *  css style sheet guide for customer view modules
+ *
+ */
+
+ .customer-view {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    
+    min-height: 100vh; 
+    padding: 20px; /* Add some padding */
+   
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ccc;
+}
+
+.time {
+    font-size: 18px;
+}
+
+.title {
+    text-align: center;
+    flex-grow: 1;
+}
+
+.main-content {
+    display: flex;
+    flex: 1;
+    height: calc(100vh - 60px);
+}
+.mainView {
+    display: flex;
+    flex-direction: row;
+    width: 100vw; /* Full viewport width */
+    min-height: 100vh; /* Minimum height of the container */
+    padding: 20px; /* Add padding */
+}
+
+.background_img {
+    background-image: url('/photos/background.avif');
+    background-size: cover; /* or use a smaller size as discussed */
+    background-repeat: no-repeat;
+    height: 100vh; /* Full viewport height */
+    width: 100vw; /* Full viewport width */
+    display: flex; /* Enable flexbox layout */
+    flex-direction: column; /* Stack children vertically */
+    justify-content: flex-start; /* Align content to the top */
+    
+}
+
+.navigation {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #ccc;
+    padding-right: 20px;
+    width: 200px;
+    padding-bottom: 30px;
+    justify-content: space-between;
+    height: 100%; /* This should work now with the above settings */
+}
+
+.navigation button {
+   
+    display: block;
+    margin-bottom: 20px; /* Use a single margin for bottom */
+    width: 100%;
+    padding: 15px; /* Add padding for a better click area */
+    border: none; /* Remove default border */
+    border-radius: 8px; /* Rounded corners */
+    background-color: #E03C31; /* Panda Express red */
+    color: white; /* White text */
+    font-size: 16px; /* Adjust font size */
+    
+    font-weight: bold; /* Make text bold */
+    cursor: pointer; /* Change cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+/* Hover effect */
+.navigation button:hover {
+    background-color: #C02C24; /* Darker red on hover */
+}
+
+
+.dataContent {
+    display: flex;
+    justify-content: center; 
+    text-align: center;
+    align-items: center; 
+    height: 100%;
+    padding-left: 200px;
+    width: 130vh;
+    flex-wrap: wrap;
+}
+

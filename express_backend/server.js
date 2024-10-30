@@ -1,3 +1,4 @@
+
 // Imports express.js
 const express = require('express');
 // // Imports Client class from PostegreSQL
@@ -40,6 +41,7 @@ process.on('SIGINT', function() {  // End Server gracefully
 //     .then(() => console.log('Connected to PostgreSQL'))
 //     .catch(err => console.error('Connection error', err.stack));
 
+
 // Endpoint to verify employee login
 app.post('/api/verifyEmployeeLogin', async (req, res) => {
     const { username, password } = req.body;
@@ -70,6 +72,7 @@ app.post('/api/verifyManagerLogin', async (req, res) => {
     const { username, password } = req.body;
 
     try {
+
         const query = {  // Check if manager exists in database with given id and password
             text: 'SELECT * FROM employee WHERE is_manager = true AND employee_id = $1 AND password = $2',
             values: [username, password],
@@ -94,4 +97,3 @@ app.post('/api/verifyManagerLogin', async (req, res) => {
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
-

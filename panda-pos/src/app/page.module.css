@@ -1,0 +1,95 @@
+
+@media (prefers-color-scheme: dark) {
+  .page {
+    --gray-rgb: 255, 255, 255;
+    --gray-alpha-200: rgba(var(--gray-rgb), 0.145);
+    --gray-alpha-100: rgba(var(--gray-rgb), 0.06);
+
+    --button-primary-hover: #ccc;
+    --button-secondary-hover: #1a1a1a;
+  }
+}
+.h1{
+  padding-bottom: 40px;
+}
+.container {
+  padding-top: 125px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: center; /* Center content horizontally */
+  justify-content: center; /* Center content vertically */
+  grid-row-start: 2;
+  width: 100%; /* Ensure it takes the full width */
+}
+
+.button {
+  display: inline-block;
+  text-decoration: none;
+  color: white;
+  background-color: #0070f3;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+.navList {
+  list-style-type: none; /* Remove bullet points */
+  padding: 0; /* Remove default padding */
+  display: flex; /* Use flexbox for layout */
+  gap: 50px; /* Space between buttons */
+}
+
+.navItem {
+  margin: 0; /* Remove default margin */
+}
+
+/* Enable hover only on non-touch devices */
+@media (hover: hover) and (pointer: fine) {
+  a.primary:hover {
+    background: var(--button-primary-hover);
+    border-color: transparent;
+  }
+
+ 
+
+  .footer a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding: 32px;
+    padding-bottom: 80px;
+  }
+
+  .ctas {
+    flex-direction: column;
+  }
+
+  .ctas a {
+    font-size: 14px;
+    height: 40px;
+    padding: 0 16px;
+  }
+
+  a.secondary {
+    min-width: auto;
+  }
+
+  .footer {
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .logo {
+    filter: invert();
+  }
+}
+
+

@@ -1,0 +1,76 @@
+/* HomeContent.css */
+.grid-container {
+    padding-left: 50px;
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack children vertically */
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    width: 90vw;
+    padding: 16px; /* Add padding for spacing */
+}
+
+.row {
+    display: flex; /* Use flexbox for rows */
+    justify-content: center; /* Center items in each row */
+    width: 100%; /* Ensure rows take the full width */
+    margin-bottom: 8px; /* Add space between rows */
+}
+
+.zoom-controls {
+    justify-content: flex-end; /* Right align buttons */
+}
+.zoom-icon{
+    padding:0px;
+}
+.zoom-controls, .button-row, .right-align {
+    width: 100%; /* Ensure rows take the full width */
+}
+.center-text {
+    justify-content: center; /* Center text */
+    text-align: center;
+}
+
+.button-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* Space buttons evenly */
+    gap: 10px;
+}
+
+.button-side{
+    justify-content: center;
+    gap: 10px;
+}
+
+.right-align {
+    justify-content: flex-end; /* Right align the last button */
+}
+
+.button {
+    padding: 12px 20px; /* Add more padding for a bigger button */
+    margin: 5px; /* Maintain margin between buttons */
+    border-radius: 5px; /* Slightly rounded corners */
+    border: none; /* Remove the border */
+    background-color: #0070f3; /* Primary color */
+    color: white; /* Text color */
+    font-size: 16px; /* Larger font size */
+    font-weight: bold; /* Bold text */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+}
+
+.button:hover {
+    background-color: #005bb5; /* Darker shade on hover */
+    transform: scale(1.05); /* Slightly enlarge the button */
+}
+
+.button:active {
+    transform: scale(0.95); /* Slightly shrink the button when clicked */
+}
+
+.button-image {
+    width: 20px; /* Set a width for the image */
+    height: 20px; /* Set a height for the image */
+    margin-right: 5px; /* Space between image and text */
+    vertical-align: middle; /* Align image vertically */
+}
