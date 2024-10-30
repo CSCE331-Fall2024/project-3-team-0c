@@ -19,7 +19,7 @@ app.use(express.json());
 //     port: 5432,
 // });
 // Create pool
-const pool = new Pool({
+const pool = new Pool({  // Connect to PostgreSQL database
     user: process.env.PSQL_USER,
     host: process.env.PSQL_HOST,
     database: process.env.PSQL_DATABASE,
@@ -29,7 +29,7 @@ const pool = new Pool({
 });
 
 // Add process hook to shutdown pool
-process.on('SIGINT', function() {
+process.on('SIGINT', function() {  // End Server gracefully
     pool.end();
     console.log('Application successfully shutdown');
     process.exit(0);
@@ -45,7 +45,7 @@ app.post('/api/verifyEmployeeLogin', async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        const query = {
+        const query = {  // Check employee with id and password exist in database
             text: 'SELECT * FROM employee WHERE employee_id = $1 AND password = $2',
             values: [username, password],
         };
@@ -54,9 +54,9 @@ app.post('/api/verifyEmployeeLogin', async (req, res) => {
 
         // sends 200 status if employee login is verified
         // sends 401 status if employee login is not verified
-        if (result.rows.length > 0) {
+        if (result.rows.length > 0) {  // If Login is correct
             res.status(200).json({ success: true, message: 'Employee login verified' });
-        } else {
+        } else {  // Incorrect login
             res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
     } catch (error) {
@@ -70,7 +70,7 @@ app.post('/api/verifyManagerLogin', async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        const query = {
+        const query = {  // Check if manager exists in database with given id and password
             text: 'SELECT * FROM employee WHERE is_manager = true AND employee_id = $1 AND password = $2',
             values: [username, password],
         };
@@ -79,9 +79,9 @@ app.post('/api/verifyManagerLogin', async (req, res) => {
 
         // sends 200 status if manager login is verified
         // sends 401 status if manager login is not verified
-        if (result.rows.length > 0) {
+        if (result.rows.length > 0) {  // If Manager login is correct
             res.status(200).json({ success: true, message: 'Manager login verified' });
-        } else {
+        } else {  // Not authorized to login as a manager
             res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
     } catch (error) {
