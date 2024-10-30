@@ -24,9 +24,19 @@ const AppetizersComponent = ({ message }) => {
                 </button>
             </div>
             <div className={styles['row'] + ' ' + styles['button-row']}>
-                <button className={styles.button}>Veggie Spring Roll</button>
-                <button className={styles.button}>Chicken Spring Roll</button>
-                <button className={styles.button}>Cream Cheese Ragoon</button>
+                <div className={styles.card}>
+                    <img src="/photos/veggie.png" alt="Veggie Spring Roll" className={styles.image} />
+                    <button className={styles.button}>Veggie Spring Roll</button>
+                </div>
+                <div className={styles.card}>
+                    <img src="photos/chicken_egg_roll (1).png" alt="Chicken Spring Roll" className={styles.image} />
+                    <button className={styles.button}>Chicken Spring Roll</button>
+                </div>
+                <div className={styles.card}>
+                    <img src="photos/crabrangoon.png" alt="Cream Cheese Ragoon" className={styles.image} />
+                    <button className={styles.button}>Cream Cheese Ragoon</button>
+                </div>
+
             </div>
             <div className={styles['row'] + ' ' + styles['right-align']}>
                 <button className={styles.button}>Add To Cart</button>

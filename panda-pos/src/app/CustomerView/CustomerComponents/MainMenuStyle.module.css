@@ -45,32 +45,62 @@
 .right-align {
     justify-content: flex-end; /* Right align the last button */
 }
+.card {
+    display: inline-block; /* Align cards in a row */
+    width: 150px; /* Set a fixed width for cards */
+    margin: 10px; /* Space between cards */
+    border: 1px solid #ddd; /* Optional: border around card */
+    border-radius: 15px; /* Rounded corners for card */
+    background-color: whitesmoke;
+    overflow: hidden; /* Prevent overflow */
+    text-align: center; /* Center text */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.image {
+    width: 100%; /* Make image take full width of card */
+    height: auto; /* Maintain aspect ratio */
+}
+.card:hover {
+    background-color: whitesmoke;
+    transform: scale(1.05);
+}
 
 .button {
-    padding: 12px 20px; /* Add more padding for a bigger button */
-    margin: 5px; /* Maintain margin between buttons */
-    border-radius: 5px; /* Slightly rounded corners */
-    border: none; /* Remove the border */
-    background-color: #0070f3; /* Primary color */
-    color: white; /* Text color */
-    font-size: 16px; /* Larger font size */
-    font-weight: bold; /* Bold text */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+    padding: 8px 16px; /* Reduced padding for a smaller button */
+    margin: 5px;
+    border-radius: 10px; /* Increased border-radius for rounder edges */
+    border: none;
+    background-color: whitesmoke;
+    color: black;
+    font-size: 14px; /* Slightly smaller font size */
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.button:hover {
-    background-color: #005bb5; /* Darker shade on hover */
-    transform: scale(1.05); /* Slightly enlarge the button */
+.button_1 {
+    padding: 10px 20px;
+    margin-top: 50px; /* Adjusted padding for a more substantial button */
+    margin: 5px;
+    border-radius: 5px; /* Slightly rounded edges */
+    border: none;
+    background-color: lightcoral; /* Green color for a "success" look */
+    color: white; /* White text for contrast */
+    font-size: 16px; /* Increased font size for better visibility */
+    font-weight: bold;
+    width: 90px;
+    height: 60px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
 }
+
+
+
 
 .button:active {
-    transform: scale(0.95); /* Slightly shrink the button when clicked */
-}
-
-.button-image {
-    width: 20px; /* Set a width for the image */
-    height: 20px; /* Set a height for the image */
-    margin-right: 5px; /* Space between image and text */
-    vertical-align: middle; /* Align image vertically */
+    transform: scale(0.95);
 }
