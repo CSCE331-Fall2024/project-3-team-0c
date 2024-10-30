@@ -1,6 +1,7 @@
 // src/views/CashierView.js
 import React from 'react';
 
+// Front end for Cashier-specific view
 function CashierView() {
   return (
     <div>
