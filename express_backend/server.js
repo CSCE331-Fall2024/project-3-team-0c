@@ -2,7 +2,7 @@
 // Imports express.js
 const express = require("express");
 const cors = require("cors");
-const port = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8080;
 const { Pool } = require('pg');
 const dotenv = require('dotenv').config();
 
@@ -39,7 +39,7 @@ process.on('SIGINT', function() {  // End Server gracefully
 
 //ALL ROUTES DEFINED BELOW
 
-app.post('/', (req,res)=>{
+app.get('/', (req,res)=>{
     //console.log("Here");
     res.send("hi");
 })
