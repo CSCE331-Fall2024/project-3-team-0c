@@ -8,7 +8,6 @@ app.get('/customer', async (req, res) => {
 
     // Keep track of how many items are in this order for later sql queries
     var numItems = 1;
-
     // Check if there are more than 1 menu items in the order. If so, save them
     if (req.body.hasOwnProperty('menuItem2')) {
         var menuItem2 = req.body.menuItem2;

@@ -1,20 +1,22 @@
 "use client";
 import Image from 'next/image';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import styles from "./Login.module.css";
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  // const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("");
 
   /*
   * handles employee login button logic
   * @author Jaden
   */    
+
+
   const handleEmployeeLogin = async () => {                                             //need to incorporate authentification api next sprint
     try {
-      const response = await fetch("http://localhost:3001/api/verifyEmployeeLogin", {  //for posting to express backend server for authentification
+      const response = await fetch("http://localhost:8080/verifyEmployeeLogin", {  //for posting to express backend server for authentification
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,12 +27,16 @@ function Login() {
       const data = await response.json();
       if (data.success) {
         setMessage("Employee login successful!");
+        setTimeout(() => {
+          // Navigate to the manager view page
+          window.location.href = '/CashierView'; 
+        }, 1000);
       } else {
         setMessage("Invalid employee credentials.");
       }
     } catch (error) {                                         //handle errors
       setMessage("An error occurred. Please try again.");
-      console.error(error);
+      //console.error(error);
     }
   };
 
@@ -39,7 +45,7 @@ function Login() {
   */
   const handleManagerLogin = async () => {                                              //need to incorporate authentification api next sprint
     try {
-      const response = await fetch("http://localhost:3001/api/verifyManagerLogin", {    //for posting to express backend server for authentification
+      const response = await fetch("http://localhost:8080/verifyManagerLogin", {    //for posting to express backend server for authentification
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -50,12 +56,16 @@ function Login() {
       const data = await response.json();
       if (data.success) {
         setMessage("Manager login successful!");
+        setTimeout(() => {
+          // Navigate to the manager view page
+          window.location.href = '/ManagerView'; 
+        }, 1000);
       } else {
         setMessage("Invalid manager credentials.");
       }
     } catch (error) {                                       //handles errors
       setMessage("An error occurred. Please try again.");
-      console.error(error);
+      //console.error(error);
     }
   };
 
@@ -98,6 +108,7 @@ function Login() {
             <button className={styles.button} onClick={handleManagerLogin}>Login as Manager</button>
             <button className={styles.button} onClick={handleEmployeeLogin}>Login as Employee</button>
           </div>
+          {message}
         </div>
       </main>
       <footer className={styles.footer}>
