@@ -2,7 +2,7 @@
 // Imports express.js
 const express = require("express");
 const cors = require("cors");
-const PORT = 8080;
+const port = process.env.PORT || 8080;
 const { Pool } = require('pg');
 const dotenv = require('dotenv').config();
 
