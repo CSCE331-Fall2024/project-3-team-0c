@@ -24,6 +24,9 @@ const HomePage = () => {
             <Link href="/CustomerView" className={styles.button}>Start an Order</Link>
           </li>
           <li className={styles.navItem}>
+            <Link href="/MenuBoardView" className={styles.button}>View Menu Board</Link>
+          </li>
+          <li className={styles.navItem}>
             <Link href="/loginGUI" className={styles.button}>Log in Manager/Cashier</Link> 
           </li> 
         </ul>
