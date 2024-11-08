@@ -10,29 +10,27 @@ function EmployeeManagement() {
     { id: "102", firstName: "Jane", lastName: "Smith", payRate: 25, lastLogin: "2024-11-01", isManager: true },
   ];
 
-    const handleEmployeeSelect = (e) => {
+  const handleEmployeeSelect = (e) => {
     const employeeId = e.target.value;
-    const employee = employees.find(emp => emp.id === employeeId);
+    const employee = employees.find((emp) => emp.id === employeeId);
     setSelectedEmployee(employee);
   };
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.header}>Employee Management</h1>
+    <div className={styles.container}>
+      <h1 className={styles.header}>Employee Management</h1>
 
       {/* Employee Dropdown */}
-      <div style={styles.form}>
+      <div className={styles.form}>
         <label>
           Select Employee:
-          <select style={styles.input} onChange={handleEmployeeSelect}>
+          <select className={styles.input} onChange={handleEmployeeSelect}>
             <option value="">Select an employee</option>
-
             {employees.map((emp) => (
               <option key={emp.id} value={emp.id}>
                 {emp.firstName} {emp.lastName}
               </option>
-        ))}
-
+            ))}
           </select>
         </label>
 
@@ -41,19 +39,39 @@ function EmployeeManagement() {
             <h3>Employee Details</h3>
             <label>
               First Name:
-              <input type="text" value={selectedEmployee.firstName} style={styles.input} readOnly />
+              <input
+                type="text"
+                value={selectedEmployee.firstName}
+                className={styles.input}
+                readOnly
+              />
             </label>
             <label>
               Last Name:
-              <input type="text" value={selectedEmployee.lastName} style={styles.input} readOnly />
+              <input
+                type="text"
+                value={selectedEmployee.lastName}
+                className={styles.input}
+                readOnly
+              />
             </label>
             <label>
               Pay Rate:
-              <input type="text" value={selectedEmployee.payRate} style={styles.input} readOnly />
+              <input
+                type="text"
+                value={selectedEmployee.payRate}
+                className={styles.input}
+                readOnly
+              />
             </label>
             <label>
               Last Login:
-              <input type="text" value={selectedEmployee.lastLogin} style={styles.input} readOnly />
+              <input
+                type="text"
+                value={selectedEmployee.lastLogin}
+                className={styles.input}
+                readOnly
+              />
             </label>
             <label>
               Is Manager:
@@ -62,11 +80,11 @@ function EmployeeManagement() {
           </>
         )}
 
-        {/* Action Buttons (Placeholder) */}
-        <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
-          <button style={styles.button}>Edit</button>
-          <button style={{ ...styles.button, backgroundColor: "#ff4500" }}>Delete</button>
-          <button style={{ ...styles.button, backgroundColor: "#00cc66" }}>Add New Employee</button>
+        {/* Action Buttons */}
+        <div className={styles.buttonGroup}>
+          <button className={styles.button}>Edit</button>
+          <button className={`${styles.button} ${styles.deleteButton}`}>Delete</button>
+          <button className={`${styles.button} ${styles.addButton}`}>Add New Employee</button>
         </div>
       </div>
     </div>
