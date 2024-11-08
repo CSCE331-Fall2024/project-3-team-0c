@@ -87,7 +87,12 @@ function EmployeeManagement() {
           <button className={`${styles.button} ${styles.addButton}`}>Add New Employee</button>
         </div>
       </div>
+
+      <footer className = {styles.footer}>
+        <a href= "/ManagerView" className = {styles.link}>Back to Manager Dashboard</a>
+      </footer> 
     </div>
+    
   );
 }
 
