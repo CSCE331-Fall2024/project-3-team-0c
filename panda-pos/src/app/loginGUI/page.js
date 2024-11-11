@@ -14,7 +14,7 @@ function Login() {
   */    
   const handleEmployeeLogin = async () => {                                             //need to incorporate authentification api next sprint
     try {
-      const response = await fetch("http://localhost:3001/api/verifyEmployeeLogin", {  //for posting to express backend server for authentification
+      const response = await fetch("http://localhost:8080/verifyEmployeeLogin", {  //for posting to express backend server for authentification
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -39,7 +39,7 @@ function Login() {
   */
   const handleManagerLogin = async () => {                                              //need to incorporate authentification api next sprint
     try {
-      const response = await fetch("http://localhost:3001/api/verifyManagerLogin", {    //for posting to express backend server for authentification
+      const response = await fetch("http://localhost:8080/verifyManagerLogin", {    //for posting to express backend server for authentification
         method: "POST",
         headers: {
           "Content-Type": "application/json",
