@@ -1,25 +1,25 @@
 
 // Imports express.js
-const express = require('express');
+const express = require("express");
+const cors = require("cors");
+const PORT = process.env.PORT || 8080;
+const { Pool } = require('pg');
+const dotenv = require('dotenv').config();
+
 // // Imports Client class from PostegreSQL
 // const { Client } = require('pg');
 
 // Creating Express app
 const app = express();
-// Set port that server runs on and that will be used to make HTTP requests to the server
-const port = 3001;
-// Middleware for parsing JSON requests -- makes it easier to deal wih JSON data
 app.use(express.json()); 
+app.use(cors());
 
-// // PostgreSQL client setup
-// const client = new Client({
-//     user: 'team_0c',
-//     host: 'csce-315-db.engr.tamu.edu',
-//     database: 'team_0c_db',
-//     password: 'magmar56',
-//     port: 5432,
-// });
-// Create pool
+// Start the Express server
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+//Create pool
 const pool = new Pool({  // Connect to PostgreSQL database
     user: process.env.PSQL_USER,
     host: process.env.PSQL_HOST,
@@ -36,14 +36,16 @@ process.on('SIGINT', function() {  // End Server gracefully
     process.exit(0);
 });
 
-// // Connect to PostgreSQL
-// client.connect()
-//     .then(() => console.log('Connected to PostgreSQL'))
-//     .catch(err => console.error('Connection error', err.stack));
 
+//ALL ROUTES DEFINED BELOW
+
+app.get('/', (req,res)=>{
+    //console.log("Here");
+    res.send("hi");
+})
 
 // Endpoint to verify employee login
-app.post('/api/verifyEmployeeLogin', async (req, res) => {
+app.post('/verifyEmployeeLogin', async (req, res) => {
     const { username, password } = req.body;
 
     try {
@@ -67,8 +69,9 @@ app.post('/api/verifyEmployeeLogin', async (req, res) => {
     }
 });
 
+
 // Endpoint to verify manager login
-app.post('/api/verifyManagerLogin', async (req, res) => {
+app.post('/verifyManagerLogin', async (req, res) => {
     const { username, password } = req.body;
 
     try {
@@ -93,7 +96,3 @@ app.post('/api/verifyManagerLogin', async (req, res) => {
     }
 });
 
-// Start the Express server
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
