@@ -8,14 +8,14 @@
     justify-content: center;
     font-family: Arial, sans-serif;
     height: 100vh;
-    background-color: #f5f5f5;
+    background-color: black;
     padding-top: 50px;
   }
   
   .header {
     font-size: 36px;
     margin-bottom: 40px;
-    color: #333;
+    color: #ffffff;
   }
   
   .navMenu {
@@ -32,7 +32,7 @@
     padding: 14px 20px;
     width: 250px;
     border-radius: 8px;
-    background-color: black; /* Light red similar to login buttons */
+    background-color: rgb(218, 36, 36); /* Light red similar to login buttons */
     color: white;
     text-decoration: none;
     cursor: pointer;
@@ -41,7 +41,7 @@
   }
   
   .navButton:hover {
-    background-color: #ff9999; /* Darker red on hover */
+    background-color: #9b4b4b; /* Darker red on hover */
   }
   
   .footer {
@@ -51,7 +51,7 @@
   }
   
   .link {
-    color: #0070f3;
+    color: #fcfcfc;
     text-decoration: none;
   }
   

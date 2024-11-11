@@ -11,7 +11,7 @@ function ManagerView() {
     
       <div className = {styles.navMenu}>
         <a href= "/EmployeeManagement" className = {styles.navButton}>Employee Management</a>
-        <a href = "/InventoryManagement" className = {styles.navButton}>Inventory Management</a>
+        <a href = "/EditPrice_Inventory_MenuView" className = {styles.navButton}>Database Editor Dashboard</a>
         <a href = "/ReportsView" className = {styles.navButton}>View Data Reports</a>
       </div>
 

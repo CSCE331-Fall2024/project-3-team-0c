@@ -83,8 +83,8 @@ function EmployeeManagement() {
         {/* Action Buttons */}
         <div className={styles.buttonGroup}>
           <button className={styles.button}>Edit</button>
-          <button className={`${styles.button} ${styles.deleteButton}`}>Delete</button>
-          <button className={`${styles.button} ${styles.addButton}`}>Add New Employee</button>
+          <button className={`${styles.button}`}>Delete</button>
+          <button className={`${styles.button}`}>Add New Employee</button>
         </div>
       </div>
 

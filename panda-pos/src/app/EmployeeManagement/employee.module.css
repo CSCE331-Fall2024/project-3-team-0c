@@ -6,12 +6,13 @@
   font-family: Arial, sans-serif;
   min-height: 100vh; /* Ensure the page takes full height */
   padding: 40px;
-  background-color: #f5f5f5;
+  background-color: black;
 }
 
 .header {
   font-size: 32px;
   margin-bottom: 20px;
+  color: white;
 }
 
 .form {
@@ -19,11 +20,17 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
+  color: white;
+  background-color:  #383636;
+  border-radius: 12px; 
+  padding: 20px; 
+  border: 1px solid white; 
+ 
 }
 
 .input {
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #fff0f0;
   border-radius: 6px;
   font-size: 16px;
   margin-top: 5px;
@@ -41,33 +48,27 @@
   border-radius: 6px;
   cursor: pointer;
   font-size: 16px;
-  background-color: rgb(173, 168, 168);
+  background-color:rgb(218, 36, 36);
   color: black;
   transition: background-color 0.3s ease;
 }
 
 .button:hover {
-  background-color: white;
+  background-color:  #9b4b4b;
 }
 
-.deleteButton {
-  background-color: #ff4500;
-}
 
-.addButton {
-  background-color: #00cc66;
-}
 
 .footer {
-  margin-top: auto; /* Push footer to the bottom if content is less */
+  margin-top: auto;
   text-align: center;
   padding: 20px;
-  background-color: #f0f0f0;
+  background-color: #000000;
   width: 100%;
 }
 
 .link {
-  color: #0070f3;
+  color: white;
   text-decoration: none;
   font-size: 16px;
 }
