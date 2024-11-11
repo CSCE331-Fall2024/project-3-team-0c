@@ -1,20 +1,22 @@
 "use client";
 import Image from 'next/image';
 import React, { useState } from "react";
+import { useRouter } from 'next/navigation';
 
 import styles from "./Login.module.css";
 function Login() {
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  // const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("");
 
   /*
   * handles employee login button logic
   * @author Jaden
   */    
-  const handleEmployeeLogin = async () => {                                             //need to incorporate authentification api next sprint
+  const handleEmployeeLogin = async () => {                                             //need to incorporate authentication api next sprint
     try {
-      const response = await fetch("http://localhost:8080/verifyEmployeeLogin", {  //for posting to express backend server for authentification
+      const response = await fetch("http://localhost:8080/verifyEmployeeLogin", {  //for posting to express backend server for authentication
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,6 +27,7 @@ function Login() {
       const data = await response.json();
       if (data.success) {
         setMessage("Employee login successful!");
+        router.push("/CashierView");
       } else {
         setMessage("Invalid employee credentials.");
       }
@@ -37,9 +40,9 @@ function Login() {
   /*
   * handles manager login button logic
   */
-  const handleManagerLogin = async () => {                                              //need to incorporate authentification api next sprint
+  const handleManagerLogin = async () => {                                              //need to incorporate authentication api next sprint
     try {
-      const response = await fetch("http://localhost:8080/verifyManagerLogin", {    //for posting to express backend server for authentification
+      const response = await fetch("http://localhost:8080/verifyManagerLogin", {    //for posting to express backend server for authentication
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -50,6 +53,7 @@ function Login() {
       const data = await response.json();
       if (data.success) {
         setMessage("Manager login successful!");
+        router.push("/ManagerView");
       } else {
         setMessage("Invalid manager credentials.");
       }
@@ -99,6 +103,7 @@ function Login() {
             <button className={styles.button} onClick={handleEmployeeLogin}>Login as Employee</button>
           </div>
         </div>
+        {message && <div className = {styles.message}>{message}</div>}
       </main>
       <footer className={styles.footer}>
         <a href="/" className={styles.link}>Go Back</a>
