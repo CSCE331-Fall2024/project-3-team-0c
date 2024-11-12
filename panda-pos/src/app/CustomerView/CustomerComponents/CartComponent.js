@@ -2,17 +2,7 @@ import React, { useState } from 'react';
 import styles from './MainMenuStyle.module.css';
 import Image from 'next/image';
 
-const CartComponent = ({ message }) => {
-    const [items, setItems] = useState([
-        'Orange Chicken',
-        'Honey Sesame Chicken',
-        'Broccoli Beef'
-    ]); // Initial items, replace with dynamic data as needed.
-
-
-    const handleDeleteItem = (index) => {
-        setItems((prevItems) => prevItems.filter((_, i) => i !== index));
-    };
+const CartComponent = ({ message, cartItems }) => {
 
     return (
         <div className={styles['grid-container']}>
@@ -34,28 +24,16 @@ const CartComponent = ({ message }) => {
                 </button>
             </div>
             <div className={styles['row'] + ' ' + styles['center-text']}>
-                <p>{message}</p>
-            </div>
-
-            <div className={styles['row'] + ' ' + styles['order-list']}>
-                <ol className={styles['item-list']}>
-                    {items.map((item, index) => (
-                        <li key={index} className={styles['order-item']}>
-                            <span>{item}</span>
-                            <button
-                                onClick={() => handleDeleteItem(index)}
-                                className={styles['delete-button']}
-                                aria-label={`Delete ${item}`}
-                            >
-                                🗑️
-                            </button>
-                        </li>
-                    ))}
-                </ol>
-            </div>
-
-            <div className={styles['row'] + ' ' + styles['right-align']}>
-                <button className={styles.button}>Check Out</button>
+                {/* <p>{message}</p> */}
+                {cartItems.length > 0 ? (
+        <ul>
+          {cartItems.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>Your cart is empty</p>
+      )}
             </div>
         </div>
     );

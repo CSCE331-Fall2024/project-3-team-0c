@@ -9,6 +9,7 @@ import CartComponent from './CustomerComponents/CartComponent';
 const CustomerView = () => {
     const [time, setTime] = useState(new Date().toLocaleTimeString());
     const [activeSection, setActiveSection] = useState('home');
+    const [cartItems, setCartItems] = useState([]); 
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -17,6 +18,9 @@ const CustomerView = () => {
         return () => clearInterval(timer);
     }, []);
 
+    const addToCart = (item) => {
+        setCartItems((prevItems) => [...prevItems, item]);
+    }
 
     /*
     * Provide instructions for each type of order on each rednering clicked
@@ -27,26 +31,26 @@ const CustomerView = () => {
         switch (activeSection) {
             case 'Bowl':
                 instructionmessage = ""
-                return <MainMenuComponent message={instructionmessage}/>;
+                return <MainMenuComponent message={instructionmessage} addToCart={addToCart}/>;
             case 'Plate':
                 instructionmessage = ""
-                return <MainMenuComponent message={instructionmessage}/>;
+                return <MainMenuComponent message={instructionmessage} addToCart={addToCart}/>;
             case 'Bigger Plate':
                 instructionmessage = ""
-                return <MainMenuComponent message={instructionmessage}/>;
+                return <MainMenuComponent message={instructionmessage} addToCart={addToCart}/>;
             case 'Appetizers':
-                return <AppetizersComponent/>;
+                return <AppetizersComponent addToCart={addToCart}/>;
             case 'Drinks':
-                return <DrinksComponent/>;
+                return <DrinksComponent addToCart={addToCart}/>;
             case 'A La Carte':
                 instructionmessage = "A La Carte: Order items individually."
-                return <MainMenuComponent message={instructionmessage}/>;
+                return <MainMenuComponent message={instructionmessage} addToCart={addToCart}/>;
             case 'Go To Cart':
                 instructionmessage = "Checkout"
-                return <CartComponent message={instructionmessage}/>;
+                return <CartComponent message={instructionmessage} cartItems={cartItems}/>;
             default:
                 instructionmessage = ""
-                return <MainMenuComponent message={instructionmessage}/>;
+                return <MainMenuComponent message={instructionmessage} cartItems={cartItems}/>;
         }
     };
 

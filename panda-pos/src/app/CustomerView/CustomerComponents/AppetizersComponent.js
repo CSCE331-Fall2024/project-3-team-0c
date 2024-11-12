@@ -3,7 +3,7 @@ import React from 'react';
 import styles from './MainMenuStyle.module.css';
 import Image from 'next/image';
 
-const AppetizersComponent = ({ message }) => {
+const AppetizersComponent = ({ addToCart }) => {
     return (
         <div className={styles['grid-container']}>
             <div className={styles['row'] + ' ' + styles['zoom-controls']}>
@@ -26,15 +26,15 @@ const AppetizersComponent = ({ message }) => {
             <div className={styles['row'] + ' ' + styles['button-row']}>
                 <div className={styles.card}>
                     <img src="/photos/veggie.png" alt="Veggie Spring Roll" className={styles.image} />
-                    <button className={styles.button}>Veggie Spring Roll</button>
+                    <button className={styles.button} onClick={() => addToCart('Veggie Spring Roll')}>Veggie Spring Roll</button>
                 </div>
                 <div className={styles.card}>
                     <img src="photos/chicken_egg_roll (1).png" alt="Chicken Spring Roll" className={styles.image} />
-                    <button className={styles.button}>Chicken Spring Roll</button>
+                    <button className={styles.button} onClick={() => addToCart('Chicken Spring Roll')}>Chicken Spring Roll</button>
                 </div>
                 <div className={styles.card}>
                     <img src="photos/crabrangoon.png" alt="Cream Cheese Ragoon" className={styles.image} />
-                    <button className={styles.button}>Cream Cheese Ragoon</button>
+                    <button className={styles.button} onClick={() => addToCart('Cream Cheese Ragoon')}>Cream Cheese Ragoon</button>
                 </div>
 
             </div>
