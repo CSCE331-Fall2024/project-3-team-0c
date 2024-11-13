@@ -354,4 +354,50 @@ app.get('/employeeLoad', async (req, res) => {
     }
 });
 
+// Get all prices
+app.get('/pricesLoad', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM prices;');
+        
+        // Respond with the list of prices
+        if (result.rows.length > 0) {
+            res.status(200).json({ success: true, data: result.rows });
+        } else {
+            res.status(404).json({ success: false, message: "No prices found." });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+// Update the price for a menu item
+app.put('/UpdatePrices', async (req, res) => {
+    const { name, price } = req.body;  // Extract price and name from the request body
+
+    if (!name || !price) {
+        return res.status(400).json({ success: false, message: "Name and price are required." });
+    }
+
+    try {
+        const result = await pool.query(
+            'UPDATE prices SET price = $1 WHERE name = $2 RETURNING *;',
+            [price, name]
+        );
+
+        if (result.rows.length > 0) {
+            res.status(200).json({ success: true, message: 'Price updated successfully', data: result.rows[0] });
+        } else {
+            res.status(404).json({ success: false, message: "Price not found for the specified name." });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+
+
+
+
+
 
