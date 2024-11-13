@@ -95,4 +95,29 @@ app.post('/verifyManagerLogin', async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });
+// Delete
+app.post('/DeleteEmployee', async (req, res) => {
+    const { employee_id } = req.body;
+
+    try {
+        const query = {
+            text: 'DELETE FROM employee WHERE employee_id = $1 RETURNING *;',  // Delete and return the deleted employee data
+            values: [employee_id],
+        };
+
+        // Perform the query to delete the employee
+        const result = await pool.query(query);
+
+        // If the result returns any rows, it means the deletion was successful
+        if (result.rows.length > 0) {
+            res.status(200).json({ success: true, message: 'Employee deleted successfully' });
+        } else {
+            // If no rows were returned, it means the employee_id did not exist in the database
+            res.status(404).json({ success: false, message: 'Employee not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
 
