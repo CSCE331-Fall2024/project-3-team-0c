@@ -154,11 +154,20 @@ const CashierView = () => {
         {/* Left content here, e.g., Order summary or Product categories */}
         <h2>Receipt</h2>
         <h3>Cart</h3>
-         <ul>
+        <ul>
           {cart.map((item, index) => (
-            <li key={index}>
-              {item.name} - ${item.price}
-              <button onClick={() => handleRemoveItem(index)}>Remove</button>
+            <li key={index} className={styles.listItem}>
+              <div className={styles.itemInfo}>
+                <span className={styles.itemName}>{item.name}</span>
+                <span className={styles.dashes}></span>
+                <span className={styles.price}>${item.price}</span>
+              </div>
+              <button
+                className={styles.deleteButton}
+                onClick={() => handleRemoveItem(index)}
+              >
+                Remove
+              </button>
             </li>
           ))}
         </ul>
@@ -168,42 +177,42 @@ const CashierView = () => {
         {/* Right content here, e.g., Product details or Checkout section */}
         <h2>Right Pane</h2>
         <div className={styles['buttonRow']}>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'White Rice', price: 10 })}>White Rice</button>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Fried Rice', price: 10 })}>Fried Rice</button>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Chow Mein', price: 10 })}>Chow Mein</button>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Super Greens', price: 10 })}>Super Greens</button>
+          <button className={styles['buttonSide']} onClick={() => handleAddItem({ name: 'White Rice', price: 10 })}>White Rice</button>
+          <button className={styles['buttonSide']} onClick={() => handleAddItem({ name: 'Fried Rice', price: 10 })}>Fried Rice</button>
+          <button className={styles['buttonSide']} onClick={() => handleAddItem({ name: 'Chow Mein', price: 10 })}>Chow Mein</button>
+          <button className={styles['buttonSide']} onClick={() => handleAddItem({ name: 'Super Greens', price: 10 })}>Super Greens</button>
         </div>
         <div className={styles['buttonRow']}>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Orange Chicken', price: 10 })}>Orange Chicken</button>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Honey Sesame Chicken', price: 10 })}>Honey Sesame Chicken</button>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Broccoli Beef', price: 10 })}>Broccoli Beef</button>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Kung Pao Chicken', price: 10 })}>Kung Pao Chicken</button>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Black Pepper Angus Steak', price: 10 })}>Black Pepper Angus Steak</button>
+          <button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Orange Chicken', price: 10 })}>Orange Chicken</button>
+          <button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Honey Sesame Chicken', price: 10 })}>Honey Sesame Chicken</button>
+          <button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Broccoli Beef', price: 10 })}>Broccoli Beef</button>
+          <button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Kung Pao Chicken', price: 10 })}>Kung Pao Chicken</button>
+          <button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Black Pepper Angus Steak', price: 10 })}>Black Pepper Angus Steak</button>
         </div>
         <div className={styles['buttonRow']}>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Sweet Fire Chicken Breast', price: 10 })}>Sweet Fire Chicken Breast</button>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Grilled Teriyaki Chicken', price: 10 })}>Grilled Teriyaki Chicken</button>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Mushroom Chicken', price: 10 })}>Mushroom Chicken</button>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Beijing Beef', price: 10 })}>Beijing Beef</button>
+          <button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Sweet Fire Chicken Breast', price: 10 })}>Sweet Fire Chicken Breast</button>
+          <button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Grilled Teriyaki Chicken', price: 10 })}>Grilled Teriyaki Chicken</button>
+          <button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Mushroom Chicken', price: 10 })}>Mushroom Chicken</button>
+          <button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Beijing Beef', price: 10 })}>Beijing Beef</button>
         </div>
         <div className={styles['buttonRow']}>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Veggie Spring Roll', price: 10 })}>Veggie Spring Roll</button>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Chicken Spring Roll', price: 10 })}>Chicken Spring Roll</button>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Cream Cheese Ragoon', price: 10 })}>Cream Cheese Ragoon</button>
+          <button className={styles['buttonApp']} onClick={() => handleAddItem({ name: 'Veggie Spring Roll', price: 10 })}>Veggie Spring Roll</button>
+          <button className={styles['buttonApp']} onClick={() => handleAddItem({ name: 'Chicken Spring Roll', price: 10 })}>Chicken Spring Roll</button>
+          <button className={styles['buttonApp']} onClick={() => handleAddItem({ name: 'Cream Cheese Ragoon', price: 10 })}>Cream Cheese Ragoon</button>
         </div>
         <div className={styles['buttonRow']}>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Water Bottle', price: 10 })}>Water Bottle</button>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Sprite', price: 10 })}>Sprite</button>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Root Beer', price: 10 })}>Root Beer</button>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Mexican Coke', price: 10 })}>Mexican Coke</button>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Coke', price: 10 })}>Coke</button>
+          <button className={styles['buttonDrink']} onClick={() => handleAddItem({ name: 'Water Bottle', price: 10 })}>Water Bottle</button>
+          <button className={styles['buttonDrink']} onClick={() => handleAddItem({ name: 'Sprite', price: 10 })}>Sprite</button>
+          <button className={styles['buttonDrink']} onClick={() => handleAddItem({ name: 'Root Beer', price: 10 })}>Root Beer</button>
+          <button className={styles['buttonDrink']} onClick={() => handleAddItem({ name: 'Mexican Coke', price: 10 })}>Mexican Coke</button>
+          <button className={styles['buttonDrink']} onClick={() => handleAddItem({ name: 'Coke', price: 10 })}>Coke</button>
         </div>
         <div className={styles['buttonRow']}>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Lemonade', price: 10 })}>Lemonade</button>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Fanta', price: 10 })}>Fanta</button>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Dr Pepper', price: 10 })}>Dr Pepper</button>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Diet Coke', price: 10 })}>Diet Coke</button>
-          <button className={styles['button']} onClick={() => handleAddItem({ name: 'Apple Juice', price: 10 })}>Apple Juice</button>
+          <button className={styles['buttonDrink']} onClick={() => handleAddItem({ name: 'Lemonade', price: 10 })}>Lemonade</button>
+          <button className={styles['buttonDrink']} onClick={() => handleAddItem({ name: 'Fanta', price: 10 })}>Fanta</button>
+          <button className={styles['buttonDrink']} onClick={() => handleAddItem({ name: 'Dr Pepper', price: 10 })}>Dr Pepper</button>
+          <button className={styles['buttonDrink']} onClick={() => handleAddItem({ name: 'Diet Coke', price: 10 })}>Diet Coke</button>
+          <button className={styles['buttonDrink']} onClick={() => handleAddItem({ name: 'Apple Juice', price: 10 })}>Apple Juice</button>
         </div>
       </div>
     </div>
