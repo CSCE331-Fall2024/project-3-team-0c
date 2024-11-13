@@ -51,8 +51,8 @@
   padding: 12px 16px; /* Increased padding */
   border-radius: 6px; /* Increased border radius */
   border: none;
-  background-color: #ffcccc; /* Light red */
-  color: black;
+  background-color: #000000; /* Light red */
+  color: rgb(255, 251, 251);
   cursor: pointer;
   font-size: 16px; /* Increased font size */
 }
