@@ -21,6 +21,28 @@ function EmployeeManagement() {
   //   { id: "102", firstName: "Jane", lastName: "Smith", payRate: 25, lastLogin: "2024-11-01",password: "pain", isManager: true },
   // ];
 
+  const employees = loadEmployee();
+
+  const loadEmployee = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/loadEmployee", {  //for posting to express backend server for authentication
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ firstName, lastName, payRate, lastLogin,password, isManager }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        
+        //setMessage("Employee Information Edited");
+      }
+    } catch (error) {                                         //handle errors
+      //setMessage("An error occurred. Please try again.");
+      console.error(error);
+    }
+  };
   const handleEmployeeSelect = (e) => {
     
     const employeeId = e.target.value;
@@ -30,7 +52,7 @@ function EmployeeManagement() {
 
   const editEmployee = async () => {                                             
     try {
-      const response = await fetch("http://localhost:8080/editEmployee", {  //for posting to express backend server for authentication
+      const response = await fetch("http://localhost:8080/updateEmployee", {  //for posting to express backend server for authentication
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -116,7 +138,7 @@ function EmployeeManagement() {
               First Name:
               <input
                 type="text"
-                value={firstName}
+                value={employees.firstName}
                 onChange={(e) => setfirstName(e.target.value)}
                 className={styles.input}
               />
@@ -125,7 +147,7 @@ function EmployeeManagement() {
               Last Name:
               <input
                 type="text"
-                value={lastName}
+                value={employees.lastName}
                 onChange={(e) => setlastName(e.target.value)}
                 className={styles.input}
               />
@@ -134,7 +156,7 @@ function EmployeeManagement() {
               Pay Rate:
               <input
                 type="text"
-                value={payRate}
+                value={employees.payRate}
                 onChange={(e) => setpayRate(e.target.value)}
                 className={styles.input}
               />
@@ -143,7 +165,7 @@ function EmployeeManagement() {
               Last Login:
               <input
                 type="text"
-                value={lastLogin}
+                value={employees.lastLogin}
                 onChange={(e) => setlastLogin(e.target.value)}
                 className={styles.input}
               />
@@ -152,7 +174,7 @@ function EmployeeManagement() {
               Password:
               <input
                 type="text"
-                value={password}
+                value={employees.password}
                 onChange={(e) => setpassword(e.target.value)}
                 className={styles.input}
               />
@@ -161,7 +183,7 @@ function EmployeeManagement() {
               Is Manager:
               <input 
               type="checkbox" 
-              checked={isManager}
+              checked={employees.isManager}
               onChange={(e) => setisManager(e.target.value)}
                />
             </label>
