@@ -16,6 +16,7 @@ function EmployeeManagement() {
     setSelectedEmployee(employee);
   };
 
+
   return (
     <div className={styles.container}>
       <h1 className={styles.header}>Employee Management</h1>

@@ -21,7 +21,7 @@ function ReportsView() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.header}>Inventory Trends</h1>
+      <h1 className={styles.header}>Data Reports Dashboard</h1>
 
       <div className={styles.sections}>
         <div className={styles.section}>
