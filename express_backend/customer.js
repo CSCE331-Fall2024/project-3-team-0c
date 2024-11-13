@@ -2,27 +2,27 @@ import {app, pool} from 'server.js';  // Get app and database connection from se
 
 // Create an empty order with cost = 0, and the current time as the date
 app.post('/createCustomerOrder', async (req, res) => {
-    let dateTime = new Date();  // Current date
+    let dateTime = new Date();  // Get current date
     try {
         const statement = {
+            // order_id will be auto-generated and payment type can be left null until known
             text: "INSERT INTO orders(date, cost) VALUES($1, 0);",
             values: [dateTime],
         }
         const result = await pool.query(statement);
-        if (result.rowCount == 1) {
+        if (result.rowCount == 1) {  // Only one row should be created
             res.status(200).json({ success: true, message: 'Order Created' });
-        } else {
-            // If no rows were returned, it means the employee_id did not exist in the database
+        } else {  // If rowCount != 1, then something other than the intended operation occurred; therefor error
             res.status(404).json({ success: false, message: 'Failed to create order' });
         }
     }
     catch(error) {
-        console.error(error);
+        console.error(error);  // Log any errors for debugging purposes
     }
     
 });
 
-// Update order  payment type
+// Update order payment type. payment type and order ID should be passed in req body
 app.post('/updatePaymentType', async (req, res) => {
     try {
         const statement = {
@@ -30,10 +30,14 @@ app.post('/updatePaymentType', async (req, res) => {
             values: [req.body.paymentType, req.body.orderID],
         }
         const result = await pool.query(statement);
-        res.send(result);
+        if (result.rowCount == 1) {  // Only one row should be updated
+            res.status(200).json({ success: true, message: 'Payment type updated' });
+        } else {  // If rowCount != 1, then something other than the intended operation occurred; therefor error
+            res.status(404).json({ success: false, message: 'Failed to update payment type' });
+        }
     }
     catch(error) {
-        console.error(error);
+        console.error(error);  // Log any errors for debugging purposes
     }
 });
 
