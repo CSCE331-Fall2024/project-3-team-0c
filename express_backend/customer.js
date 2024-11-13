@@ -22,12 +22,12 @@ app.post('/createCustomerOrder', async (req, res) => {
     
 });
 
-// TODO handle payment type
+// Update order  payment type
 app.post('/updatePaymentType', async (req, res) => {
     try {
         const statement = {
-            text: "UPDATE orders SET payment_type = $1 WHERE order_id = $2",
-            values: [req.paymentType, req.orderID],
+            text: "UPDATE orders SET payment_type = $1 WHERE order_id = $2;",
+            values: [req.body.paymentType, req.body.orderID],
         }
         const result = await pool.query(statement);
         res.send(result);
