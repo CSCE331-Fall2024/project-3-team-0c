@@ -18,10 +18,18 @@ const CustomerView = () => {
         return () => clearInterval(timer);
     }, []);
 
-    const addToCart = (item) => {
-        setCartItems((prevItems) => [...prevItems, item]);
-    }
 
+    useEffect(() => {
+        // Force a small state update after initial render to ensure everything is ready
+        setCartItems([]);  // Clear the cart if needed on mount, or make sure it's initialized
+    }, []); 
+
+    const addToCart = (item) => {
+        setCartItems((prevItems) => {
+            return [...prevItems, item];
+        });
+    };
+    
     /*
     * Provide instructions for each type of order on each rednering clicked
     * based on the tab clicked provide different food options
@@ -31,7 +39,8 @@ const CustomerView = () => {
         switch (activeSection) {
             case 'Bowl':
                 instructionmessage = ""
-                return <MainMenuComponent message={instructionmessage} addToCart={addToCart}/>;
+                return <MainMenuComponent key={activeSection} message={instructionmessage} addToCart={addToCart}/>;
+                
             case 'Plate':
                 instructionmessage = ""
                 return <MainMenuComponent message={instructionmessage} addToCart={addToCart}/>;
@@ -50,7 +59,7 @@ const CustomerView = () => {
                 return <CartComponent message={instructionmessage} cartItems={cartItems}/>;
             default:
                 instructionmessage = ""
-                return <MainMenuComponent message={instructionmessage} cartItems={cartItems}/>;
+                return <MainMenuComponent message={instructionmessage} addToCart={addToCart} cartItems={cartItems}/>;
         }
     };
 

@@ -1,7 +1,8 @@
 "use client";
 import Image from 'next/image';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
+
 
 import styles from "./Login.module.css";
 function Login() {
@@ -14,9 +15,11 @@ function Login() {
   * handles employee login button logic
   * @author Jaden
   */    
-  const handleEmployeeLogin = async () => {                                             //need to incorporate authentication api next sprint
+
+
+  const handleEmployeeLogin = async () => {                                             //need to incorporate authentification api next sprint
     try {
-      const response = await fetch("http://localhost:8080/verifyEmployeeLogin", {  //for posting to express backend server for authentication
+      const response = await fetch("http://localhost:8080/verifyEmployeeLogin", {  //for posting to express backend server for authentification
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,16 +36,16 @@ function Login() {
       }
     } catch (error) {                                         //handle errors
       setMessage("An error occurred. Please try again.");
-      console.error(error);
+      //console.error(error);
     }
   };
 
   /*
   * handles manager login button logic
   */
-  const handleManagerLogin = async () => {                                              //need to incorporate authentication api next sprint
+  const handleManagerLogin = async () => {                                              //need to incorporate authentification api next sprint
     try {
-      const response = await fetch("http://localhost:8080/verifyManagerLogin", {    //for posting to express backend server for authentication
+      const response = await fetch("http://localhost:8080/verifyManagerLogin", {    //for posting to express backend server for authentification
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -54,12 +57,13 @@ function Login() {
       if (data.success) {
         setMessage("Manager login successful!");
         router.push("/ManagerView");
+
       } else {
         setMessage("Invalid manager credentials.");
       }
     } catch (error) {                                       //handles errors
       setMessage("An error occurred. Please try again.");
-      console.error(error);
+      //console.error(error);
     }
   };
 
@@ -102,8 +106,8 @@ function Login() {
             <button className={styles.button} onClick={handleManagerLogin}>Login as Manager</button>
             <button className={styles.button} onClick={handleEmployeeLogin}>Login as Employee</button>
           </div>
+          {message && <div className = {styles.message}>{message}</div>}
         </div>
-        {message && <div className = {styles.message}>{message}</div>}
       </main>
       <footer className={styles.footer}>
         <a href="/" className={styles.link}>Go Back</a>

@@ -1,14 +1,4 @@
 
-@media (prefers-color-scheme: dark) {
-  .page {
-    --gray-rgb: 255, 255, 255;
-    --gray-alpha-200: rgba(var(--gray-rgb), 0.145);
-    --gray-alpha-100: rgba(var(--gray-rgb), 0.06);
-
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
-  }
-}
 .h1{
   padding-bottom: 40px;
 }
@@ -42,6 +32,54 @@
 
 .navItem {
   margin: 0; /* Remove default margin */
+}
+
+.weatherInfo {
+  background-color: whitesmoke; 
+  padding: 20px;
+  border-radius: 12px; /* Slightly more rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow for a card-like effect */
+ 
+  max-width: 400px; /* Limit the width */
+  text-align: center; /* Center text */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add smooth animation on hover */
+}
+
+.weatherInfo:hover {
+  transform: scale(1.05); /* Slightly enlarge on hover */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Enhance shadow on hover */
+}
+
+.weatherTitle {
+  font-size: 2rem;
+  font-weight: 600; /* Bold title */
+  color: #333333; /* Dark text color for better readability */
+  margin-bottom: 10px; /* Space below the title */
+  text-transform: uppercase; /* Make the title all caps */
+  letter-spacing: 1px; /* Slight letter spacing */
+}
+
+.weatherInfo p {
+  font-size: 1.2rem;
+  color: #555555; /* Lighter color for the text */
+  margin: 8px 0; /* Space between lines */
+}
+
+.weatherInfo p strong {
+  color: #0070f3; /* Highlight key values with a blue color */
+}
+
+/* Styling for the error message */
+.error {
+  color: #ff4d4d; /* Bright red for errors */
+  font-size: 1.4rem;
+  font-weight: 600; /* Bold for emphasis */
+  margin-top: 30px;
+  text-align: center; /* Center the error text */
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #ffe6e6; /* Light red background for error */
+  border: 2px solid #ff4d4d; /* Red border for error */
 }
 
 /* Enable hover only on non-touch devices */
@@ -84,12 +122,5 @@
     align-items: center;
     justify-content: center;
   }
+
 }
-
-@media (prefers-color-scheme: dark) {
-  .logo {
-    filter: invert();
-  }
-}
-
-
