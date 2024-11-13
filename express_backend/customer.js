@@ -90,24 +90,25 @@ app.post('/addCustomerOrderItem', async (req, res) => {
                 values: [orderID, priceID, menuItem1, menuItem2, menuItem3, menuItem4],
             };
         }
-        const result = await pool.query(orderItemQuery);
+        const orderItemResult = await pool.query(orderItemQuery);
         
-        const priceQuery = {  // Get the price of the newly added order item
-            text: 'SELECT price FROM prices WHERE price_id = $1;',
-            values: orderID,
+    //    const priceResult = await pool.query('SELECT price FROM prices WHERE price_id = 1;');
+        
+        const orderPriceUpdate = {  // Update order cost
+            text: 'UPDATE orders SET cost = cost + (SELECT price FROM prices WHERE price_id = 4) WHERE order_id = $1;',
+            values: [orderID],
         };
 
-        const price = await pool.query(query).price;
-
-        const orderPriceQuery = {  // Update order cost
-            text: 'UPDATE orders SET cost = cost + $1::money WHERE order_id = $2',
-            values: [price, orderID],
-        };
+        const orderPriceUpdateResult = await pool.query(orderPriceUpdate);
 
         // TODO update inventory
 
-        // TODO - add better error handling
-        res.status(200).json({ success: true, message: 'Order added'});
+        if ((orderItemResult.rowCount == 1) && (orderPriceUpdateResult.rowCount == 1)) {
+            res.status(200).json({ success: true, message: 'Order added'});
+        }
+        else {
+            res.status(500).json({ success: false, message: 'Server error' });
+        }
 
     } catch (error) {
         console.error(error);
