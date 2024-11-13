@@ -1,9 +1,12 @@
 "use client";
 import Image from 'next/image';
 import React, { useEffect, useState } from "react";
+import { useRouter } from 'next/navigation';
+
 
 import styles from "./Login.module.css";
 function Login() {
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -27,6 +30,7 @@ function Login() {
       const data = await response.json();
       if (data.success) {
         setMessage("Employee login successful!");
+        router.push("/CashierView");
       } else {
         setMessage("Invalid employee credentials.");
       }
@@ -52,6 +56,8 @@ function Login() {
       const data = await response.json();
       if (data.success) {
         setMessage("Manager login successful!");
+        router.push("/ManagerView");
+
       } else {
         setMessage("Invalid manager credentials.");
       }
@@ -100,7 +106,7 @@ function Login() {
             <button className={styles.button} onClick={handleManagerLogin}>Login as Manager</button>
             <button className={styles.button} onClick={handleEmployeeLogin}>Login as Employee</button>
           </div>
-          {message}
+          {message && <div className = {styles.message}>{message}</div>}
         </div>
       </main>
       <footer className={styles.footer}>
