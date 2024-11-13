@@ -3,20 +3,32 @@ import React, { useState } from "react";
 import styles from "./employee.module.css";
 
 function EmployeeManagement() {
+
+  const router = useRouter();
+  const [firstName, setfirstName] = useState("");
+  const [lastName, setlastName] = useState("");
+  const [payRate, setpayRate] = useState("");
+  const [lastLogin, setlastLogin] = useState("");
+  const [password, setpassword] = useState("");
+  const [isManager, setisManager] = useState("");
+  const [message, setMessage] = useState("");
+
+
   // State variables for employee details (for display only)
   const [selectedEmployee, setSelectedEmployee] = useState(null);
-  const employees = [
-    { id: "101", firstName: "John", lastName: "Doe", payRate: 20, lastLogin: "2024-10-20",password: "pain", isManager: false },
-    { id: "102", firstName: "Jane", lastName: "Smith", payRate: 25, lastLogin: "2024-11-01",password: "pain", isManager: true },
-  ];
+  // const employees = [
+  //   { id: "101", firstName: "John", lastName: "Doe", payRate: 20, lastLogin: "2024-10-20",password: "pain", isManager: false },
+  //   { id: "102", firstName: "Jane", lastName: "Smith", payRate: 25, lastLogin: "2024-11-01",password: "pain", isManager: true },
+  // ];
 
   const handleEmployeeSelect = (e) => {
+    
     const employeeId = e.target.value;
     const employee = employees.find((emp) => emp.id === employeeId);
     setSelectedEmployee(employee);
   };
 
-  const editEmployee = async () => {                                             //need to incorporate authentication api next sprint
+  const editEmployee = async () => {                                             
     try {
       const response = await fetch("http://localhost:8080/editEmployee", {  //for posting to express backend server for authentication
         method: "POST",
@@ -37,7 +49,7 @@ function EmployeeManagement() {
     }
   };
 
-  const addEmployee = async () => {                                             //need to incorporate authentication api next sprint
+  const addEmployee = async () => {                                           
     try {
       const response = await fetch("http://localhost:8080/addEmployee", {  //for posting to express backend server for authentication
         method: "POST",
@@ -58,7 +70,7 @@ function EmployeeManagement() {
     }
   };
 
-  const deleteEmployee = async () => {                                             //need to incorporate authentication api next sprint
+  const deleteEmployee = async () => {                                             
     try {
       const response = await fetch("http://localhost:8080/deleteEmployee", {  //for posting to express backend server for authentication
         method: "POST",
@@ -104,50 +116,54 @@ function EmployeeManagement() {
               First Name:
               <input
                 type="text"
-                value={selectedEmployee.firstName}
+                value={firstName}
+                onChange={(e) => setfirstName(e.target.value)}
                 className={styles.input}
-                readOnly
               />
             </label>
             <label>
               Last Name:
               <input
                 type="text"
-                value={selectedEmployee.lastName}
+                value={lastName}
+                onChange={(e) => setlastName(e.target.value)}
                 className={styles.input}
-                readOnly
               />
             </label>
             <label>
               Pay Rate:
               <input
                 type="text"
-                value={selectedEmployee.payRate}
+                value={payRate}
+                onChange={(e) => setpayRate(e.target.value)}
                 className={styles.input}
-                readOnly
               />
             </label>
             <label>
               Last Login:
               <input
                 type="text"
-                value={selectedEmployee.lastLogin}
+                value={lastLogin}
+                onChange={(e) => setlastLogin(e.target.value)}
                 className={styles.input}
-                readOnly
               />
             </label>
             <label>
               Password:
               <input
                 type="text"
-                value={selectedEmployee.password}
+                value={password}
+                onChange={(e) => setpassword(e.target.value)}
                 className={styles.input}
-                readOnly
               />
             </label>
             <label>
               Is Manager:
-              <input type="checkbox" checked={selectedEmployee.isManager} readOnly />
+              <input 
+              type="checkbox" 
+              checked={isManager}
+              onChange={(e) => setisManager(e.target.value)}
+               />
             </label>
           </>
         )}
