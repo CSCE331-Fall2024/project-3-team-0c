@@ -195,9 +195,24 @@ app.post('/DeleteEmployee', async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });
-
-// Inventory Load - Get only the item names
+// Inventory Load - Get all inventory for inventory table
 app.get('/InventoryLoad', async (req, res) => {
+    try {
+        const query = {  
+            text: 'SELECT * FROM inventory;',  // Select all inventory
+        };
+        
+        const result = await pool.query(query);
+
+        res.status(200).json(result.rows);  // Return all inventory
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+// Inventory Load - Get only the item names for Select Bar
+app.get('/InventoryLoadSelect', async (req, res) => {
     try {
         const query = {  
             text: 'SELECT name FROM inventory;',  // Select only item_name column
@@ -322,4 +337,5 @@ app.put('/InventoryUpdate', async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error', error: error.message });
     }
 });
+
 
