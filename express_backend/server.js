@@ -211,24 +211,24 @@ app.get('/InventoryLoad', async (req, res) => {
     }
 });
 
-// Inventory Load - Get only the item names for Select Bar
-app.get('/InventoryLoadSelect', async (req, res) => {
-    try {
-        const query = {  
-            text: 'SELECT name FROM inventory;',  // Select only item_name column
-        };
+// // Inventory Load - Get only the item names for Select Bar
+// app.get('/InventoryLoadSelect', async (req, res) => {
+//     try {
+//         const query = {  
+//             text: 'SELECT name FROM inventory;',  // Select only item_name column
+//         };
         
-        const result = await pool.query(query);
+//         const result = await pool.query(query);
 
-        // Return only the item names in the response
-        const itemNames = result.rows.map(row => row.name);
+//         // Return only the item names in the response
+//         const itemNames = result.rows.map(row => row.name);
 
-        res.status(200).json(itemNames);  // Return array of item names
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: 'Server error' });
-    }
-});
+//         res.status(200).json(itemNames);  // Return array of item names
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ success: false, message: 'Server error' });
+//     }
+// });
 // Add Inventory - Manually calculate inventory_id
 app.post('/InventoryAdd', async (req, res) => {
     const { name, quantity } = req.body;
@@ -335,6 +335,22 @@ app.put('/InventoryUpdate', async (req, res) => {
     } catch (error) {
         console.error('Error updating inventory:', error);
         res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+});
+
+// Employee Load - Get all Employee Items for inventory table
+app.get('/employeeLoad', async (req, res) => {
+    try {
+        const query = {  
+            text: 'SELECT * FROM employee;',  // Select all inventory
+        };
+        
+        const result = await pool.query(query);
+
+        res.status(200).json(result.rows);  // Return all inventory
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 });
 
