@@ -1,0 +1,80 @@
+.container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .receipt {
+    width: 33%;
+    padding: 1rem;
+    background-color: #f4f4f4;
+    border-right: 1px solid #ddd;
+  }
+  
+  .buttons {
+    width: 67%;
+    padding: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .button {
+    padding: 1rem;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .button:hover {
+    background-color: #0056b3;
+  }
+
+/* cashierView.module.css */
+
+.container {
+    display: flex;
+    height: 100vh; /* Full viewport height */
+  }
+  
+  .leftPane {
+    flex: 1; /* 1 out of 3 parts */
+    background-color: #f0f0f0; /* Light gray background */
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .rightPane {
+    flex: 2; /* 2 out of 3 parts */
+    background-color: #ffffff; /* White background */
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Evenly space rows vertically */
+  }
+  
+.button {
+    flex: 1; /* Each button fills available space in its row */
+    padding: 10px;
+    background-color: #007bff; /* Customize button color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+  }
+  
+  .button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+
+  .buttonRow {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px; /* Space between rows */
+  }
+  
