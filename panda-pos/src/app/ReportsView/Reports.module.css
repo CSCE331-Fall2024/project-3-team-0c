@@ -1,0 +1,138 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: black;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2rem;
+    color: white;
+  }
+  
+  .sections {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .section {
+    flex: 1;
+    margin-right: 20px;
+    margin-left: 20px;
+    padding: 20px;
+    border: 1px solid black;
+    border-radius: 8px;
+    background-color: #383636;
+    color: white;
+  }
+  
+  .sectionHeader {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .form {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .label {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
+  .select {
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .button {
+    padding: 10px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: rgb(218, 36, 36);
+    color: white;
+    margin-top: 10px;
+  }
+  
+  .chartPlaceholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    border: 2px dashed #9b4b4b;
+    border-radius: 8px;
+    background-color: #2e2d2d;
+  }
+  
+  .placeholderText {
+    color: #9b9b9b;
+    font-size: 1.2rem;
+    text-align: center;
+  }
+  
+  .tableContainer {
+    width: 100%;
+    margin-top: 30px;
+    overflow-x: auto;
+    background-color: #383636;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .tableHeader {
+    font-size: 1.5rem;
+    color: white;
+    margin-bottom: 10px;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .tableHeaderCell {
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    border-bottom: 2px solid #9b4b4b;
+    text-align: left;
+  }
+  
+  .tableCell {
+    padding: 12px;
+    font-size: 1rem;
+    color: white;
+    border-bottom: 1px solid #9b4b4b;
+    text-align: left;
+  }
+  
+  .footer {
+    margin-top: auto;
+    text-align: center;
+    padding: 20px;
+    background-color: black;
+    width: 100%;
+  }
+  
+  .link {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+  }
+  
