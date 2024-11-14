@@ -98,7 +98,6 @@ app.post('/verifyManagerLogin', async (req, res) => {
 // Update Employee - Dynamically updates employee fields based on what is provided
 app.put('/updateEmployee', async (req, res) => {
     const {
-        employeeId, 
         isManager, 
         firstName, 
         lastName, 
@@ -106,6 +105,7 @@ app.put('/updateEmployee', async (req, res) => {
         payRate, 
         password
     } = req.body;
+   
 
     try {
         // Start building the SQL update query
@@ -143,8 +143,8 @@ app.put('/updateEmployee', async (req, res) => {
         sqlUpdate = sqlUpdate.slice(0, -2); 
 
         // Add the WHERE condition
-        sqlUpdate += ` WHERE employee_id = $${valueIndex};`;
-        values.push(employeeId); // Add employeeId as the last value
+        sqlUpdate += ` WHERE first_name = $${valueIndex};`;
+        values.push(firstName); // Add employeeId as the last value
 
         // Execute the SQL query
         const result = await pool.query(sqlUpdate, values);
@@ -171,13 +171,13 @@ app.put('/updateEmployee', async (req, res) => {
     }
 });
 // Delete
-app.post('/DeleteEmployee', async (req, res) => {
-    const { employee_id } = req.body;
+app.put('/DeleteEmployee', async (req, res) => {
+    const {firstName} = req.body;
 
     try {
         const query = {
-            text: 'DELETE FROM employee WHERE employee_id = $1 RETURNING *;',  // Delete and return the deleted employee data
-            values: [employee_id],
+            text: 'DELETE FROM employee WHERE first_name = $1 RETURNING *;',  // Delete and return the deleted employee data
+            values: [firstName],
         };
 
         // Perform the query to delete the employee
@@ -353,51 +353,60 @@ app.get('/employeeLoad', async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });
-
-// Get all prices
-app.get('/pricesLoad', async (req, res) => {
-    try {
-        const result = await pool.query('SELECT * FROM prices;');
-        
-        // Respond with the list of prices
-        if (result.rows.length > 0) {
-            res.status(200).json({ success: true, data: result.rows });
-        } else {
-            res.status(404).json({ success: false, message: "No prices found." });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: 'Server error' });
-    }
-});
-// Update the price for a menu item
-app.put('/UpdatePrices', async (req, res) => {
-    const { name, price } = req.body;  // Extract price and name from the request body
-
-    if (!name || !price) {
-        return res.status(400).json({ success: false, message: "Name and price are required." });
-    }
+// Add Employee
+// Function to add a new employee
+app.put('/addEmployee', async (req, res) => {
+    const {
+        isManager,
+        firstName,
+        lastName,
+        lastLoginTime,
+        payRate,
+        password
+    } = req.body;
 
     try {
-        const result = await pool.query(
-            'UPDATE prices SET price = $1 WHERE name = $2 RETURNING *;',
-            [price, name]
-        );
+        // Step 1: Get the last employee_id from the database
+        const getEmployeeIdQuery = 'SELECT MAX(employee_id) AS last_employee_id FROM employee;';
+        const result = await pool.query(getEmployeeIdQuery);
+        let employeeId = 0;
 
-        if (result.rows.length > 0) {
-            res.status(200).json({ success: true, message: 'Price updated successfully', data: result.rows[0] });
+        if (result.rows.length > 0 && result.rows[0].last_employee_id) {
+            employeeId = result.rows[0].last_employee_id + 1;
         } else {
-            res.status(404).json({ success: false, message: "Price not found for the specified name." });
+            employeeId = 1; // If there are no employees, start with ID 1
         }
+
+        // Step 2: Insert the new employee into the database
+        const insertEmployeeQuery = `
+            INSERT INTO employee (employee_id, is_manager, first_name, last_name, last_login, payrate, password)
+            VALUES ($1, $2, $3, $4, $5, $6, $7);
+        `;
+
+        const values = [
+            employeeId,
+            isManager,
+            firstName,
+            lastName,
+            lastLoginTime, // Assuming lastLoginTime is a string formatted as a timestamp (e.g., "YYYY-MM-DD HH:MM:SS")
+            payRate,
+            password
+        ];
+
+        await pool.query(insertEmployeeQuery, values);
+
+        // Step 3: Send a success response
+        res.status(201).json({
+            success: true,
+            message: 'Employee added successfully',
+            employeeId: employeeId, // Return the new employee ID
+        });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: 'Server error' });
+        console.error('Error adding employee:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Server error',
+            error: error.message
+        });
     }
 });
-
-
-
-
-
-
-
