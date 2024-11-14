@@ -4,7 +4,7 @@ import {app, pool} from 'server.js';  // Get app and database connection from se
 
 // TODO given menu item name get price
 
-// TODO given menu item name get ID
+// Given menu item name get ID the ID for the item
 app.post('/getMenuID', async (req, res) => {
     try {
         const statement = {
@@ -13,8 +13,8 @@ app.post('/getMenuID', async (req, res) => {
         }
 
         const result = await pool.query(statement);
-        if (result.rowCount == 1) {  // Only one row should be created
-            // res.send(result)
+        if (result.rowCount == 1) {  // Only one row should be returned
+            // The menu item ID is found in the first returned of the result
             res.status(200).json({ success: true, menuItemID: result.rows[0].menu_id });
         } else {  // If rowCount != 1, then something other than the intended operation occurred; therefor error
             res.status(404).json({ success: false, message: 'Failed to get menu item ID' });
