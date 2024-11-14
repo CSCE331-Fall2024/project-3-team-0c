@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './MainMenuStyle.module.css';
 import Image from 'next/image';
 
-
+// main menu with sides and entrees layout for customer view
 const MainMenuComponent = ({ message, addToCart }) => {
     console.log(addToCart);
     return (
