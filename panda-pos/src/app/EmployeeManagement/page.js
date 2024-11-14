@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 import styles from "./employee.module.css";
 import { useRouter } from 'next/navigation';
 
+/*
+* employee mangement page front end code
+*/
 function EmployeeManagement() {
   const router = useRouter();
   const [firstName, setfirstName] = useState("");
@@ -13,10 +16,10 @@ function EmployeeManagement() {
   const [isManager, setisManager] = useState(false);
   const [message, setMessage] = useState("");
 
-  // State variables for employee details (for display only)
+  
   const [selectedEmployee, setSelectedEmployee] = useState(null);
-  const [employees, setEmployees] = useState([]); // Default to empty array    
-  const [isLoading, setIsLoading] = useState(true); // For loading state
+  const [employees, setEmployees] = useState([]);   
+  const [isLoading, setIsLoading] = useState(true); 
 
   // Fetch employee data from the server
   const loadEmployee = async () => {
@@ -34,35 +37,35 @@ function EmployeeManagement() {
 
       const data = await response.json();
       console.log("Fetched Employee Data:", data); // Log the fetched data to check structure
-      return data; // If the data is already an array, return it directly
+      return data; 
     } catch (error) {
       console.error("Error occurred while fetching employee data:", error);
-      return []; // Return an empty array in case of an error
+      return []; 
     }
   };
 
   useEffect(() => {
     const fetchData = async () => {
       const result = await loadEmployee(); 
-      console.log("Fetched Employees:", result); // Debugging: check the structure of result
+      console.log("Fetched Employees:", result); 
 
       if (Array.isArray(result)) {
-        setEmployees(result); // Set the employees array directly since result is already an array
+        setEmployees(result); 
       } else {
-        setEmployees([]); // Set to empty if result is not an array
+        setEmployees([]); 
       }
 
-      setIsLoading(false); // Stop loading state
+      setIsLoading(false); 
     };
 
     fetchData();
-  }, []); // Empty dependency array to call only once when the component mounts
+  }, []); 
 
   console.log(employees);
   // Handle employee selection from the dropdown
   const handleEmployeeSelect = (e) => {
     const employeeId = e.target.value;
-    const employee = employees.find((emp) => emp.employee_id === parseInt(employeeId)); // Match by employee_id
+    const employee = employees.find((emp) => emp.employee_id === parseInt(employeeId)); 
     setSelectedEmployee(employee);
 
     if (employee) {
@@ -138,7 +141,7 @@ function EmployeeManagement() {
     }
   };
   const handleReload = () => {
-    loadEmployee(); // Manually trigger employee data load
+    loadEmployee(); 
   };
 
   return (

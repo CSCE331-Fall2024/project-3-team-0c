@@ -2,13 +2,17 @@
 import React, { useState } from "react";
 import styles from "./EditPrice_Inventory_Menu.module.css";
 
+
+/*
+* Edit Menu, prices, and invenotry in this forntend interface
+*/
 function EditMenuAndPrices() {
   // State variables for the menu, price, and inventory items (for display only)
   const [selectedMenuItem, setSelectedMenuItem] = useState(null);
   const [selectedPriceItem, setSelectedPriceItem] = useState(null);
   const [selectedInventoryItem, setSelectedInventoryItem] = useState(null);
 
-  // Placeholders
+  // Placeholders need to be chaged eventually
   const menuItems = [
     { id: "1", name: "Orange Chicken" },
     { id: "2", name: "Fried Rice" },
