@@ -1,136 +1,188 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./employee.module.css";
+import { useRouter } from 'next/navigation';
 
+/*
+* employee mangement page front end code
+*/
 function EmployeeManagement() {
-
   const router = useRouter();
   const [firstName, setfirstName] = useState("");
   const [lastName, setlastName] = useState("");
   const [payRate, setpayRate] = useState("");
   const [lastLogin, setlastLogin] = useState("");
   const [password, setpassword] = useState("");
-  const [isManager, setisManager] = useState("");
+  const [isManager, setisManager] = useState(false);
   const [message, setMessage] = useState("");
 
-
-  // State variables for employee details (for display only)
+  
   const [selectedEmployee, setSelectedEmployee] = useState(null);
-  // const employees = [
-  //   { id: "101", firstName: "John", lastName: "Doe", payRate: 20, lastLogin: "2024-10-20",password: "pain", isManager: false },
-  //   { id: "102", firstName: "Jane", lastName: "Smith", payRate: 25, lastLogin: "2024-11-01",password: "pain", isManager: true },
-  // ];
+  const [employees, setEmployees] = useState([]);   
+  const [isLoading, setIsLoading] = useState(true); 
 
-  const employees = loadEmployee();
-
+  // Fetch employee data from the server
   const loadEmployee = async () => {
     try {
-      const response = await fetch("http://localhost:8080/loadEmployee", {  //for posting to express backend server for authentication
-        method: "POST",
+      const response = await fetch("http://localhost:8080/employeeLoad", {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ firstName, lastName, payRate, lastLogin,password, isManager }),
       });
 
-      const data = await response.json();
-      if (data.success) {
-        
-        //setMessage("Employee Information Edited");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
-    } catch (error) {                                         //handle errors
-      //setMessage("An error occurred. Please try again.");
-      console.error(error);
+
+      const data = await response.json();
+      console.log("Fetched Employee Data:", data); // Log the fetched data to check structure
+      return data; 
+    } catch (error) {
+      console.error("Error occurred while fetching employee data:", error);
+      return []; 
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await loadEmployee(); 
+      console.log("Fetched Employees:", result); 
+
+      if (Array.isArray(result)) {
+        setEmployees(result); 
+      } else {
+        setEmployees([]); 
+      }
+
+      setIsLoading(false); 
+    };
+
+    fetchData();
+  }, []); 
+
+  console.log(employees);
+  // Handle employee selection from the dropdown
   const handleEmployeeSelect = (e) => {
-    
     const employeeId = e.target.value;
-    const employee = employees.find((emp) => emp.id === employeeId);
+    const employee = employees.find((emp) => emp.employee_id === parseInt(employeeId)); 
     setSelectedEmployee(employee);
+
+    if (employee) {
+      // Populate form fields with the selected employee's data
+      setfirstName(employee.first_name);
+      setlastName(employee.last_name);
+      setpayRate(employee.payrate);
+      setlastLogin(employee.last_login);
+      setpassword(employee.password);
+      setisManager(employee.is_manager);
+    }
   };
 
-  const editEmployee = async () => {                                             
+  // Edit employee details
+  const editEmployee = async () => {
     try {
-      const response = await fetch("http://localhost:8080/updateEmployee", {  //for posting to express backend server for authentication
-        method: "POST",
+      const response = await fetch("http://localhost:8080/updateEmployee", {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ firstName, lastName, payRate, lastLogin,password, isManager }),
+        body: JSON.stringify({ firstName, lastName, payRate, lastLogin, password, isManager }),
       });
 
       const data = await response.json();
       if (data.success) {
-        
         setMessage("Employee Information Edited");
       }
-    } catch (error) {                                         //handle errors
+    } catch (error) {
       setMessage("An error occurred. Please try again.");
-      console.error(error);
     }
   };
 
-  const addEmployee = async () => {                                           
+  // Add a new employee
+  const addEmployee = async () => {
     try {
-      const response = await fetch("http://localhost:8080/addEmployee", {  //for posting to express backend server for authentication
-        method: "POST",
+      const response = await fetch("http://localhost:8080/addEmployee", {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ firstName, lastName, payRate, lastLogin,password, isManager }),
+        body: JSON.stringify({ firstName, lastName, payRate, lastLogin, password, isManager }),
       });
 
       const data = await response.json();
       if (data.success) {
-        
         setMessage("New Employee Added");
       }
-    } catch (error) {                                         //handle errors
+    } catch (error) {
       setMessage("An error occurred. Please try again.");
       console.error(error);
     }
   };
 
-  const deleteEmployee = async () => {                                             
+  // Delete an employee
+  const deleteEmployee = async () => {
     try {
-      const response = await fetch("http://localhost:8080/deleteEmployee", {  //for posting to express backend server for authentication
-        method: "POST",
+      const response = await fetch("http://localhost:8080/deleteEmployee", {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ firstName, lastName, payRate, lastLogin,password, isManager }),
+        body: JSON.stringify({ firstName }),
       });
 
       const data = await response.json();
       if (data.success) {
-        
         setMessage("Employee Deleted");
       }
-    } catch (error) {                                         //handle errors
+    } catch (error) {
       setMessage("An error occurred. Please try again.");
       console.error(error);
     }
+  };
+  const handleReload = () => {
+    loadEmployee(); 
   };
 
   return (
     <div className={styles.container}>
       <h1 className={styles.header}>Employee Management</h1>
-
+      
+      
+    
       {/* Employee Dropdown */}
       <div className={styles.form}>
+     
         <label>
           Select Employee:
-          <select className={styles.input} onChange={handleEmployeeSelect}>
+          <select className={styles.input} onChange={handleEmployeeSelect} disabled={isLoading}>
             <option value="">Select an employee</option>
-            {employees.map((emp) => (
-              <option key={emp.id} value={emp.id}>
-                {emp.firstName} {emp.lastName}
-              </option>
-            ))}
+            {isLoading ? (
+              <option value="" disabled>Loading employees...</option>
+            ) : (
+              Array.isArray(employees) && employees.length > 0 ? (
+                // Using a for loop instead of map
+                (() => {
+                  const options = [];
+                  console.log(employees); // Logs employees to console
+                  for (let i = 0; i < employees.length; i++) {
+                    const emp = employees[i];
+                    options.push(
+                      <option key={emp.employee_id} value={emp.employee_id}>
+                        {emp.first_name} {emp.last_name}
+                      </option>
+                    );
+                  }
+                  return options;
+                })()
+              ) : (
+                <option value="" disabled>No employees available</option>
+              )
+            )}
           </select>
         </label>
 
+        {/* Display employee details */}
         {selectedEmployee && (
           <>
             <h3>Employee Details</h3>
@@ -138,7 +190,7 @@ function EmployeeManagement() {
               First Name:
               <input
                 type="text"
-                value={employees.firstName}
+                value={firstName}
                 onChange={(e) => setfirstName(e.target.value)}
                 className={styles.input}
               />
@@ -147,7 +199,7 @@ function EmployeeManagement() {
               Last Name:
               <input
                 type="text"
-                value={employees.lastName}
+                value={lastName}
                 onChange={(e) => setlastName(e.target.value)}
                 className={styles.input}
               />
@@ -156,7 +208,7 @@ function EmployeeManagement() {
               Pay Rate:
               <input
                 type="text"
-                value={employees.payRate}
+                value={payRate}
                 onChange={(e) => setpayRate(e.target.value)}
                 className={styles.input}
               />
@@ -165,7 +217,7 @@ function EmployeeManagement() {
               Last Login:
               <input
                 type="text"
-                value={employees.lastLogin}
+                value={lastLogin}
                 onChange={(e) => setlastLogin(e.target.value)}
                 className={styles.input}
               />
@@ -174,35 +226,37 @@ function EmployeeManagement() {
               Password:
               <input
                 type="text"
-                value={employees.password}
+                value={password}
                 onChange={(e) => setpassword(e.target.value)}
                 className={styles.input}
               />
             </label>
             <label>
               Is Manager:
-              <input 
-              type="checkbox" 
-              checked={employees.isManager}
-              onChange={(e) => setisManager(e.target.value)}
-               />
+              <input
+                type="checkbox"
+                checked={isManager}
+                onChange={(e) => setisManager(e.target.checked)} // Toggle with checked
+              />
             </label>
           </>
         )}
 
         {/* Action Buttons */}
         <div className={styles.buttonGroup}>
-          <button className={styles.button} onClick = {editEmployee}>Edit</button>
-          <button className={`${styles.button}`} onClick = {deleteEmployee}>Delete</button>
-          <button className={`${styles.button}`} onClick = {addEmployee}>Add New Employee</button>
+          <button className={styles.button} onClick={editEmployee}>Edit</button>
+          <button className={styles.button} onClick={deleteEmployee}>Delete</button>
+          <button className={styles.button} onClick={addEmployee}>Add New Employee</button>
         </div>
       </div>
 
-      <footer className = {styles.footer}>
-        <a href= "/ManagerView" className = {styles.link}>Back to Manager Dashboard</a>
-      </footer> 
+      {/* Display message */}
+      {message && <p>{message}</p>}
+
+      <footer className={styles.footer}>
+        <a href="/ManagerView" className={styles.link}>Back to Manager Dashboard</a>
+      </footer>
     </div>
-    
   );
 }
 

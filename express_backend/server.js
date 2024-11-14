@@ -98,7 +98,6 @@ app.post('/verifyManagerLogin', async (req, res) => {
 // Update Employee - Dynamically updates employee fields based on what is provided
 app.put('/updateEmployee', async (req, res) => {
     const {
-        employeeId, 
         isManager, 
         firstName, 
         lastName, 
@@ -106,6 +105,7 @@ app.put('/updateEmployee', async (req, res) => {
         payRate, 
         password
     } = req.body;
+   
 
     try {
         // Start building the SQL update query
@@ -143,8 +143,8 @@ app.put('/updateEmployee', async (req, res) => {
         sqlUpdate = sqlUpdate.slice(0, -2); 
 
         // Add the WHERE condition
-        sqlUpdate += ` WHERE employee_id = $${valueIndex};`;
-        values.push(employeeId); // Add employeeId as the last value
+        sqlUpdate += ` WHERE first_name = $${valueIndex};`;
+        values.push(firstName); // Add employeeId as the last value
 
         // Execute the SQL query
         const result = await pool.query(sqlUpdate, values);
@@ -171,13 +171,13 @@ app.put('/updateEmployee', async (req, res) => {
     }
 });
 // Delete
-app.post('/DeleteEmployee', async (req, res) => {
-    const { employee_id } = req.body;
+app.put('/DeleteEmployee', async (req, res) => {
+    const {firstName} = req.body;
 
     try {
         const query = {
-            text: 'DELETE FROM employee WHERE employee_id = $1 RETURNING *;',  // Delete and return the deleted employee data
-            values: [employee_id],
+            text: 'DELETE FROM employee WHERE first_name = $1 RETURNING *;',  // Delete and return the deleted employee data
+            values: [firstName],
         };
 
         // Perform the query to delete the employee
@@ -211,24 +211,24 @@ app.get('/InventoryLoad', async (req, res) => {
     }
 });
 
-// Inventory Load - Get only the item names for Select Bar
-app.get('/InventoryLoadSelect', async (req, res) => {
-    try {
-        const query = {  
-            text: 'SELECT name FROM inventory;',  // Select only item_name column
-        };
+// // Inventory Load - Get only the item names for Select Bar
+// app.get('/InventoryLoadSelect', async (req, res) => {
+//     try {
+//         const query = {  
+//             text: 'SELECT name FROM inventory;',  // Select only item_name column
+//         };
         
-        const result = await pool.query(query);
+//         const result = await pool.query(query);
 
-        // Return only the item names in the response
-        const itemNames = result.rows.map(row => row.name);
+//         // Return only the item names in the response
+//         const itemNames = result.rows.map(row => row.name);
 
-        res.status(200).json(itemNames);  // Return array of item names
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: 'Server error' });
-    }
-});
+//         res.status(200).json(itemNames);  // Return array of item names
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ success: false, message: 'Server error' });
+//     }
+// });
 // Add Inventory - Manually calculate inventory_id
 app.post('/InventoryAdd', async (req, res) => {
     const { name, quantity } = req.body;
@@ -338,4 +338,75 @@ app.put('/InventoryUpdate', async (req, res) => {
     }
 });
 
+// Employee Load - Get all Employee Items for inventory table
+app.get('/employeeLoad', async (req, res) => {
+    try {
+        const query = {  
+            text: 'SELECT * FROM employee;',  // Select all inventory
+        };
+        
+        const result = await pool.query(query);
 
+        res.status(200).json(result.rows);  // Return all inventory
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+// Add Employee
+// Function to add a new employee
+app.put('/addEmployee', async (req, res) => {
+    const {
+        isManager,
+        firstName,
+        lastName,
+        lastLoginTime,
+        payRate,
+        password
+    } = req.body;
+
+    try {
+        // Step 1: Get the last employee_id from the database
+        const getEmployeeIdQuery = 'SELECT MAX(employee_id) AS last_employee_id FROM employee;';
+        const result = await pool.query(getEmployeeIdQuery);
+        let employeeId = 0;
+
+        if (result.rows.length > 0 && result.rows[0].last_employee_id) {
+            employeeId = result.rows[0].last_employee_id + 1;
+        } else {
+            employeeId = 1; // If there are no employees, start with ID 1
+        }
+
+        // Step 2: Insert the new employee into the database
+        const insertEmployeeQuery = `
+            INSERT INTO employee (employee_id, is_manager, first_name, last_name, last_login, payrate, password)
+            VALUES ($1, $2, $3, $4, $5, $6, $7);
+        `;
+
+        const values = [
+            employeeId,
+            isManager,
+            firstName,
+            lastName,
+            lastLoginTime, // Assuming lastLoginTime is a string formatted as a timestamp (e.g., "YYYY-MM-DD HH:MM:SS")
+            payRate,
+            password
+        ];
+
+        await pool.query(insertEmployeeQuery, values);
+
+        // Step 3: Send a success response
+        res.status(201).json({
+            success: true,
+            message: 'Employee added successfully',
+            employeeId: employeeId, // Return the new employee ID
+        });
+    } catch (error) {
+        console.error('Error adding employee:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Server error',
+            error: error.message
+        });
+    }
+});

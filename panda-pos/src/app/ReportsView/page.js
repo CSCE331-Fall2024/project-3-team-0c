@@ -2,12 +2,17 @@
 import React, { useState } from "react";
 import styles from "./Reports.module.css"; 
 
+
+
+/*
+* creates front end for reports view to view inventory in table manner and generate charts for manager
+*/
 function ReportsView() {
   const [selectedGraph, setSelectedGraph] = useState("Select Graph");
   const [startDate, setStartDate] = useState("Select Start Date");
   const [endDate, setEndDate] = useState("Select End Date");
 
-  // Placeholder data 
+  // Placeholder data that needs to be replaced later
   const inventoryData = [
     { inventory_ID: 1, name: "Orange Chicken", quantity: 50 },
     { inventory_ID: 2, name: "Kung Pao Chicken", quantity: 30 },
@@ -67,6 +72,7 @@ function ReportsView() {
         </div>
 
         <div className={styles.section}>
+          {/* Graph display section*/}
           <h2 className={styles.sectionHeader}>Chart Display</h2>
           <div className={styles.chartPlaceholder}>
             <p className={styles.placeholderText}>
@@ -79,6 +85,7 @@ function ReportsView() {
       </div>
 
       <div className={styles.tableContainer}>
+        {/* Inventory table display*/}
         <h2 className={styles.tableHeader}>Inventory Table</h2>
         <table className={styles.table}>
           <thead>
@@ -99,7 +106,7 @@ function ReportsView() {
           </tbody>
         </table>
       </div>
-
+            {/* Navigate back to dashboard*/}
       <footer className={styles.footer}>
         <a href="/ManagerView" className={styles.link}>Back to Manager Dashboard</a>
       </footer>
