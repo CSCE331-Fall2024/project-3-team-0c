@@ -3,7 +3,7 @@ import React from 'react';
 import styles from './MainMenuStyle.module.css';
 import Image from 'next/image';
 
-
+// drinks view and layout for customer view
 const DrinksComponent = ({ message, addToCart }) => {
     return (
         <div className={styles['grid-container']}>
