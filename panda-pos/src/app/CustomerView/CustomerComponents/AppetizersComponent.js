@@ -3,6 +3,7 @@ import React from 'react';
 import styles from './MainMenuStyle.module.css';
 import Image from 'next/image';
 
+// layout of the appetizers view for the customer
 const AppetizersComponent = ({ addToCart }) => {
     return (
         <div className={styles['grid-container']}>
