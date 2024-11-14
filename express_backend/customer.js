@@ -1,4 +1,29 @@
 import {app, pool} from 'server.js';  // Get app and database connection from server.js
+// const express = require("express");
+// const router = express.Router()
+
+// TODO given menu item name get price
+
+// TODO given menu item name get ID
+app.post('/getMenuID', async (req, res) => {
+    try {
+        const statement = {
+            text: "SELECT menu_id FROM menu_item WHERE name = $1;",
+            values: [req.body.itemName],
+        }
+
+        const result = await pool.query(statement);
+        if (result.rowCount == 1) {  // Only one row should be created
+            // res.send(result)
+            res.status(200).json({ success: true, menuItemID: result.rows[0].menu_id });
+        } else {  // If rowCount != 1, then something other than the intended operation occurred; therefor error
+            res.status(404).json({ success: false, message: 'Failed to get menu item ID' });
+        }
+    }
+    catch(error) {
+        console.error(error);  // Log any errors for debugging purposes
+    }
+});
 
 // Create an empty order with cost = 0, and the current time as the date
 app.post('/createCustomerOrder', async (req, res) => {
@@ -115,3 +140,5 @@ app.post('/addCustomerOrderItem', async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });
+
+// module.exports = router;
