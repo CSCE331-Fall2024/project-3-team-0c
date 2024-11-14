@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styles from './MainMenuStyle.module.css';
 import Image from 'next/image';
 
+// cart view and layout for customer view
 const CartComponent = ({ message, cartItems }) => {
 
     return (
