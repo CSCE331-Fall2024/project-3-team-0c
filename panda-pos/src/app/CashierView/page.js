@@ -153,7 +153,6 @@ const CashierView = () => {
       <div className={styles['leftPane']}>
         {/* Left content here, e.g., Order summary or Product categories */}
         <h2>Receipt</h2>
-        <h3>Cart</h3>
         <ul>
           {cart.map((item, index) => (
             <li key={index} className={styles.listItem}>
@@ -171,11 +170,16 @@ const CashierView = () => {
             </li>
           ))}
         </ul>
-        <p>Total: ${calculateTotal()}</p>
+        
       </div>
       <div className={styles['rightPane']}>
-        {/* Right content here, e.g., Product details or Checkout section */}
-        <h2>Right Pane</h2>
+        {/* menu buttons and layout */}
+        <h2>Menu</h2>
+        <div className={styles['buttonRow']}>
+          <button className={styles['buttonCombo']} onClick={() => handleAddItem({ name: 'Bowl', price: 10 })}>Bowl</button>
+          <button className={styles['buttonCombo']} onClick={() => handleAddItem({ name: 'Plate', price: 10 })}>Plate</button>
+          <button className={styles['buttonCombo']} onClick={() => handleAddItem({ name: 'Bigger Plate', price: 10 })}>Bigger Plate</button>
+        </div>
         <div className={styles['buttonRow']}>
           <button className={styles['buttonSide']} onClick={() => handleAddItem({ name: 'White Rice', price: 10 })}>White Rice</button>
           <button className={styles['buttonSide']} onClick={() => handleAddItem({ name: 'Fried Rice', price: 10 })}>Fried Rice</button>

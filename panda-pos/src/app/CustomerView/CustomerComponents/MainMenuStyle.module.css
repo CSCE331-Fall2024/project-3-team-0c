@@ -104,3 +104,156 @@
 .button:active {
     transform: scale(0.95);
 }
+
+
+/* for cart
+
+.container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .receipt {
+    width: 33%;
+    padding: 1rem;
+    background-color: #f4f4f4;
+    border-right: 1px solid #ddd;
+  }
+  
+  .buttons {
+    width: 67%;
+    padding: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .button {
+    padding: 1rem;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .button:hover {
+    background-color: #0056b3;
+  }
+
+/* cashierView.module.css */
+
+.container {
+    display: flex;
+    height: 100vh; /* Full viewport height */
+  }
+  
+  .leftPane {
+    flex: 1; /* 1 out of 3 parts */
+    background-color: #f0f0f0; /* Light gray background */
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .rightPane {
+    flex: 2; /* 2 out of 3 parts */
+    background-color: #ffffff; /* White background */
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Evenly space rows vertically */
+  }
+
+  .buttonCombo {
+    flex: 1; /* Each button fills available space in its row */
+    padding: 10px;
+    background-color: #e99a76; /* Customize button color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+.buttonEntree {
+    flex: 1; /* Each button fills available space in its row */
+    padding: 10px;
+    background-color: #79afea; /* Customize button color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .buttonSide {
+    flex: 1; /* Each button fills available space in its row */
+    padding: 10px;
+    background-color: #e4a39e; /* Customize button color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .buttonDrink {
+    flex: 1; /* Each button fills available space in its row */
+    padding: 10px;
+    background-color: #c19dc9; /* Customize button color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .buttonApp {
+    flex: 1; /* Each button fills available space in its row */
+    padding: 10px;
+    background-color: #9ce9bf; /* Customize button color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .buttonRow {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px; /* Space between rows */
+  }
+
+  .listItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+  }
+  
+  .itemInfo {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+  
+  .itemName {
+    margin-right: 10px; /* Space between name and dashes */
+  }
+  
+  .dashes {
+    flex: 1;
+    border-bottom: 1px dashed #ccc; /* Dashed line that grows with space */
+    margin: 0 10px; /* Adjust space between dashes and price */
+  }
+  
+  .price {
+    white-space: nowrap; /* Prevent price from breaking onto a new line */
+  }
+  
+  .deleteButton {
+    margin-left: 20px; /* Space between price and button */
+  }
