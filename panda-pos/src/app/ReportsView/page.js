@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Reports.module.css"; 
 
 
@@ -11,17 +11,45 @@ function ReportsView() {
   const [selectedGraph, setSelectedGraph] = useState("Select Graph");
   const [startDate, setStartDate] = useState("Select Start Date");
   const [endDate, setEndDate] = useState("Select End Date");
+  const [inventoryData, setInventoryData] = useState([]);
 
   // Placeholder data that needs to be replaced later
-  const inventoryData = [
-    { inventory_ID: 1, name: "Orange Chicken", quantity: 50 },
-    { inventory_ID: 2, name: "Kung Pao Chicken", quantity: 30 },
-    { inventory_ID: 3, name: "Mushroom Chicken", quantity: 45 },
-    { inventory_ID: 4, name: "Teriyaki Chicken", quantity: 20 },
-  ];
+  // const inventoryData = [
+  //   { inventory_ID: 1, name: "Orange Chicken", quantity: 50 },
+  //   { inventory_ID: 2, name: "Kung Pao Chicken", quantity: 30 },
+  //   { inventory_ID: 3, name: "Mushroom Chicken", quantity: 45 },
+  //   { inventory_ID: 4, name: "Teriyaki Chicken", quantity: 20 },
+  // ];
+
+    // Fetch employee data from the server
+  const loadInventory = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/InventoryLoad", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch inventory data");
+      }
+
+      const data = await response.json();
+      console.log("Fetched Inventory Data:", data);
+      setInventoryData(data); // Update the state with the fetched data
+    } catch (error) {
+      console.error("Error occurred while fetching inventory data:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadInventory();
+  }, []);
 
   const handleGenerateChart = () => {
     // Logic needed here
+
   };
 
   return (
@@ -52,8 +80,17 @@ function ReportsView() {
               className={styles.select}
             >
               <option value="Select Start Date">Select Start Date</option>
-              <option value="2024-01-01">2024-01-01</option>
-              {/* Add more dates*/}
+              <option value="2024-01-31">2024-01-31</option>
+              <option value="2024-02-31">2024-02-31</option>
+              <option value="2024-03-31">2024-03-31</option>
+              <option value="2024-04-31">2024-04-31</option>
+              <option value="2024-05-31">2024-05-31</option>
+              <option value="2024-06-31">2024-06-31</option>
+              <option value="2024-07-31">2024-07-31</option>
+              <option value="2024-08-31">2024-08-31</option>
+              <option value="2024-09-31">2024-09-31</option>
+              <option value="2024-10-31">2024-10-31</option>
+              <option value="2024-11-31">2024-11-31</option>
             </select>
 
             <label className={styles.label}>End Date:</label>
@@ -64,7 +101,16 @@ function ReportsView() {
             >
               <option value="Select End Date">Select End Date</option>
               <option value="2024-01-31">2024-01-31</option>
-              {/* Add more dates*/}
+              <option value="2024-02-31">2024-02-31</option>
+              <option value="2024-03-31">2024-03-31</option>
+              <option value="2024-04-31">2024-04-31</option>
+              <option value="2024-05-31">2024-05-31</option>
+              <option value="2024-06-31">2024-06-31</option>
+              <option value="2024-07-31">2024-07-31</option>
+              <option value="2024-08-31">2024-08-31</option>
+              <option value="2024-09-31">2024-09-31</option>
+              <option value="2024-10-31">2024-10-31</option>
+              <option value="2024-11-31">2024-11-31</option>
             </select>
 
             <button onClick={handleGenerateChart} className={styles.button}>Generate</button>
@@ -98,7 +144,7 @@ function ReportsView() {
           <tbody>
             {inventoryData.map((item) => (
               <tr key={item.inventory_ID}>
-                <td className={styles.tableCell}>{item.inventory_ID}</td>
+                <td className={styles.tableCell}>{item.inventory_id}</td>
                 <td className={styles.tableCell}>{item.name}</td>
                 <td className={styles.tableCell}>{item.quantity}</td>
               </tr>
