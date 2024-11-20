@@ -347,6 +347,6 @@ app.post('/addCustomerOrderItem', async (req, res) => {
         console.error(error);
         res.status(500).json({ success: false, message: 'Server error' });
     }
-});
+}); 
 
 // module.exports = router;
