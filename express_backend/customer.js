@@ -1,8 +1,26 @@
-import {app, pool} from 'server.js';  // Get app and database connection from server.js
+import { app, pool } from 'server.js';  // Get app and database connection from server.js
 // const express = require("express");
 // const router = express.Router()
 
 // TODO given menu item name get price
+
+
+// For Testing Purposes
+app.post('/getIngredients', async (req,res) => {
+    //SELECT inventory_id, quantity FROM menu_ingredient WHERE menu_id = $1;
+    try {
+        const statement = {
+            text: "SELECT inventory_id, quantity FROM menu_ingredient WHERE menu_id = $1;",
+            values: [req.body.menu_id],
+        }
+
+        const result = await pool.query(statement);
+        res.send(result);
+    }
+    catch (error) {
+        console.error(error);  // Log any errors for debugging purposes
+    }
+});
 
 // Given menu item name get ID the ID for the item
 app.post('/getMenuID', async (req, res) => {
@@ -20,7 +38,7 @@ app.post('/getMenuID', async (req, res) => {
             res.status(404).json({ success: false, message: 'Failed to get menu item ID' });
         }
     }
-    catch(error) {
+    catch (error) {
         console.error(error);  // Log any errors for debugging purposes
     }
 });
@@ -41,10 +59,10 @@ app.post('/createCustomerOrder', async (req, res) => {
             res.status(404).json({ success: false, message: 'Failed to create order' });
         }
     }
-    catch(error) {
+    catch (error) {
         console.error(error);  // Log any errors for debugging purposes
     }
-    
+
 });
 
 // Update order payment type. payment type and order ID should be passed in req body
@@ -61,7 +79,7 @@ app.post('/updatePaymentType', async (req, res) => {
             res.status(404).json({ success: false, message: 'Failed to update payment type' });
         }
     }
-    catch(error) {
+    catch (error) {
         console.error(error);  // Log any errors for debugging purposes
     }
 });
@@ -84,7 +102,7 @@ app.post('/addCustomerOrderItem', async (req, res) => {
             if (req.body.hasOwnProperty('menuItem4')) {
                 var menuItem4 = req.body.menuItem4;
                 numItems++;
-                
+
             }
         }
     }
@@ -116,9 +134,7 @@ app.post('/addCustomerOrderItem', async (req, res) => {
             };
         }
         const orderItemResult = await pool.query(orderItemQuery);
-        
-    //    const priceResult = await pool.query('SELECT price FROM prices WHERE price_id = 1;');
-        
+
         const orderPriceUpdate = {  // Update order cost
             text: 'UPDATE orders SET cost = cost + (SELECT price FROM prices WHERE price_id = 4) WHERE order_id = $1;',
             values: [orderID],
@@ -126,10 +142,202 @@ app.post('/addCustomerOrderItem', async (req, res) => {
 
         const orderPriceUpdateResult = await pool.query(orderPriceUpdate);
 
-        // TODO update inventory
+        if (numItems == 1) {
+            try {
+                const statement = {
+                    text: "SELECT inventory_id, quantity FROM menu_ingredient WHERE menu_id = $1;",
+                    values: [req.body.menuItem1],
+                }
+        
+                const result = await pool.query(statement);
+                for (let i = 0; i < result.rowCount; i++) {
+                    const invUpdateStmt = {
+                        text: "UPDATE inventory SET quantity = quantity - $1 WHERE inventory_id = $2;",
+                        values: [result.rows[i].quantity, result.rows[i].inventory_id],
+                    }
+                    const invResult = await pool.query(invUpdateStmt);
+                }
+            }
+            catch (error) {
+                console.error(error);  // Log any errors for debugging purposes
+            }
+        }
+        else if (numItems == 2) {
+            try {
+                const statement = {
+                    text: "SELECT inventory_id, quantity FROM menu_ingredient WHERE menu_id = $1;",
+                    values: [req.body.menuItem1],
+                }
+        
+                const result = await pool.query(statement);
+                for (let i = 0; i < result.rowCount; i++) {
+                    const invUpdateStmt = {
+                        text: "UPDATE inventory SET quantity = quantity - $1 WHERE inventory_id = $2;",
+                        values: [result.rows[i].quantity, result.rows[i].inventory_id],
+                    }
+                    const invResult = await pool.query(invUpdateStmt);
+                }
+            }
+            catch (error) {
+                console.error(error);  // Log any errors for debugging purposes
+            }
+
+            try {
+                const statement2 = {
+                    text: "SELECT inventory_id, quantity FROM menu_ingredient WHERE menu_id = $1;",
+                    values: [req.body.menuItem2],
+                }
+        
+                const result = await pool.query(statement2);
+                for (let i = 0; i < result.rowCount; i++) {
+                    const invUpdateStmt2 = {
+                        text: "UPDATE inventory SET quantity = quantity - $1 WHERE inventory_id = $2;",
+                        values: [result.rows[i].quantity, result.rows[i].inventory_id],
+                    }
+                    const invResult = await pool.query(invUpdateStmt2);
+                }
+            }
+            catch (error) {
+                console.error(error);  // Log any errors for debugging purposes
+            }
+        }
+        else if (numItems == 3) {
+            try {
+                const statement = {
+                    text: "SELECT inventory_id, quantity FROM menu_ingredient WHERE menu_id = $1;",
+                    values: [req.body.menuItem1],
+                }
+        
+                const result = await pool.query(statement);
+                for (let i = 0; i < result.rowCount; i++) {
+                    const invUpdateStmt = {
+                        text: "UPDATE inventory SET quantity = quantity - $1 WHERE inventory_id = $2;",
+                        values: [result.rows[i].quantity, result.rows[i].inventory_id],
+                    }
+                    const invResult = await pool.query(invUpdateStmt);
+                }
+            }
+            catch (error) {
+                console.error(error);  // Log any errors for debugging purposes
+            }
+
+            try {
+                const statement2 = {
+                    text: "SELECT inventory_id, quantity FROM menu_ingredient WHERE menu_id = $1;",
+                    values: [req.body.menuItem2],
+                }
+        
+                const result = await pool.query(statement2);
+                for (let i = 0; i < result.rowCount; i++) {
+                    const invUpdateStmt2 = {
+                        text: "UPDATE inventory SET quantity = quantity - $1 WHERE inventory_id = $2;",
+                        values: [result.rows[i].quantity, result.rows[i].inventory_id],
+                    }
+                    const invResult = await pool.query(invUpdateStmt2);
+                }
+            }
+            catch (error) {
+                console.error(error);  // Log any errors for debugging purposes
+            }
+            
+            try {
+                const statement3 = {
+                    text: "SELECT inventory_id, quantity FROM menu_ingredient WHERE menu_id = $1;",
+                    values: [req.body.menuItem3],
+                }
+        
+                const result = await pool.query(statement3);
+                for (let i = 0; i < result.rowCount; i++) {
+                    const invUpdateStmt3 = {
+                        text: "UPDATE inventory SET quantity = quantity - $1 WHERE inventory_id = $2;",
+                        values: [result.rows[i].quantity, result.rows[i].inventory_id],
+                    }
+                    const invResult = await pool.query(invUpdateStmt3);
+                }
+            }
+            catch (error) {
+                console.error(error);  // Log any errors for debugging purposes
+            }
+        }
+        else if (numItems == 4) {
+            try {
+                const statement = {
+                    text: "SELECT inventory_id, quantity FROM menu_ingredient WHERE menu_id = $1;",
+                    values: [req.body.menuItem1],
+                }
+        
+                const result = await pool.query(statement);
+                for (let i = 0; i < result.rowCount; i++) {
+                    const invUpdateStmt = {
+                        text: "UPDATE inventory SET quantity = quantity - $1 WHERE inventory_id = $2;",
+                        values: [result.rows[i].quantity, result.rows[i].inventory_id],
+                    }
+                    const invResult = await pool.query(invUpdateStmt);
+                }
+            }
+            catch (error) {
+                console.error(error);  // Log any errors for debugging purposes
+            }
+
+            try {
+                const statement2 = {
+                    text: "SELECT inventory_id, quantity FROM menu_ingredient WHERE menu_id = $1;",
+                    values: [req.body.menuItem2],
+                }
+        
+                const result = await pool.query(statement2);
+                for (let i = 0; i < result.rowCount; i++) {
+                    const invUpdateStmt2 = {
+                        text: "UPDATE inventory SET quantity = quantity - $1 WHERE inventory_id = $2;",
+                        values: [result.rows[i].quantity, result.rows[i].inventory_id],
+                    }
+                    const invResult = await pool.query(invUpdateStmt2);
+                }
+            }
+            catch (error) {
+                console.error(error);  // Log any errors for debugging purposes
+            }
+            
+            try {
+                const statement3 = {
+                    text: "SELECT inventory_id, quantity FROM menu_ingredient WHERE menu_id = $1;",
+                    values: [req.body.menuItem3],
+                }
+        
+                const result = await pool.query(statement3);
+                for (let i = 0; i < result.rowCount; i++) {
+                    const invUpdateStmt3 = {
+                        text: "UPDATE inventory SET quantity = quantity - $1 WHERE inventory_id = $2;",
+                        values: [result.rows[i].quantity, result.rows[i].inventory_id],
+                    }
+                    const invResult = await pool.query(invUpdateStmt3);
+                }
+            }
+            catch (error) {
+                console.error(error);  // Log any errors for debugging purposes
+            }
+            try {
+                const statement4 = {
+                    text: "SELECT inventory_id, quantity FROM menu_ingredient WHERE menu_id = $1;",
+                    values: [req.body.menuItem3],
+                }
+        
+                const result = await pool.query(statement4);
+                for (let i = 0; i < result.rowCount; i++) {
+                    const invUpdateStmt4 = {
+                        text: "UPDATE inventory SET quantity = quantity - $1 WHERE inventory_id = $2;",
+                        values: [result.rows[i].quantity, result.rows[i].inventory_id],
+                    }
+                    const invResult = await pool.query(invUpdateStmt4);
+                }
+            }
+            catch (error) {
+                console.error(error);  // Log any errors for debugging purposes
+            }
+        }
 
         if ((orderItemResult.rowCount == 1) && (orderPriceUpdateResult.rowCount == 1)) {
-            res.status(200).json({ success: true, message: 'Order added'});
+            res.status(200).json({ success: true, message: 'Order added' });
         }
         else {
             res.status(500).json({ success: false, message: 'Server error' });
