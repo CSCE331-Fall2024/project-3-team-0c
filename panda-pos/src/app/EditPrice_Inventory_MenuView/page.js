@@ -33,10 +33,6 @@ function EditMenuAndPrices() {
     { id: "2", name: "Plate", price: 8.00 },
   ];
 
-  // const inventoryItems = [
-  //   { id: "1", name: "Chicken", quantity: 100 },
-  //   { id: "2", name: "Rice", quantity: 50 },
-  // ];
 
   const handleMenuItemSelect = (e) => {
     setSelectedMenuItem(e.target.value);
@@ -121,6 +117,7 @@ function EditMenuAndPrices() {
         const data = await response.json();
         if (data.success) {
             setMessage(data.message);
+            window.location.reload();
         } else {
             setMessage("Failed to update inventory. Please try again.");
         }
@@ -145,31 +142,33 @@ function EditMenuAndPrices() {
       const data = await response.json();
       if (data.success) {
         setMessage("New Inventory Item Added");
+        window.location.reload();
       }
     } catch (error) {
       setMessage("An error occurred. Please try again.");
     }
   };
 
-  // // Delete an inventory item      //not necessarily needed might be able to remove this button in entitrety
-  // const deleteInventory = async () => {
-  //   try {
-  //     const response = await fetch("http://localhost:8080/deleteInventory", {
-  //       method: "DELETE",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ inventoryId }),
-  //     });
+  // Delete an inventory item      
+  const deleteInventory = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/InventoryDelete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ inventoryId }),
+      });
 
-  //     const data = await response.json();
-  //     if (data.success) {
-  //       setMessage("Inventory Item Deleted");
-  //     }
-  //   } catch (error) {
-  //     setMessage("An error occurred. Please try again.");
-  //   }
-  // };
+      const data = await response.json();
+      if (data.success) {
+        setMessage("Inventory Item Deleted");
+        window.location.reload();
+      }
+    } catch (error) {
+      setMessage("An error occurred. Please try again.");
+    }
+  };
 
 
 
@@ -304,7 +303,7 @@ function EditMenuAndPrices() {
           <button className={styles.button} onClick={editInventory}>
             Edit Inventory
           </button>
-          <button className={styles.button} >
+          <button className={styles.button} onClick = {deleteInventory} >
             Delete
           </button>
           <button className={styles.button} onClick={addInventory}>
