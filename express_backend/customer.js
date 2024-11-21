@@ -2,7 +2,24 @@ import { app, pool } from 'server.js';  // Get app and database connection from 
 // const express = require("express");
 // const router = express.Router()
 
-// TODO get most recent orderID
+app.post('/getLatestOrderID', async (req, res) => {
+    try {
+        const statement = {
+            text: "SELECT order_id FROM orders ORDER BY order_id DESC LIMIT 1;",
+        }
+
+        const result = await pool.query(statement);
+        if (result.rowCount == 1) {  // Only one row should be returned
+            // The menu item ID is found in the first returned of the result
+            res.status(200).json({ success: true, menuItemID: result.rows[0].order_id });
+        } else {  // If rowCount != 1, then something other than the intended operation occurred; therefor error
+            res.status(404).json({ success: false, message: 'Failed to get order ID' });
+        }
+    }
+    catch (error) {
+        console.error(error);  // Log any errors for debugging purposes
+    }
+});
 
 app.post('/getPrice', async (req, res) => {
     try {
