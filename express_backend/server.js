@@ -278,65 +278,97 @@ app.post('/InventoryAdd', async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error', error: error.message });
     }
 });
+
+app.post('/InventoryDelete', async (req, res) => {
+    const { inventoryId } = req.body;
+
+    try {
+        // Start a transaction
+        await pool.query('BEGIN');
+
+        // Check if the inventory item exists
+        const checkQuery = {
+            text: 'SELECT * FROM inventory WHERE inventory_id = $1;',
+            values: [inventoryId],
+        };
+
+        const checkResult = await pool.query(checkQuery);
+
+        if (checkResult.rows.length === 0) {
+            // If the inventory item does not exist, rollback and return an error
+            await pool.query('ROLLBACK');
+            return res.status(404).json({
+                success: false,
+                message: 'Inventory item not found',
+            });
+        }
+
+        // Delete the inventory item
+        const deleteQuery = {
+            text: 'DELETE FROM inventory WHERE inventory_id = $1 RETURNING *;',
+            values: [inventoryId],
+        };
+
+        const deleteResult = await pool.query(deleteQuery);
+
+        // If the deletion was successful, commit the transaction
+        if (deleteResult.rows.length > 0) {
+            await pool.query('COMMIT');
+            res.status(200).json({
+                success: true,
+                message: 'Inventory item deleted successfully',
+                data: deleteResult.rows[0], // Return the deleted inventory data
+            });
+        } else {
+            // If no rows were deleted, rollback and return an error
+            await pool.query('ROLLBACK');
+            res.status(500).json({
+                success: false,
+                message: 'Failed to delete inventory item',
+            });
+        }
+
+    } catch (error) {
+        // Rollback the transaction if an error occurred
+        await pool.query('ROLLBACK');
+        console.error('Error deleting inventory item:', error);
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    }
+});
+
+
 // Update Inventory
 app.put('/InventoryUpdate', async (req, res) => {
-    const inventoryId = parseInt(req.params.inventoryId);
+    const inventoryId = parseInt(req.body.inventoryId); // Extract inventoryId from body
     const { name, quantity } = req.body;
 
     try {
-        // Start building the SQL update query
-        let sqlUpdate = 'UPDATE inventory SET ';
-        const queryParams = [];
+        // Check if inventoryId exists
+        const countQuery = 'SELECT COUNT(*) FROM inventory WHERE inventory_id = $1';
+        const countResult = await pool.query(countQuery, [inventoryId]);
+        const exists = parseInt(countResult.rows[0].count) > 0;
 
-        // Append fields to the SQL update string based on the request body
-        if (name) {
-            sqlUpdate += `name = $${queryParams.length + 1}, `;
-            queryParams.push(name);
-        }
-        if (quantity !== undefined) {
-            sqlUpdate += `quantity = $${queryParams.length + 1}, `;
-            queryParams.push(quantity);
-        }
-
-        // Remove the trailing comma and space if needed
-        sqlUpdate = sqlUpdate.slice(0, -2);
-
-        // Add the WHERE clause
-        sqlUpdate += ` WHERE inventory_id = $${queryParams.length + 1}`;
-        queryParams.push(inventoryId);
-
-        // First, check if the inventory_id exists by counting rows
-        const countQuery = 'SELECT COUNT(*) FROM inventory';
-        const countResult = await pool.query(countQuery);
-
-        const rowCount = parseInt(countResult.rows[0].count);
-
-        if (inventoryId > rowCount) {
-            // If inventory_id > rowCount, perform an INSERT instead of UPDATE
-            sqlUpdate = 'INSERT INTO inventory(inventory_id, name, quantity) VALUES($1, $2, $3)';
-            queryParams.push(inventoryId);
-        }
-
-        // Execute the query (either UPDATE or INSERT)
-        const result = await pool.query(sqlUpdate, queryParams);
-
-        if (result.rowCount > 0) {
-            res.status(200).json({
-                success: true,
-                message: inventoryId > rowCount ? 'Inventory added successfully' : 'Inventory updated successfully',
-            });
+        if (exists) {
+            // Update if inventoryId exists
+            const updateQuery = `
+                UPDATE inventory
+                SET name = COALESCE($1, name), quantity = COALESCE($2, quantity)
+                WHERE inventory_id = $3
+            `;
+            await pool.query(updateQuery, [name, quantity, inventoryId]);
+            return res.status(200).json({ success: true, message: 'Inventory updated successfully' });
         } else {
-            res.status(404).json({
-                success: false,
-                message: 'Inventory not found or update failed',
-            });
+            // Insert if inventoryId does not exist
+            const insertQuery = 'INSERT INTO inventory (inventory_id, name, quantity) VALUES ($1, $2, $3)';
+            await pool.query(insertQuery, [inventoryId, name, quantity]);
+            return res.status(201).json({ success: true, message: 'Inventory added successfully' });
         }
-
     } catch (error) {
         console.error('Error updating inventory:', error);
         res.status(500).json({ success: false, message: 'Server error', error: error.message });
     }
 });
+
 
 // Employee Load - Get all Employee Items for inventory table
 app.get('/employeeLoad', async (req, res) => {
@@ -431,5 +463,90 @@ app.post('/getPrice', async (req, res) => {
     }
     catch (error) {
         console.error(error);  // Log any errors for debugging purposes
+    }
+});
+
+// Edit Price
+app.put('/editPrice', async (req, res) => {
+    try {
+        const statement = {
+            text: "UPDATE prices SET price = $1 WHERE name = $2;",
+            values: [req.body.price, req.body.name],
+        }
+        const result = await pool.query(statement);
+        if (result.rowCount == 1) {  // Only one row should be updated
+            res.status(200).json({ success: true, message: 'Price updated' });
+        } else {  // If rowCount != 1, then something other than the intended operation occurred; therefor error
+            res.status(404).json({ success: false, message: 'Failed to update price' });
+        }
+    }
+    catch (error) {
+        console.error(error);  // Log any errors for debugging purposes
+    }
+});
+// Menu Load
+app.get('/menuLoad', async (req, res) => {
+    try {
+        const query = {  
+            text: 'SELECT * FROM menu_item;',  // Select all inventory
+        };
+        
+        const result = await pool.query(query);
+
+        res.status(200).json(result.rows);  // Return all inventory
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+// Add Menu Item
+app.put('/addMenuItem', async (req, res) => {
+    try {
+        // Construct the query to calculate max id + 1 
+        const statement = {
+            text: `
+                INSERT INTO menu_item (id, name)
+                VALUES (
+                    (SELECT COALESCE(MAX(id), 0) + 1 FROM menu_item),
+                    $1
+                );
+            `,
+            values: [req.body.name]
+        };
+
+        const result = await pool.query(statement);
+
+        if (result.rowCount === 1) {  // Confirm a single row was inserted
+            res.status(200).json({ success: true, message: 'Menu item added' });
+        } else {  // Handle unexpected cases
+            res.status(404).json({ success: false, message: 'Failed to add menu item' });
+        }
+    } catch (error) {
+        console.error('Error adding menu item:', error);  // Log error details
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+// Delete Menu Item
+app.put('/deleteMenuItem', async (req, res) => {
+    try {
+        // Construct the query to calculate max id + 1 
+        const statement = {
+            text: `
+                DELETE FROM menu_item
+                WHERE id = $1;
+            `,
+            values: [req.body.id]
+        };
+
+        const result = await pool.query(statement);
+
+        if (result.rowCount === 1) {  // Confirm a single row was found
+            res.status(200).json({ success: true, message: 'Menu item deleted' });
+        } else {  // Handle unexpected cases
+            res.status(404).json({ success: false, message: 'Failed to delete menu item' });
+        }
+    } catch (error) {
+        console.error('Error deleting menu item:', error);  // Log error details
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 });
