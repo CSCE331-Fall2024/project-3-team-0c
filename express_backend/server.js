@@ -465,3 +465,88 @@ app.post('/getPrice', async (req, res) => {
         console.error(error);  // Log any errors for debugging purposes
     }
 });
+
+// Edit Price
+app.put('/editPrice', async (req, res) => {
+    try {
+        const statement = {
+            text: "UPDATE prices SET price = $1 WHERE name = $2;",
+            values: [req.body.price, req.body.name],
+        }
+        const result = await pool.query(statement);
+        if (result.rowCount == 1) {  // Only one row should be updated
+            res.status(200).json({ success: true, message: 'Price updated' });
+        } else {  // If rowCount != 1, then something other than the intended operation occurred; therefor error
+            res.status(404).json({ success: false, message: 'Failed to update price' });
+        }
+    }
+    catch (error) {
+        console.error(error);  // Log any errors for debugging purposes
+    }
+});
+// Menu Load
+app.get('/menuLoad', async (req, res) => {
+    try {
+        const query = {  
+            text: 'SELECT * FROM menu_item;',  // Select all inventory
+        };
+        
+        const result = await pool.query(query);
+
+        res.status(200).json(result.rows);  // Return all inventory
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+// Add Menu Item
+app.put('/addMenuItem', async (req, res) => {
+    try {
+        // Construct the query to calculate max id + 1 
+        const statement = {
+            text: `
+                INSERT INTO menu_item (id, name)
+                VALUES (
+                    (SELECT COALESCE(MAX(id), 0) + 1 FROM menu_item),
+                    $1
+                );
+            `,
+            values: [req.body.name]
+        };
+
+        const result = await pool.query(statement);
+
+        if (result.rowCount === 1) {  // Confirm a single row was inserted
+            res.status(200).json({ success: true, message: 'Menu item added' });
+        } else {  // Handle unexpected cases
+            res.status(404).json({ success: false, message: 'Failed to add menu item' });
+        }
+    } catch (error) {
+        console.error('Error adding menu item:', error);  // Log error details
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+// Delete Menu Item
+app.put('/deleteMenuItem', async (req, res) => {
+    try {
+        // Construct the query to calculate max id + 1 
+        const statement = {
+            text: `
+                DELETE FROM menu_item
+                WHERE id = $1;
+            `,
+            values: [req.body.id]
+        };
+
+        const result = await pool.query(statement);
+
+        if (result.rowCount === 1) {  // Confirm a single row was found
+            res.status(200).json({ success: true, message: 'Menu item deleted' });
+        } else {  // Handle unexpected cases
+            res.status(404).json({ success: false, message: 'Failed to delete menu item' });
+        }
+    } catch (error) {
+        console.error('Error deleting menu item:', error);  // Log error details
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
