@@ -4,8 +4,45 @@ import Image from 'next/image';
 
 // cart view and layout for customer view
 const CartComponent = ({ message, cartItems, setCartItems }) => {
+  const [showMainMenu, setShowMainMenu] = useState(true);
+  const [bowlPrice, setBowlPrice] = useState(null);
+  const [platePrice, setPlatePrice] = useState(null);
+  const [biggerPlatePrice, setBiggerPlatePrice] = useState(null);
+  const [appetizersPrice, setAppetizersPrice] = useState(null);
+  const [drinkPrice, setDrinkPrice] = useState(null);
+  // const [ALaCartePrice, setALaCartePricePrice] = useState(null);
+
   const [totalPrice, setTotalPrice] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState(''); // State for selected payment method
+
+  const getPriceFromDB = async (itemName, setState) => {
+    try {
+      const response = await fetch("http://localhost:8080/getPrice", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name: itemName }),
+      });
+
+      if (!response.ok) {
+          throw new Error(`Failed to fetch price for ${itemName}`);
+      }
+
+      const data = await response.json();
+      setState(data.price); // Update the corresponding state
+  } catch (error) {
+      console.error(`An error occurred requesting ${itemName} price:`, error.message);
+  }
+  };
+
+  useEffect(() => {
+    getPriceFromDB("Bowl", setBowlPrice);
+    getPriceFromDB("Plate", setPlatePrice);
+    getPriceFromDB("Bigger Plate", setBiggerPlatePrice);
+    getPriceFromDB("Appetizer", setAppetizersPrice);
+    getPriceFromDB("Drink", setDrinkPrice);
+}, []);
 
   // Calculate total price
   useEffect(() => {
@@ -92,19 +129,19 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
                   {(item.isMainSelection || item.type === 'A La Carte') && (
                     // Show price and type only for sides
                     <span className={styles.price}>
-                      {item.type} - $
+                      {item.type} - 
                       {item.type === 'Bowl'
-                        ? '8.30'
+                        ? bowlPrice
                         : item.type === 'Plate'
-                          ? '9.80'
+                          ? platePrice
                           : item.type === 'Bigger Plate'
-                            ? '11.30'
+                            ? biggerPlatePrice
                             : item.type === 'Appetizer'
-                              ? '2.00'
+                              ? appetizersPrice
                               : item.type === 'Drink'
-                                ? '2.10'
+                                ? drinkPrice
                                 : item.type === 'A La Carte'
-                                  ? '20.00'
+                                  ? '20.00'  // FIXME
                                   : 'N/A'}
                     </span>
                   )}
