@@ -500,14 +500,14 @@ app.get('/menuLoad', async (req, res) => {
     }
 });
 // Add Menu Item
-app.put('/addMenuItem', async (req, res) => {
+app.post('/addMenuItem', async (req, res) => {
     try {
         // Construct the query to calculate max id + 1 
         const statement = {
             text: `
-                INSERT INTO menu_item (id, name)
+                INSERT INTO menu_item (menu_id, name)
                 VALUES (
-                    (SELECT COALESCE(MAX(id), 0) + 1 FROM menu_item),
+                    (SELECT COALESCE(MAX(menu_id), 0) + 1 FROM menu_item),
                     $1
                 );
             `,
@@ -527,15 +527,24 @@ app.put('/addMenuItem', async (req, res) => {
     }
 });
 // Delete Menu Item
-app.put('/deleteMenuItem', async (req, res) => {
+app.post('/deleteMenuItem', async (req, res) => {
     try {
         // Construct the query to calculate max id + 1 
+        const deleteIngredientsStatement = {
+            text: `
+                DELETE FROM menu_ingredient
+                WHERE menu_id = $1;
+            `,
+            values: [req.body.menu_id],
+        };
+        await pool.query(deleteIngredientsStatement);
+        
         const statement = {
             text: `
                 DELETE FROM menu_item
-                WHERE id = $1;
+                WHERE menu_id = $1;
             `,
-            values: [req.body.id]
+            values: [req.body.menu_id]
         };
 
         const result = await pool.query(statement);
