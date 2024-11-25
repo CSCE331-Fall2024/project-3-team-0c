@@ -16,6 +16,7 @@ function EditMenuAndPrices() {
   const [menuId, setMenuId] = useState("");
 
   const [priceItems, setPriceItems] = useState([]);
+  const [priceId, setPriceId] = useState("");
   const [priceName, setPriceName] = useState("");
   const [priceValue, setPriceValue] = useState("");
 
@@ -27,7 +28,10 @@ function EditMenuAndPrices() {
   const [isLoading, setIsLoading] = useState(true);
   const [Menumessage, setMenuMessage] = useState("");
   const [Inventorymessage, setInventoryMessage] = useState("");
+  const [Pricemessage, setPriceMessage] = useState("");
 
+
+  /////menu section logic////////////////////////////////////////////////////////////
   // Load menu items
   const loadMenu = async () => {
     try {
@@ -97,6 +101,74 @@ function EditMenuAndPrices() {
       setMenuMessage("An error occurred. Please try again.");
     }
   };
+
+  //////////prices section logic/////////////////////////////////////////
+
+  const loadPrices = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/loadPrice", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!response.ok) throw new Error("Network response was not ok");
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching menu data:", error);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    const fetchMenu = async () => {
+      const result = await loadPrices();
+      setPriceItems(Array.isArray(result) ? result : []);
+    };
+    fetchMenu();
+  }, []);
+
+  const handlePriceItemSelect = (e) => {
+    const priceItemId = e.target.value;
+    const priceItem = priceItems.find(
+      (item) => item.price_id === parseInt(priceItemId)
+    );
+    setSelectedPriceItem(priceItem);
+    if (priceItem) {
+      setPriceId(priceItem.price_id);
+      setPriceName(priceItem.name);
+      setPriceValue(priceItem.price);
+    }
+ };
+
+ const editPrices = async () => {
+  try {
+    const response = await fetch("http://localhost:8080/editPrice", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        priceId: parseInt(priceId),
+        priceName,
+        priceValue: parseFloat(priceValue),
+      }),
+    });
+    const data = await response.json();
+    if (data.success) {
+      setPriceMessage("Price Item Updated");
+      window.location.reload();
+    } else {
+      setPriceMessage("Failed to update prices. Please try again.");
+    }
+  } catch (error) {
+    setPriceMessage("An error occurred. Please try again.");
+  }
+};
+
+
+
+
+
+
+  //////invenotry section logic///////////////////////////////
 
   // Load inventory items
   const loadInventory = async () => {
@@ -234,24 +306,36 @@ function EditMenuAndPrices() {
           <h2 className={styles.sectionHeader}>Price Editor</h2>
           <div className={styles.form}>
             <label className={styles.label}>Select Price Item:</label>
-            <select onChange={(e) => setSelectedPriceItem(e.target.value)} className={styles.select}>
+            <select onChange={handlePriceItemSelect} className={styles.select}>
               <option value="">Select...</option>
               {priceItems.map((item) => (
-                <option key={item.id} value={item.id}>
+                <option key={item.price_id} value={item.price_id}>
                   {item.name}
                 </option>
               ))}
             </select>
-            <label className={styles.label}>Price:</label>
+            <label className={styles.label}>Price ID:</label>
+            <input type="text" value={priceId} readOnly className={styles.input} />
+            <label className={styles.label}>Price Item:</label>
             <input
               type="text"
-              placeholder="Price"
+              value={priceName}
+              onChange={(e) => setPriceName(e.target.value)}
               className={styles.input}
-              onChange={(e) => setPriceValue(e.target.value)}
             />
-            <button className={styles.button}>Add/Update Price Item</button>
-            <button className={styles.button}>Delete Price Item</button>
+            <label className={styles.label}>Price Item Cost:</label>
+            <input
+              type="text"
+              value={priceValue}
+              onChange={(e) => setPriceValue(e.target.value)}
+              className={styles.input}
+            />
+             <button className={styles.button} onClick={editPrices}>
+              Edit Prices
+            </button>
           </div>
+
+          {Pricemessage && <p className = {styles.message}>{Pricemessage}</p>}
         </div>
 
         {/* Inventory Section */}
