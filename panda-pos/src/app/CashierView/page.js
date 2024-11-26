@@ -1,8 +1,9 @@
 "use client"
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './CashierView.module.css';
 
 const CashierView = () => {
+  // handle adding and removing items to the cart
   const [cart, setCart] = useState([]);
   const [bowlPrice, setBowlPrice] = useState(null);
   const [platePrice, setPlatePrice] = useState(null);
@@ -58,11 +59,11 @@ const CashierView = () => {
     fetchPrice("Drink", setDrinkPrice);
   }, []); // Run once on mount
 
-
+// layout and design for the cashier view
   return (
     <div className={styles['container']}>
       <div className={styles['leftPane']}>
-        {/*left panel: the receipt */}
+        {/* receipt and layout */}
         <h2>Receipt</h2>
         <ul>
           {cart.map((item, index) => (

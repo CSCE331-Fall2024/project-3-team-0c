@@ -24,7 +24,7 @@ function EmployeeManagement() {
   // Fetch employee data from the server
   const loadEmployee = async () => {
     try {
-      const response = await fetch("http://localhost:8080/employeeLoad", {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/employeeLoad", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -82,7 +82,7 @@ function EmployeeManagement() {
   // Edit employee details
   const editEmployee = async () => {
     try {
-      const response = await fetch("http://localhost:8080/updateEmployee", {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/updateEmployee", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -102,7 +102,7 @@ function EmployeeManagement() {
   // Add a new employee
   const addEmployee = async () => {
     try {
-      const response = await fetch("http://localhost:8080/addEmployee", {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/addEmployee", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -123,7 +123,7 @@ function EmployeeManagement() {
   // Delete an employee
   const deleteEmployee = async () => {
     try {
-      const response = await fetch("http://localhost:8080/deleteEmployee", {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/deleteEmployee", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
