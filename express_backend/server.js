@@ -1103,4 +1103,25 @@ app.post('/getPrice', async (req, res) => {
     }
 });
 
+app.post('/getPriceID', async (req, res) => {
+    try {
+        const statement = {
+            text: "SELECT price_id FROM prices WHERE name = $1;",
+            values: [req.body.name],
+        }
+
+        const result = await pool.query(statement);
+
+        if (result.rowCount == 1) {  // Only one row should be returned
+            // The menu item ID is found in the first returned of the result
+            res.status(200).json({ success: true, price_ID: result.rows[0].price_id });
+        } else {  // If rowCount != 1, then something other than the intended operation occurred; therefor error
+            res.status(404).json({ success: false, message: 'Failed to get price' });
+        }
+    }
+    catch (error) {
+        console.error(error);  // Log any errors for debugging purposes
+    }
+});
+
 // module.exports = router;
