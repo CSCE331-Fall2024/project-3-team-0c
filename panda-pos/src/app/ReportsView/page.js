@@ -192,21 +192,26 @@ function ReportsView() {
     }
   };
 
-  // Generate report for Month-by-Month Sales
   const handleGenerateMonthlySalesHistory = async () => {
     try {
       setIsLoading(true);
       const response = await fetch(
         "http://localhost:8080/managerViewMonthlySalesHistory",
-        {
-          method: "GET",
-        }
+        { method: "GET" }
       );
-
+  
       if (!response.ok) throw new Error("Failed to fetch monthly sales history");
-
+  
       const data = await response.json();
-      setChartData(data);
+      console.log("Monthly Sales History Data:", data);
+  
+      // Transform array into chartData object
+      const chartData = {};
+      data.forEach(({ month, total_sales }) => {
+        chartData[month] = total_sales; // Backend now returns a number
+      });
+  
+      setChartData(chartData);
     } catch (error) {
       console.error("Error generating monthly sales history:", error.message);
       alert("Failed to generate monthly sales history.");
@@ -214,6 +219,8 @@ function ReportsView() {
       setIsLoading(false);
     }
   };
+  
+  
 
   // Generate report for Popular Items
   const handleGeneratePopularItems = async () => {

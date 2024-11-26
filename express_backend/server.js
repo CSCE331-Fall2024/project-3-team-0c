@@ -625,40 +625,33 @@ app.post('/productUsage', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-// Month-by-month Sales chart
 app.get('/managerViewMonthlySalesHistory', async (req, res) => {
-    const salesMap = {}; // Object to store monthly sales data
-
     try {
-        // SQL query to fetch all orders
-        const sqlStatement = `SELECT * FROM orders;`;
+        // Query to aggregate sales data by month
+        const sqlStatement = `
+            SELECT 
+                EXTRACT(MONTH FROM date) AS month, 
+                SUM(cost)::numeric AS total_sales
+            FROM orders
+            GROUP BY EXTRACT(MONTH FROM date)
+            ORDER BY month;
+        `;
 
-        // Execute the query
-        const { rows } = await pool.query(sqlStatement);
+        const result = await pool.query(sqlStatement);
 
-        // Process the result set
-        rows.forEach(row => {
-            // Extract the "date" field and parse it into a JavaScript Date object
-            const date = new Date(row.date);
+        // Send the data as an array of objects
+        const salesData = result.rows.map(row => ({
+            month: row.month,
+            total_sales: parseFloat(row.total_sales), // Convert total_sales to a float
+        }));
 
-            // Extract the month (JavaScript months are 0-based, so add 1 to match real months)
-            const month = date.getMonth() + 1;
-
-            // Retrieve the "cost" data from the row
-            const sales = row.cost;
-
-            // Add to the salesMap: if the month already exists, update the value by adding to the existing sales
-            salesMap[month] = (salesMap[month] || 0) + sales;
-        });
-
-        // Send the salesMap as a JSON response
-        res.json(salesMap);
+        res.status(200).json(salesData); // Send array
     } catch (error) {
-        console.error("Error:", error.message);
-        // Send an error response with status code 500
+        console.error("Error in /managerViewMonthlySalesHistory:", error.message);
         res.status(500).json({ error: error.message });
     }
 });
+
 
 // Popular Items
 app.get('/managerViewPopularItems', async (req, res) => {
