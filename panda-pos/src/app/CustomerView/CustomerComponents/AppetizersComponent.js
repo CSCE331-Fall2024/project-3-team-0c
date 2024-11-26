@@ -15,7 +15,6 @@ const AppetizersComponent = ({ message, addToCart }) => {
     const zoomOut = () => {
         setZoomLevel(prevZoom => Math.max(prevZoom - 0.1, 0.5)); // Min zoom level = 0.5
     };
-
     return (
         <div
         className={styles.pageZoom}

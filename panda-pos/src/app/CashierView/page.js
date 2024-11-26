@@ -1,136 +1,9 @@
-// // src/views/CashierView.js
-// import React from 'react';
-
-// ///lot more work to be done in  this file  --- sprint 2...
-// // Front end for Cashier-specific view
-// function CashierView() {
-//   return (
-//     <div>
-//       <h2>Cashier Dashboard</h2>
-//       <p>This is the cashier view. Here, you can process orders and manage transactions.</p>
-//       {/* Cashier-specific features go here */}
-//     </div>
-//   );
-// }
-
-// export default CashierView;
-// "use client"
-// import React, { useState } from 'react';
-// import styles from './CashierView.module.css';
-
-// function CashierView() {
-//   // State to keep track of selected items
-//   const [selectedItems, setSelectedItems] = useState([]);
-
-//   // List of available items to choose from
-//   const items = [
-//     'Burger',
-//     'Fries',
-//     'Soft Drink',
-//     'Salad',
-//     'Coffee',
-//     'Dessert'
-//   ];
-
-//   // Handle adding an item to the receipt
-//   const handleAddItem = (item) => {
-//     setSelectedItems((prevItems) => [...prevItems, item]);
-//   };
-
-//   return (
-//     <div className={styles.container}>
-//       {/* Receipt Section */}
-//       <div className={styles.receipt}>
-//         <h2>Receipt</h2>
-//         {selectedItems.length === 0 ? (
-//           <p>No items ordered yet.</p>
-//         ) : (
-//           <ul>
-//             {selectedItems.map((item, index) => (
-//               <li key={index}>{item}</li>
-//             ))}
-//           </ul>
-//         )}
-//       </div>
-
-//       {/* Buttons Section */}
-//       <div className={styles.buttons}>
-//         {items.map((item, index) => (
-//           <button 
-//             key={index} 
-//             className={styles.button} 
-//             onClick={() => handleAddItem(item)}
-//           >
-//             {item}
-//           </button>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default CashierView;
 "use client"
-// import React, { useState } from 'react';
-
-// function CashierGUI() {
-//   const [cart, setCart] = useState([]);
-
-//   const handleAddItem = (item) => {
-//     setCart([...cart, item]);
-//   };
-
-//   const handleRemoveItem = (index) => {
-//     const newCart = [...cart];
-//     newCart.splice(index, 1);
-//     setCart(newCart);
-//   };
-
-//   const calculateTotal = () => {
-//     return cart.reduce((total, item) => total + item.price, 0);
-//   };
-
-//   return (
-//     <div>
-//       <h2>Cashier GUI</h2>
-
-//       {/* Product List */}
-//       <div className={styles['receipt']}>
-//         {/* Render your product buttons here */}
-//         <button onClick={() => handleAddItem({ name: 'Product 1', price: 10 })}>
-//           Product 1
-//         </button>
-//         {/* Add more product buttons as needed */}
-//       </div>
-
-//       {/* Cart */}
-//       <div>
-//         <h3>Cart</h3>
-//         <ul>
-//           {cart.map((item, index) => (
-//             <li key={index}>
-//               {item.name} - ${item.price}
-//               <button onClick={() => handleRemoveItem(index)}>Remove</button>
-//             </li>
-//           ))}
-//         </ul>
-//         <p>Total: ${calculateTotal()}</p>
-//       </div>
-
-//       {/* Checkout */}
-//       <div>
-//         <button>Checkout</button>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default CashierGUI;
-
 import React, { useState } from 'react';
 import styles from './CashierView.module.css';
 
 const CashierView = () => {
+  // handle adding and removing items to the cart
   const [cart, setCart] = useState([]);
 
   const handleAddItem = (item) => {
@@ -147,11 +20,11 @@ const CashierView = () => {
     return cart.reduce((total, item) => total + item.price, 0);
   };
 
-
+// layout and design for the cashier view
   return (
     <div className={styles['container']}>
       <div className={styles['leftPane']}>
-        {/* Left content here, e.g., Order summary or Product categories */}
+        {/* receipt and layout */}
         <h2>Receipt</h2>
         <ul>
           {cart.map((item, index) => (
