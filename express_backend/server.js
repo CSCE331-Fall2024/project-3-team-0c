@@ -662,6 +662,34 @@ app.get('/managerViewPopularItems', async (req, res) => {
     }
 });
 
+// Monthly sales history 
+app.get('/managerViewMonthlySalesHistory', async (req, res) => {
+    try {
+        // Query to aggregate sales data by month
+        const sqlStatement = `
+            SELECT 
+                EXTRACT(MONTH FROM date) AS month, 
+                SUM(cost)::numeric AS total_sales
+            FROM orders
+            GROUP BY EXTRACT(MONTH FROM date)
+            ORDER BY month;
+        `;
+
+        const result = await pool.query(sqlStatement);
+
+        // Send the data as an array of objects
+        const salesData = result.rows.map(row => ({
+            month: row.month,
+            total_sales: parseFloat(row.total_sales), // Convert total_sales to a float
+        }));
+
+        res.status(200).json(salesData); // Send array
+    } catch (error) {
+        console.error("Error in /managerViewMonthlySalesHistory:", error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 
 
 /*
