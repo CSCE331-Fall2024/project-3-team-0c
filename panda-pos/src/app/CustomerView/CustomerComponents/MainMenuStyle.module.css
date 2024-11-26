@@ -1,13 +1,23 @@
 /* HomeContent.css */
+.pageZoom {
+    transform-origin: top left;
+    width: 100%; /* Ensures the width is set to 100% */
+    height: 100vh;
+    overflow: auto; /* Allows both horizontal and vertical scrolling */
+    display: block; /* Ensure it's block-level for scrolling */
+}
+
 .grid-container {
     padding-left: 50px;
-    display: flex; /* Use flexbox for layout */
-    flex-direction: column; /* Stack children vertically */
-    justify-content: center; /* Center vertically */
-    align-items: center; /* Center horizontally */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 90vw;
-    padding: 16px; /* Add padding for spacing */
+    max-width: 100%; /* Ensure the container doesn't overflow */
+    padding: 16px;
 }
+
 
 .row {
     display: flex; /* Use flexbox for rows */
