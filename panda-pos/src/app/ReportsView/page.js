@@ -47,9 +47,124 @@ function ReportsView() {
     loadInventory();
   }, []);
 
-  const handleGenerateChart = () => {
-    // Logic needed here
+  // Sales Report Front End
+  const handleGenerateSalesReport = async () => {
+    // if (selectedGraph !== "Sales Report") return;
+  
+    try {
+      const payload = {
+        begin: new Date(startDate).getMonth() + 1,
+        end: new Date(endDate).getMonth() + 1,
+      };
+  
+      const response = await fetch("http://localhost:8080/salesReport", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      if (!response.ok) throw new Error("Failed to fetch sales report");
+  
+      const chartData = await response.json();
+      setChartData(chartData); // Update the chartData state
+    } catch (error) {
+      console.error("Error generating sales report:", error.message);
+      alert("Error generating sales report. Please try again.");
+    }
+  };
 
+  // Product Usage Front End
+  const handleGenerateProductUsage = async () => {
+    // if (selectedGraph !== "Product Usage") return;
+  
+    try {
+      const payload = {
+        begin: new Date(startDate).getMonth() + 1,
+        end: new Date(endDate).getMonth() + 1,
+      };
+  
+      const response = await fetch("http://localhost:8080/productUsage", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+  
+      if (!response.ok) throw new Error("Failed to fetch product usage");
+  
+      const chartData = await response.json();
+      setChartData(chartData); // Update the chartData state
+    } catch (error) {
+      console.error("Error generating product usage chart:", error.message);
+      alert("Error generating product usage chart. Please try again.");
+    }
+  };
+
+  // Month-By-Month Sales Front End
+  const handleGenerateMonthlySalesHistory = async () => {
+    // if (selectedGraph !== "Month-By-Month Sales") return;
+  
+    try {
+      const response = await fetch("http://localhost:8080/managerViewMonthlySalesHistory", {
+        method: "GET",
+      });
+  
+      if (!response.ok) throw new Error("Failed to fetch monthly sales history");
+  
+      const salesData = await response.json();
+      setChartData(salesData); // Update the chartData state
+    } catch (error) {
+      console.error("Error generating monthly sales history:", error.message);
+      alert("Error generating monthly sales history. Please try again.");
+    }
+  };
+
+  // Popular Items Front End
+  const handleGeneratePopularItems = async () => {
+    // if (selectedGraph !== "Popular Items") return;
+  
+    try {
+      const response = await fetch("http://localhost:8080/managerViewPopularItems", {
+        method: "GET",
+      });
+  
+      if (!response.ok) throw new Error("Failed to fetch popular items");
+  
+      const popularItemsData = await response.json();
+      setChartData(popularItemsData); // Update the chartData state
+    } catch (error) {
+      console.error("Error generating popular items chart:", error.message);
+      alert("Error generating popular items chart. Please try again.");
+    }
+  };
+  
+  
+
+  const handleGenerateChart = async () => {
+    // if (!selectedGraph || selectedGraph === "Select Graph") {
+    //   alert("Please select a valid graph type.");
+    //   return;
+    // }
+  
+    switch (selectedGraph) {
+      case "Sales History":
+        await handleGenerateSalesReport();
+        break;
+      case "Product Usage":
+        await handleGenerateProductUsage();
+        break;
+      case "Month-By-Month Sales":
+        await handleGenerateMonthlySalesHistory();
+        break;
+      case "Popular Items":
+        await handleGeneratePopularItems();
+        break;
+      default:
+        alert("Invalid graph type selected.");
+    }
   };
 
   return (

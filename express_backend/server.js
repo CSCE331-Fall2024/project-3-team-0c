@@ -704,8 +704,7 @@ app.get('/managerViewPopularItems', async (req, res) => {
                 GROUP BY menu_item_id
             ) AS order_counts
             ON menu_item.menu_id = order_counts.menu_item_id
-            ORDER BY times_ordered DESC;
-        `;
+            ORDER BY times_ordered DESC;`;
 
         // Execute the query
         const [rows] = await connection.execute(sqlStatement);
