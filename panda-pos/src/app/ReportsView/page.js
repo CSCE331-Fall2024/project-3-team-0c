@@ -16,6 +16,7 @@ import {
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 // Label mappings for different chart types
 const labelMappings = {
+  // X-axis labels for sales history
   "Sales History": {
     1: "Appetizer",
     2: "Entree",
@@ -24,6 +25,7 @@ const labelMappings = {
     5: "Plate",
     6: "Bigger Plate",
   },
+    // X-axis labels for month by month sales
   "Month-By-Month Sales": {
     1: "January",
     2: "February",
@@ -38,6 +40,7 @@ const labelMappings = {
     11: "November",
     12: "December",
   },
+    // X-axis labels for popular items
   "Popular Items": {
     "Mixed Vegetables": "Mixed Vegetables",
     "Fried Rice": "Fried Rice",
@@ -62,6 +65,7 @@ const labelMappings = {
     "Big Mac": "Big Mac",
     "Chicken Kiev": "Chicken Kiev",
   },
+  // X-axis labels for product usage
   "Product Usage": {
     0: "napkin",
   1: "chopstick",
@@ -190,7 +194,7 @@ function ReportsView() {
       setIsLoading(false);
     }
   };
-
+// Generate Report for monthly sales history
   const handleGenerateMonthlySalesHistory = async () => {
     try {
       setIsLoading(true);
@@ -245,7 +249,7 @@ function ReportsView() {
     }
 };
 
-
+// Generate chart from drop down selected
   const handleGenerateChart = async () => {
     if (selectedGraph === "Select Graph") {
       alert("Please select a valid graph type.");
@@ -263,15 +267,19 @@ function ReportsView() {
     }
 
     switch (selectedGraph) {
+        // Handler for sales history
       case "Sales History":
         await handleGenerateSalesReport();
         break;
+        // Handler for product usage
       case "Product Usage":
         await handleGenerateProductUsage();
         break;
+        // Handler for month by month sales
       case "Month-By-Month Sales":
         await handleGenerateMonthlySalesHistory();
         break;
+        // Handler for popular items
       case "Popular Items":
         await handleGeneratePopularItems();
         break;
