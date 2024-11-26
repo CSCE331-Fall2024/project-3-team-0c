@@ -548,3 +548,181 @@ app.post('/deleteMenuItem', async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });
+
+// Sales Report
+app.post('/salesReport', async (req, res) => {
+    const chart = {};
+    const { begin, end } = req.body; // Extract begin and end from the request body
+
+    try {
+        // Create a SQL query
+        const sqlStatement = `
+            SELECT o.order_id, mi.price_id
+            FROM orders o
+            JOIN order_item mi ON o.order_id = mi.order_id
+            WHERE EXTRACT(MONTH FROM o.date) BETWEEN ${begin} AND ${end};
+        `;
+
+        // Execute the query
+        const [rows] = await connection.execute(sqlStatement);
+
+        // Process the result set
+        rows.forEach(row => {
+            const priceItem = row.price_id;
+
+            if (priceItem === 1) {
+                chart[priceItem] = (chart[priceItem] || 0) + 2;
+            } else if (priceItem === 2) {
+                chart[priceItem] = (chart[priceItem] || 0) + 20;
+            } else if (priceItem === 3) {
+                chart[priceItem] = (chart[priceItem] || 0) + 2.10;
+            } else if (priceItem === 4) {
+                chart[priceItem] = (chart[priceItem] || 0) + 8.30;
+            } else if (priceItem === 5) {
+                chart[priceItem] = (chart[priceItem] || 0) + 9.80;
+            } else if (priceItem === 6) {
+                chart[priceItem] = (chart[priceItem] || 0) + 11.30;
+            }
+        });
+
+        // Send the chart as a JSON response
+        res.json(chart); //key: price_id, value: quantity
+    } catch (error) {
+        console.error("Error:", error.message);
+        // Send an error response with status code 500
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Product Usage Chart
+
+app.post('/productUsage', async (req, res) => {
+    const { begin, end } = req.body; // Extract begin and end from the request body
+    const chart = {}; // Object to store inventory usage data
+
+    try {
+        // SQL query to fetch product usage details
+        const sqlStatement = `
+            SELECT o.order_id,
+                   mi.menu_item1_id,
+                   mi.menu_item2_id,
+                   mi.menu_item3_id,
+                   mi.menu_item4_id,
+                   m.inventory_id,
+                   m.quantity,
+                   i.name AS inventory_name
+            FROM orders o
+            JOIN order_item mi ON o.order_id = mi.order_id
+            JOIN menu_ingredient m ON (
+                mi.menu_item1_id = m.menu_id OR
+                mi.menu_item2_id = m.menu_id OR
+                mi.menu_item3_id = m.menu_id OR
+                mi.menu_item4_id = m.menu_id
+            )
+            JOIN inventory i ON m.inventory_id = i.inventory_id
+            WHERE EXTRACT(MONTH FROM o.date) BETWEEN ${begin} AND ${end};
+        `;
+
+        // Execute the query
+        const [rows] = await connection.execute(sqlStatement);
+
+        // Process the result set
+        rows.forEach(row => {
+            const inventoryName = row.inventory_name;
+            const quantity = row.quantity;
+
+            // Update the chart object with total quantity for each inventory item
+            chart[inventoryName] = (chart[inventoryName] || 0) + quantity;
+        });
+
+        // Send the chart data as a JSON response
+        res.json(chart);
+    } catch (error) {
+        console.error("Error:", error.message);
+        // Send an error response with status code 500
+        res.status(500).json({ error: error.message });
+    }
+});
+// Month-by-month Sales chart
+app.get('/managerViewMonthlySalesHistory', async (req, res) => {
+    const salesMap = {}; // Object to store monthly sales data
+
+    try {
+        // SQL query to fetch all orders
+        const sqlStatement = `SELECT * FROM orders;`;
+
+        // Execute the query
+        const [rows] = await connection.execute(sqlStatement);
+
+        // Process the result set
+        rows.forEach(row => {
+            // Extract the "date" field and parse it into a JavaScript Date object
+            const date = new Date(row.date);
+
+            // Extract the month (JavaScript months are 0-based, so add 1 to match real months)
+            const month = date.getMonth() + 1;
+
+            // Retrieve the "cost" data from the row
+            const sales = row.cost;
+
+            // Add to the salesMap: if the month already exists, update the value by adding to the existing sales
+            salesMap[month] = (salesMap[month] || 0) + sales;
+        });
+
+        // Send the salesMap as a JSON response
+        res.json(salesMap);
+    } catch (error) {
+        console.error("Error:", error.message);
+        // Send an error response with status code 500
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Popular Items
+app.get('/managerViewPopularItems', async (req, res) => {
+    const itemSalesMap = {}; // Object to store the sales data of menu items
+
+    try {
+        // SQL query to fetch popular items and their order counts
+        const sqlStatement = `
+            SELECT menu_item.name AS dish_name,
+                   COALESCE(order_counts.order_count, 0) AS times_ordered
+            FROM menu_item
+            LEFT JOIN (
+                SELECT menu_item_id,
+                       COUNT(*) AS order_count
+                FROM (
+                    SELECT menu_item1_id AS menu_item_id FROM order_item
+                    UNION ALL
+                    SELECT menu_item2_id AS menu_item_id FROM order_item
+                    UNION ALL
+                    SELECT menu_item3_id AS menu_item_id FROM order_item
+                    UNION ALL
+                    SELECT menu_item4_id AS menu_item_id FROM order_item
+                ) AS all_menu_items
+                WHERE menu_item_id IS NOT NULL
+                GROUP BY menu_item_id
+            ) AS order_counts
+            ON menu_item.menu_id = order_counts.menu_item_id
+            ORDER BY times_ordered DESC;
+        `;
+
+        // Execute the query
+        const [rows] = await connection.execute(sqlStatement);
+
+        // Process the result set
+        rows.forEach(row => {
+            // Add the dish name and times ordered to the itemSalesMap
+            itemSalesMap[row.dish_name] = row.times_ordered;
+        });
+
+        // Send the itemSalesMap as a JSON response
+        res.json(itemSalesMap);
+    } catch (error) {
+        console.error("Error:", error.message);
+        // Send an error response with status code 500
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
