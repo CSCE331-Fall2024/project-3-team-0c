@@ -56,6 +56,16 @@
     flex-direction: column;
     justify-content: space-between; /* Evenly space rows vertically */
   }
+
+  .buttonCombo {
+    flex: 1; /* Each button fills available space in its row */
+    padding: 10px;
+    background-color: #e99a76; /* Customize button color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
   
 .buttonEntree {
     flex: 1; /* Each button fills available space in its row */
@@ -71,7 +81,7 @@
   .buttonSide {
     flex: 1; /* Each button fills available space in its row */
     padding: 10px;
-    background-color: #e6837b; /* Customize button color */
+    background-color: #e4a39e; /* Customize button color */
     color: white;
     border: none;
     border-radius: 5px;
@@ -82,7 +92,7 @@
   .buttonDrink {
     flex: 1; /* Each button fills available space in its row */
     padding: 10px;
-    background-color: #b874c9; /* Customize button color */
+    background-color: #c19dc9; /* Customize button color */
     color: white;
     border: none;
     border-radius: 5px;
@@ -93,16 +103,12 @@
   .buttonApp {
     flex: 1; /* Each button fills available space in its row */
     padding: 10px;
-    background-color: #5cf0ab; /* Customize button color */
+    background-color: #9ce9bf; /* Customize button color */
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
-  }
-  
-  .button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
   }
 
   .buttonRow {

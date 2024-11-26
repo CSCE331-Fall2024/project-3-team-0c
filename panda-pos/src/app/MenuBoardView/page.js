@@ -6,47 +6,83 @@ import styles from './MenuBoardView.module.css';
 const MenuBoardView = () => {
     // State to manage which content to display
     const [showMainMenu, setShowMainMenu] = useState(true);
+    const [bowlPrice, setBowlPrice] = useState(null);
+    const [platePrice, setPlatePrice] = useState(null);
+    const [biggerPlatePrice, setBiggerPlatePrice] = useState(null);
+    const [appetizersPrice, setAppetizersPrice] = useState(null);
+    const [drinkPrice, setDrinkPrice] = useState(null);
 
-    // Effect to switch content every 5 seconds
+
+    // Effect to switch content every 8 seconds
     useEffect(() => {
         const interval = setInterval(() => {
             setShowMainMenu((prev) => !prev); // Toggle the content
-        }, 5000); // Switch every 5 seconds
+        }, 8000); // Switch every 8 seconds
 
         // Cleanup the interval on unmount
         return () => clearInterval(interval);
     }, []);
 
+    const fetchPrice = async (itemName, setState) => {
+        try {
+            const response = await fetch("http://localhost:8080/getPrice", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ name: itemName }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch price for ${itemName}`);
+            }
+
+            const data = await response.json();
+            setState(data.price); // Update the corresponding state
+        } catch (error) {
+            console.error(`An error occurred requesting ${itemName} price:`, error.message);
+        }
+    };
+
+    // Effect to fetch all prices on component mount
+    useEffect(() => {
+        fetchPrice("Bowl", setBowlPrice);
+        fetchPrice("Plate", setPlatePrice);
+        fetchPrice("Bigger Plate", setBiggerPlatePrice);
+        fetchPrice("Appetizer", setAppetizersPrice);
+        fetchPrice("Drink", setDrinkPrice);
+    }, []); // Run once on mount
+    
     return (
-            <div className={styles.menuItems}>
-                {showMainMenu ? (
-                    <>
+        <div className={styles.menuItems}>
+            {showMainMenu ? (
+                <>
                     <div className={styles.MenuBoardView}>
                         <header className={styles.header}>
-                            <div className={styles.menuPrice}>Bowl: $8.30 - 1 entree + 1 side</div>
-                            <div className={styles.menuPrice}>Plate: $9.80 - 1 entree + 2 sides</div>
-                            <div className={styles.menuPriceNoBorder}>Bigger Plate: $11.30 - 1 entree + 3 sides</div>
+                            <div className={styles.menuPrice}>Bowl: {bowlPrice !== null ? bowlPrice : "Loading..."} - 1 entree + 1 side</div>
+                            <div className={styles.menuPrice}>Plate: {platePrice !== null ? platePrice : "Loading..."} - 1 entree + 2 sides</div>
+                            <div className={styles.menuPriceNoBorder}>Bigger Plate: {biggerPlatePrice !== null ? biggerPlatePrice : "Loading..."} - 1 entree + 3 sides</div>
                         </header>
                         <div className={styles.rows}>
                             <div className={styles.text}>Entrees:</div>
-                                <div className={styles.row}>
-                                    <div className={styles.item}>
-                                        <img src="/photos/Sides_WhiteSteamedRice.png" alt="White Rice" />
-                                        <span className={styles.caption}>White Rice</span>
-                                    </div>
-                                    <div className={styles.item}>
-                                        <img src="/photos/Sides_FriedRice.png" alt="Fried Rice" />
-                                        <span className={styles.caption}>Fried Rice</span>
-                                    </div>
-                                    <div className={styles.item}>
-                                        <img src="/photos/Sides_ChowMein.png" alt="Chow Mein" />
-                                        <span className={styles.caption}>Chow Mein</span>
-                                    </div>
-                                    <div className={styles.item}>
-                                        <img src="/photos/Vegetables_SuperGreens.png" alt="Super Greens" />
-                                        <span className={styles.caption}>Super Greens</span>
-                                    </div>
+                            <div className={styles.row}>
+                                <div className={styles.item}>
+                                    <img src="/photos/Sides_WhiteSteamedRice.png" alt="White Rice" />
+                                    <span className={styles.caption}>White Rice</span>
                                 </div>
+                                <div className={styles.item}>
+                                    <img src="/photos/Sides_FriedRice.png" alt="Fried Rice" />
+                                    <span className={styles.caption}>Fried Rice</span>
+                                </div>
+                                <div className={styles.item}>
+                                    <img src="/photos/Sides_ChowMein.png" alt="Chow Mein" />
+                                    <span className={styles.caption}>Chow Mein</span>
+                                </div>
+                                <div className={styles.item}>
+                                    <img src="/photos/Vegetables_SuperGreens.png" alt="Super Greens" />
+                                    <span className={styles.caption}>Super Greens</span>
+                                </div>
+                            </div>
                         </div>
                         <div className={styles.rows}>
                             <div className={styles.text}>Sides:</div>
@@ -93,14 +129,14 @@ const MenuBoardView = () => {
                                 </div>
                             </div>
                         </div>
-                        </div>
-                    </>
-                ) : (
-                    <>
-                       <div className={styles.MenuBoardView}>
+                    </div>
+                </>
+            ) : (
+                <>
+                    <div className={styles.MenuBoardView}>
                         <header className={styles.header}>
-                            <div className={styles.menuPrice}>Appetizers: $2.00</div>
-                            <div className={styles.menuPriceNoBorder}>Drinks: $2.10</div>
+                            <div className={styles.menuPrice}>Appetizers: {appetizersPrice !== null ? appetizersPrice : "Loading..."}</div>
+                            <div className={styles.menuPriceNoBorder}>Drinks: {drinkPrice !== null ? drinkPrice : "Loading..."}</div>
                         </header>
                         <div className={styles.rows}>
                             <div className={styles.text}>Appetizers:</div>
@@ -120,7 +156,7 @@ const MenuBoardView = () => {
                             </div>
                         </div>
                         <div className={styles.displayItems}>
-                            <div className={styles.rows}>                         
+                            <div className={styles.rows}>
                                 <div className={styles.text}>Drinks:</div>
                                 <div className={styles.row}>
                                     <div className={styles.item}>
@@ -166,10 +202,10 @@ const MenuBoardView = () => {
                                 </div>
                             </div>
                         </div>
-                        </div>
-                    </>
-                )}
-            </div>
+                    </div>
+                </>
+            )}
+        </div>
     );
 
 };
