@@ -350,16 +350,19 @@ function ReportsView() {
             {chartData ? (
               <Bar
               data={{
-                  labels: Object.keys(chartData),
-                  datasets: [
-                      {
-                          label: selectedGraph,
-                          data: Object.values(chartData),
-                          backgroundColor: "rgba(75, 192, 192, 0.2)",
-                          borderColor: "rgba(75, 192, 192, 1)",
-                          borderWidth: 1,
-                      },
-                  ],
+                labels: Object.keys(chartData).map((key) => {
+                  const mapping = labelMappings[selectedGraph];
+                  return mapping ? mapping[key] || key : key;
+                }),
+                datasets: [
+                  {
+                    label: selectedGraph,
+                    data: Object.values(chartData),
+                    backgroundColor: "rgba(75, 192, 192, 0.2)",
+                    borderColor: "rgba(75, 192, 192, 1)",
+                    borderWidth: 1,
+                  },
+                ],
               }}
               options={{
                   responsive: true,
