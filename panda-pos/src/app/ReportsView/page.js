@@ -39,29 +39,28 @@ const labelMappings = {
     12: "December",
   },
   "Popular Items": {
-    1: "Mixed Vegetables",
-    2: "Fried Rice",
-    3: "Chow Mein",
-    4: "White Steamed Rice",
-    5: "Beijing Beef",
-    6: "Honey Walnut Shrimp",
-    7: "Kung Pao Chicken",
-    8: "Honey Sesame Chicken",
-    9: "Orange Chicken",
-    10: "SweetFire Chicken Breast",
-    11: "Broccoli Beef",
-    12: "Mushroom Chicken",
-    13: "Black Pepper Angus Steak",
-    14: "Grilled Teriyaki Chicken",
-    15: "Black Pepper Chicken",
-    16: "Water Bottle",
-    17: "Fountain Drink",
-    18: "Cream Cheese Rangoon",
-    19: "Chicken Egg Roll",
-    20: "Veggie Spring Roll",
-    21: "Beijing Beef (Duplicate)",
-    22: "Big Mac",
-    23: "Chicken Kiev",
+    "Mixed Vegetables": "Mixed Vegetables",
+    "Fried Rice": "Fried Rice",
+    "Chow Mein": "Chow Mein",
+    "White Steamed Rice": "White Steamed Rice",
+    "Beijing Beef": "Beijing Beef",
+    "Honey Walnut Shrimp": "Honey Walnut Shrimp",
+    "Kung Pao Chicken": "Kung Pao Chicken",
+    "Honey Sesame Chicken": "Honey Sesame Chicken",
+    "Orange Chicken": "Orange Chicken",
+    "SweetFire Chicken Breast": "SweetFire Chicken Breast",
+    "Broccoli Beef": "Broccoli Beef",
+    "Mushroom Chicken": "Mushroom Chicken",
+    "Black Pepper Angus Steak": "Black Pepper Angus Steak",
+    "Grilled Teriyaki Chicken": "Grilled Teriyaki Chicken",
+    "Black Pepper Chicken": "Black Pepper Chicken",
+    "Water Bottle": "Water Bottle",
+    "Fountain Drink": "Fountain Drink",
+    "Cream Cheese Rangoon": "Cream Cheese Rangoon",
+    "Chicken Egg Roll": "Chicken Egg Roll",
+    "Veggie Spring Roll": "Veggie Spring Roll",
+    "Big Mac": "Big Mac",
+    "Chicken Kiev": "Chicken Kiev",
   },
   "Product Usage": {
     0: "napkin",
@@ -225,25 +224,27 @@ function ReportsView() {
   // Generate report for Popular Items
   const handleGeneratePopularItems = async () => {
     try {
-      setIsLoading(true);
-      const response = await fetch(
-        "http://localhost:8080/managerViewPopularItems",
-        {
-          method: "GET",
-        }
-      );
+        setIsLoading(true);
+        const response = await fetch(
+            "http://localhost:8080/managerViewPopularItems",
+            { method: "GET" }
+        );
 
-      if (!response.ok) throw new Error("Failed to fetch popular items");
+        if (!response.ok) throw new Error("Failed to fetch popular items");
 
-      const data = await response.json();
-      setChartData(data);
+        const data = await response.json();
+        console.log("Popular Items Data:", data);
+
+        // Directly set chartData as the response, as it is already in key-value format
+        setChartData(data);
     } catch (error) {
-      console.error("Error generating popular items chart:", error.message);
-      alert("Failed to generate popular items chart.");
+        console.error("Error generating popular items chart:", error.message);
+        alert("Failed to generate popular items chart.");
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
-  };
+};
+
 
   const handleGenerateChart = async () => {
     if (selectedGraph === "Select Graph") {

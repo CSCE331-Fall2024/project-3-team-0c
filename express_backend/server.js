@@ -577,7 +577,6 @@ app.post('/salesReport', async (req, res) => {
 });
 
 // Product Usage Chart
-
 app.post('/productUsage', async (req, res) => {
     const { begin, end } = req.body; // Extract begin and end from the request body
     const chart = {}; // Object to store inventory usage data
@@ -585,14 +584,9 @@ app.post('/productUsage', async (req, res) => {
     try {
         // SQL query to fetch product usage details
         const sqlStatement = `
-            SELECT o.order_id,
-                   mi.menu_item1_id,
-                   mi.menu_item2_id,
-                   mi.menu_item3_id,
-                   mi.menu_item4_id,
-                   m.inventory_id,
-                   m.quantity,
-                   i.name AS inventory_name
+            SELECT 
+                i.name AS inventory_name,
+                SUM(m.quantity) AS total_quantity
             FROM orders o
             JOIN order_item mi ON o.order_id = mi.order_id
             JOIN menu_ingredient m ON (
@@ -602,52 +596,23 @@ app.post('/productUsage', async (req, res) => {
                 mi.menu_item4_id = m.menu_id
             )
             JOIN inventory i ON m.inventory_id = i.inventory_id
-            WHERE EXTRACT(MONTH FROM o.date) BETWEEN ${begin} AND ${end};
+            WHERE EXTRACT(MONTH FROM o.date) BETWEEN $1 AND $2
+            GROUP BY i.name
+            ORDER BY i.name;
         `;
 
         // Execute the query
-        const [rows] = await connection.execute(sqlStatement);
+        const result = await pool.query(sqlStatement, [begin, end]);
 
         // Process the result set
-        rows.forEach(row => {
-            const inventoryName = row.inventory_name;
-            const quantity = row.quantity;
-
-            // Update the chart object with total quantity for each inventory item
-            chart[inventoryName] = (chart[inventoryName] || 0) + quantity;
+        result.rows.forEach(row => {
+            chart[row.inventory_name] = parseFloat(row.total_quantity);
         });
 
         // Send the chart data as a JSON response
-        res.json(chart);
+        res.status(200).json(chart);
     } catch (error) {
-        console.error("Error:", error.message);
-        // Send an error response with status code 500
-        res.status(500).json({ error: error.message });
-    }
-});
-app.get('/managerViewMonthlySalesHistory', async (req, res) => {
-    try {
-        // Query to aggregate sales data by month
-        const sqlStatement = `
-            SELECT 
-                EXTRACT(MONTH FROM date) AS month, 
-                SUM(cost)::numeric AS total_sales
-            FROM orders
-            GROUP BY EXTRACT(MONTH FROM date)
-            ORDER BY month;
-        `;
-
-        const result = await pool.query(sqlStatement);
-
-        // Send the data as an array of objects
-        const salesData = result.rows.map(row => ({
-            month: row.month,
-            total_sales: parseFloat(row.total_sales), // Convert total_sales to a float
-        }));
-
-        res.status(200).json(salesData); // Send array
-    } catch (error) {
-        console.error("Error in /managerViewMonthlySalesHistory:", error.message);
+        console.error("Error in /productUsage:", error.message);
         res.status(500).json({ error: error.message });
     }
 });
@@ -655,10 +620,7 @@ app.get('/managerViewMonthlySalesHistory', async (req, res) => {
 
 // Popular Items
 app.get('/managerViewPopularItems', async (req, res) => {
-    const itemSalesMap = {}; // Object to store the sales data of menu items
-
     try {
-        // SQL query to fetch popular items and their order counts
         const sqlStatement = `
             SELECT menu_item.name AS dish_name,
                    COALESCE(order_counts.order_count, 0) AS times_ordered
@@ -671,30 +633,29 @@ app.get('/managerViewPopularItems', async (req, res) => {
                     UNION ALL
                     SELECT menu_item2_id AS menu_item_id FROM order_item
                     UNION ALL
-                    SELECT menu_item3_id AS menu_item_id FROM order_item
+                    SELECT menu_item3_id AS menu_item_id
                     UNION ALL
-                    SELECT menu_item4_id AS menu_item_id FROM order_item
+                    SELECT menu_item4_id AS menu_item_id
                 ) AS all_menu_items
                 WHERE menu_item_id IS NOT NULL
                 GROUP BY menu_item_id
             ) AS order_counts
             ON menu_item.menu_id = order_counts.menu_item_id
-            ORDER BY times_ordered DESC;`;
+            ORDER BY times_ordered DESC;
+        `;
 
-        // Execute the query
-        const [rows] = await connection.execute(sqlStatement);
+        const result = await pool.query(sqlStatement);
 
-        // Process the result set
-        rows.forEach(row => {
-            // Add the dish name and times ordered to the itemSalesMap
-            itemSalesMap[row.dish_name] = row.times_ordered;
+        // Convert rows to a key-value map
+        const popularItemsMap = {};
+        result.rows.forEach(row => {
+            popularItemsMap[row.dish_name] = row.times_ordered;
         });
 
-        // Send the itemSalesMap as a JSON response
-        res.json(itemSalesMap);
+        // Send the map as a JSON response
+        res.status(200).json(popularItemsMap);
     } catch (error) {
-        console.error("Error:", error.message);
-        // Send an error response with status code 500
+        console.error("Error in /managerViewPopularItems:", error.message);
         res.status(500).json({ error: error.message });
     }
 });
