@@ -38,10 +38,32 @@ const HomePage = () => {
     };
 
     fetchWeather();
+    // Load the Google Translate script dynamically
+    const script = document.createElement('script');
+    script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    script.async = true;
+    document.body.appendChild(script);
+
+    // Initialize the Google Translate widget
+    window.googleTranslateElementInit = () => {
+      new window.google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'es,fr,de,it,pt', // Add languages you want to support
+        layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+      }, 'google_translate_element');
+    };
+
+    return () => {
+      document.body.removeChild(script); // Clean up script on component unmount
+    };
+
   }, []); // Empty dependency array to run once when the component mounts
+
+
 
   return (
     <div className={styles.container}>
+      
       <Image
         src="/photos/pandaLogo.png" // Make sure the image exists under /public/photos/
         alt="Panda Express Logo"
@@ -78,6 +100,7 @@ const HomePage = () => {
           </li> 
         </ul>
       </nav>
+      <div id="google_translate_element"></div>
     </div>
   );
 };
