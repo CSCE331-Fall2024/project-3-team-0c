@@ -555,19 +555,17 @@ app.post('/salesReport', async (req, res) => {
     const { begin, end } = req.body; // Extract begin and end from the request body
 
     try {
-        // Create a SQL query
         const sqlStatement = `
             SELECT o.order_id, mi.price_id
             FROM orders o
             JOIN order_item mi ON o.order_id = mi.order_id
-            WHERE EXTRACT(MONTH FROM o.date) BETWEEN ${begin} AND ${end};
+            WHERE EXTRACT(MONTH FROM o.date) BETWEEN $1 AND $2;
         `;
 
-        // Execute the query
-        const [rows] = await connection.execute(sqlStatement);
+        const result = await pool.query(sqlStatement, [begin, end]);
 
         // Process the result set
-        rows.forEach(row => {
+        result.rows.forEach(row => {
             const priceItem = row.price_id;
 
             if (priceItem === 1) {
