@@ -622,26 +622,28 @@ app.post('/productUsage', async (req, res) => {
 app.get('/managerViewPopularItems', async (req, res) => {
     try {
         const sqlStatement = `
-            SELECT menu_item.name AS dish_name,
-                   COALESCE(order_counts.order_count, 0) AS times_ordered
-            FROM menu_item
-            LEFT JOIN (
-                SELECT menu_item_id,
-                       COUNT(*) AS order_count
-                FROM (
-                    SELECT menu_item1_id AS menu_item_id FROM order_item
-                    UNION ALL
-                    SELECT menu_item2_id AS menu_item_id FROM order_item
-                    UNION ALL
-                    SELECT menu_item3_id AS menu_item_id
-                    UNION ALL
-                    SELECT menu_item4_id AS menu_item_id
-                ) AS all_menu_items
-                WHERE menu_item_id IS NOT NULL
-                GROUP BY menu_item_id
-            ) AS order_counts
-            ON menu_item.menu_id = order_counts.menu_item_id
-            ORDER BY times_ordered DESC;
+            SELECT 
+        menu_item.name AS "dish_name",
+        COALESCE(order_counts.order_count, 0) AS "times_ordered"
+    FROM menu_item
+    LEFT JOIN (
+        SELECT 
+            menu_item_id,
+            COUNT(*) AS order_count
+        FROM (
+            SELECT menu_item1_id AS menu_item_id FROM order_item
+            UNION ALL
+            SELECT menu_item2_id AS menu_item_id FROM order_item
+            UNION ALL
+            SELECT menu_item3_id AS menu_item_id FROM order_item
+            UNION ALL
+            SELECT menu_item4_id AS menu_item_id FROM order_item
+        ) AS all_menu_items
+        WHERE menu_item_id IS NOT NULL
+        GROUP BY menu_item_id
+    ) AS order_counts 
+    ON menu_item.menu_id = order_counts.menu_item_id
+    ORDER BY "times_ordered" DESC;
         `;
 
         const result = await pool.query(sqlStatement);
