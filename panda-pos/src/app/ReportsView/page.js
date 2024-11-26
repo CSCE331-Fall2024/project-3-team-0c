@@ -12,6 +12,7 @@ function ReportsView() {
   const [startDate, setStartDate] = useState("Select Start Date");
   const [endDate, setEndDate] = useState("Select End Date");
   const [inventoryData, setInventoryData] = useState([]);
+  const [chartData, setChartData] = useState(null); // Add this state for chart data
 
   // Placeholder data that needs to be replaced later
   // const inventoryData = [
@@ -49,31 +50,35 @@ function ReportsView() {
 
   // Sales Report Front End
   const handleGenerateSalesReport = async () => {
-    // if (selectedGraph !== "Sales Report") return;
-  
     try {
-      const payload = {
-        begin: new Date(startDate).getMonth() + 1,
-        end: new Date(endDate).getMonth() + 1,
-      };
-  
-      const response = await fetch("http://localhost:8080/salesReport", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-  
-      if (!response.ok) throw new Error("Failed to fetch sales report");
-  
-      const chartData = await response.json();
-      setChartData(chartData); // Update the chartData state
+        const payload = {
+            begin: new Date(startDate).getMonth() + 1,
+            end: new Date(endDate).getMonth() + 1,
+        };
+
+        console.log("Payload:", payload); // Debugging payload
+
+        const response = await fetch("http://localhost:8080/salesReport", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Backend Error:", errorData);
+            throw new Error(errorData.error || "Failed to fetch sales report");
+        }
+
+        const chartData = await response.json();
+        console.log("Sales Report Data:", chartData); // Debugging response
+        setChartData(chartData);
     } catch (error) {
-      console.error("Error generating sales report:", error.message);
-      alert("Error generating sales report. Please try again.");
+        console.error("Error generating sales report:", error.message);
+        alert(`Error generating sales report: ${error.message}`);
     }
-  };
+};
+
 
   // Product Usage Front End
   const handleGenerateProductUsage = async () => {
