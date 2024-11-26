@@ -34,7 +34,7 @@ const MainMenuComponent = ({ message, addToCart }) => {
                     <img src="photos/Sides_ChowMein.png" alt="Chow Mein" className={styles.image} width={24} height={24} />
                     <button className={styles.button}>Chow Mein</button>
                 </div>
-                <div className={styles.card} onClick={() => addToCart({name: 'White Rice', type: message, isMainSelection: true})}>
+                <div className={styles.card} onClick={() => addToCart({name: 'White Steamed Rice', type: message, isMainSelection: true})}>
                     <img src="photos/Sides_WhiteSteamedRice.png" alt="White Rice" className={styles.image} width={24} height={24} />
                     <button className={styles.button}>White Rice</button>
                 </div>
