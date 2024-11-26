@@ -211,24 +211,7 @@ app.get('/InventoryLoad', async (req, res) => {
     }
 });
 
-// // Inventory Load - Get only the item names for Select Bar
-// app.get('/InventoryLoadSelect', async (req, res) => {
-//     try {
-//         const query = {  
-//             text: 'SELECT name FROM inventory;',  // Select only item_name column
-//         };
-        
-//         const result = await pool.query(query);
 
-//         // Return only the item names in the response
-//         const itemNames = result.rows.map(row => row.name);
-
-//         res.status(200).json(itemNames);  // Return array of item names
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ success: false, message: 'Server error' });
-//     }
-// });
 // Add Inventory - Manually calculate inventory_id
 app.post('/InventoryAdd', async (req, res) => {
     const { name, quantity } = req.body;
@@ -445,43 +428,48 @@ app.put('/addEmployee', async (req, res) => {
 
 
 // Test
-app.post('/getPrice', async (req, res) => {
+app.get('/loadPrice', async (req, res) => {
     try {
-        const statement = {
-            text: "SELECT price FROM prices WHERE name = $1;",
-            values: [req.body.name],
+        const query = {
+            text: "SELECT * FROM prices;"
         }
 
-        const result = await pool.query(statement);
+        const result = await pool.query(query);
 
-        if (result.rowCount == 1) {  // Only one row should be returned
-            // The menu item ID is found in the first returned of the result
-            res.status(200).json({ success: true, price: result.rows[0].price });
-        } else {  // If rowCount != 1, then something other than the intended operation occurred; therefor error
-            res.status(404).json({ success: false, message: 'Failed to get price' });
-        }
-    }
+        res.status(200).json(result.rows);  //return all prices
+    } 
     catch (error) {
-        console.error(error);  // Log any errors for debugging purposes
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 });
 
 // Edit Price
 app.put('/editPrice', async (req, res) => {
+    const priceId = parseInt(req.body.priceId); 
+    const { priceName, priceValue } = req.body;
+
     try {
-        const statement = {
-            text: "UPDATE prices SET price = $1 WHERE name = $2;",
-            values: [req.body.price, req.body.name],
+        const countQuery = 'SELECT COUNT(*) FROM prices WHERE price_id = $1';
+        const countResult = await pool.query(countQuery, [priceId]);
+        const exists = parseInt(countResult.rows[0].count) > 0;
+
+        if (exists) {
+            const updateQuery = `
+                UPDATE prices
+                SET name = COALESCE($1, name), price = COALESCE($2, price)
+                WHERE price_id = $3
+            `;
+            await pool.query(updateQuery, [priceName, priceValue, priceId]);
+            return res.status(200).json({ success: true, message: 'Prices updated successfully' });
+        } else {
+            const insertQuery = 'INSERT INTO prices (price_id, name, price) VALUES ($1, $2, $3)';
+            await pool.query(insertQuery, [priceId, priceName, priceValue]);
+            return res.status(201).json({ success: true, message: 'Price Item added successfully' });
         }
-        const result = await pool.query(statement);
-        if (result.rowCount == 1) {  // Only one row should be updated
-            res.status(200).json({ success: true, message: 'Price updated' });
-        } else {  // If rowCount != 1, then something other than the intended operation occurred; therefor error
-            res.status(404).json({ success: false, message: 'Failed to update price' });
-        }
-    }
-    catch (error) {
-        console.error(error);  // Log any errors for debugging purposes
+    } catch (error) {
+        console.error('Error updating prices:', error);
+        res.status(500).json({ success: false, message: 'Server error', error: error.message });
     }
 });
 // Menu Load
@@ -494,20 +482,21 @@ app.get('/menuLoad', async (req, res) => {
         const result = await pool.query(query);
 
         res.status(200).json(result.rows);  // Return all inventory
-    } catch (error) {
+    } 
+    catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });
 // Add Menu Item
-app.put('/addMenuItem', async (req, res) => {
+app.post('/addMenuItem', async (req, res) => {
     try {
         // Construct the query to calculate max id + 1 
         const statement = {
             text: `
-                INSERT INTO menu_item (id, name)
+                INSERT INTO menu_item (menu_id, name)
                 VALUES (
-                    (SELECT COALESCE(MAX(id), 0) + 1 FROM menu_item),
+                    (SELECT COALESCE(MAX(menu_id), 0) + 1 FROM menu_item),
                     $1
                 );
             `,
@@ -527,15 +516,24 @@ app.put('/addMenuItem', async (req, res) => {
     }
 });
 // Delete Menu Item
-app.put('/deleteMenuItem', async (req, res) => {
+app.post('/deleteMenuItem', async (req, res) => {
     try {
         // Construct the query to calculate max id + 1 
+        const deleteIngredientsStatement = {
+            text: `
+                DELETE FROM menu_ingredient
+                WHERE menu_id = $1;
+            `,
+            values: [req.body.menu_id],
+        };
+        await pool.query(deleteIngredientsStatement);
+        
         const statement = {
             text: `
                 DELETE FROM menu_item
-                WHERE id = $1;
+                WHERE menu_id = $1;
             `,
-            values: [req.body.id]
+            values: [req.body.menu_id]
         };
 
         const result = await pool.query(statement);
