@@ -552,42 +552,26 @@ app.post('/deleteMenuItem', async (req, res) => {
 // Sales Report
 app.post('/salesReport', async (req, res) => {
     const chart = {};
-    const { begin, end } = req.body; // Extract begin and end from the request body
+    const { begin, end } = req.body;
 
     try {
         const sqlStatement = `
-            SELECT o.order_id, mi.price_id
+            SELECT mi.price_id, COUNT(*) AS item_count
             FROM orders o
             JOIN order_item mi ON o.order_id = mi.order_id
-            WHERE EXTRACT(MONTH FROM o.date) BETWEEN $1 AND $2;
+            WHERE EXTRACT(MONTH FROM o.date) BETWEEN $1 AND $2
+            GROUP BY mi.price_id;
         `;
 
         const result = await pool.query(sqlStatement, [begin, end]);
 
-        // Process the result set
         result.rows.forEach(row => {
-            const priceItem = row.price_id;
-
-            if (priceItem === 1) {
-                chart[priceItem] = (chart[priceItem] || 0) + 2;
-            } else if (priceItem === 2) {
-                chart[priceItem] = (chart[priceItem] || 0) + 20;
-            } else if (priceItem === 3) {
-                chart[priceItem] = (chart[priceItem] || 0) + 2.10;
-            } else if (priceItem === 4) {
-                chart[priceItem] = (chart[priceItem] || 0) + 8.30;
-            } else if (priceItem === 5) {
-                chart[priceItem] = (chart[priceItem] || 0) + 9.80;
-            } else if (priceItem === 6) {
-                chart[priceItem] = (chart[priceItem] || 0) + 11.30;
-            }
+            chart[row.price_id] = row.item_count;
         });
 
-        // Send the chart as a JSON response
-        res.json(chart); //key: price_id, value: quantity
+        res.json(chart);
     } catch (error) {
-        console.error("Error:", error.message);
-        // Send an error response with status code 500
+        console.error("Error in /salesReport:", error.message);
         res.status(500).json({ error: error.message });
     }
 });
@@ -650,7 +634,7 @@ app.get('/managerViewMonthlySalesHistory', async (req, res) => {
         const sqlStatement = `SELECT * FROM orders;`;
 
         // Execute the query
-        const [rows] = await connection.execute(sqlStatement);
+        const { rows } = await pool.query(sqlStatement);
 
         // Process the result set
         rows.forEach(row => {
