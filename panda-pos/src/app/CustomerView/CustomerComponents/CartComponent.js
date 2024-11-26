@@ -18,6 +18,7 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
 
   const getPriceFromDB = async (itemName, setState) => {
     try {
+      // Get price of an item given the name of the price type (ex: "Bowl")
       const response = await fetch("http://localhost:8080/getPrice", {
           method: "POST",
           headers: {
@@ -26,7 +27,7 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
           body: JSON.stringify({ name: itemName }),
       });
 
-      if (!response.ok) {
+      if (!response.ok) { // Throw error if failure to get price
           throw new Error(`Failed to fetch price for ${itemName}`);
       }
 
