@@ -40,50 +40,6 @@ const Page = () => {
     fetchReviews();
   }, []); // Runs once on component mount
 
-  // const handleAddReview = async () => {
-  //   const { rating, review_text } = newReview;
-
-  //   // Validate inputs
-  //   if (!rating || !review_text.trim()) {
-  //     alert("Please provide a valid rating and review text.");
-  //     return;
-  //   }
-
-  //   try {
-  //     // Make an API call to add the review
-  //     const response = await fetch("http://localhost:8080/addReview", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         rating: parseInt(rating, 10),
-  //         review_text,
-  //         menu_item: selectedItem,
-  //       }),
-  //     });
-
-  //     const result = await response.json();
-
-  //     if (response.ok && result.success) {
-  //       // Update the local state to include the new review
-  //       const newReviewId = reviews.length + 1;
-  //       setReviews([
-  //         ...reviews,
-  //         { review_id: newReviewId, rating: parseInt(rating, 10), review_text, menu_item: selectedItem },
-  //       ]);
-  //       setNewReview({ rating: "", review_text: "" });
-  //       alert("Review added successfully!");
-  //     } else {
-  //       console.error(result.message || "Failed to add review.");
-  //       alert(result.message || "Failed to add review.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error adding review:", error);
-  //     alert("An error occurred while adding the review.");
-  //   }
-  // };
-
   const handleAddReview = async () => {
     const { rating, review_text } = newReview;
 
@@ -194,6 +150,10 @@ const Page = () => {
         />
         <button onClick={handleAddReview} className="button">
           Submit
+        </button>
+
+        <button  onClick={() => (window.location.href = "..")} className="buttonback">
+          Go Back
         </button>
 
       </div>
