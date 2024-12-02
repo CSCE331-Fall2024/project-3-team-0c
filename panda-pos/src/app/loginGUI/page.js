@@ -14,12 +14,12 @@ function Login() {
   /*
   * handles employee login button logic
   * @author Jaden
-  */    
+  */
 
 
-  const handleEmployeeLogin = async () => {                                             //need to incorporate authentification api next sprint
+  const handleEmployeeLogin = async () => {  //need to incorporate authentication api next sprint
     try {
-      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/verifyEmployeeLogin", {  //for posting to express backend server for authentification
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/verifyEmployeeLogin", {  //for posting to express backend server for authentication
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,7 +34,7 @@ function Login() {
       } else {
         setMessage("Invalid employee credentials.");
       }
-    } catch (error) {                                         //handle errors
+    } catch (error) {  //handle errors
       setMessage("An error occurred. Please try again.");
       //console.error(error);
     }
@@ -43,9 +43,9 @@ function Login() {
   /*
   * handles manager login button logic
   */
-  const handleManagerLogin = async () => {                                              //need to incorporate authentification api next sprint
+  const handleManagerLogin = async () => {  //need to incorporate authentication api next sprint
     try {
-      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/verifyManagerLogin", {    //for posting to express backend server for authentification
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/verifyManagerLogin", {  //for posting to express backend server for authentication
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,7 +61,7 @@ function Login() {
       } else {
         setMessage("Invalid manager credentials.");
       }
-    } catch (error) {                                       //handles errors
+    } catch (error) {  //handles errors
       setMessage("An error occurred. Please try again.");
       //console.error(error);
     }
@@ -106,7 +106,7 @@ function Login() {
             <button className={styles.button} onClick={handleManagerLogin}>Login as Manager</button>
             <button className={styles.button} onClick={handleEmployeeLogin}>Login as Employee</button>
           </div>
-          {message && <div className = {styles.message}>{message}</div>}
+          {message && <div className={styles.message}>{message}</div>}
         </div>
       </main>
       <footer className={styles.footer}>
