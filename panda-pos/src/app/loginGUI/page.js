@@ -121,6 +121,7 @@
 import Image from 'next/image';
 import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
+import { GoogleLogin } from "react-google-login";
 
 import styles from "./Login.module.css";
 
@@ -254,7 +255,13 @@ function Login() {
             <button className={styles.button} onClick={handleEmployeeLogin}>Login as Employee</button>
           </div>
           <div id="googleSignInButton"></div>
-          {message && <div className={styles.message}>{message}</div>}
+          {/* {message && <div className={styles.message}>{message}</div>} */}
+          <GoogleLogin
+            clientId="425214390685-r9egee7vvho2ip1fepevds0i7htide9e.apps.googleusercontent.com"
+            onSuccess={handleGoogleLoginResponse}
+            onFailure={handleGoogleLoginResponse}
+            cookiePolicy={"single_host_origin"}
+          />
         </div>
       </main>
       <footer className={styles.footer}>
