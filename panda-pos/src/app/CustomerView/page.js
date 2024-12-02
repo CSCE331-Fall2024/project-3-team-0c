@@ -13,10 +13,13 @@ const CustomerView = () => {
 
     useEffect(() => {
         const timer = setInterval(() => {
-            setTime(new Date().toLocaleTimeString());
-        }, 1000);
+            setTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+        }, 0);
+        
         return () => clearInterval(timer);
     }, []);
+    
+   
 
 
     useEffect(() => {
