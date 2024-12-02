@@ -1153,7 +1153,7 @@ async function verifyToken(token) {
     audience: CLIENT_ID,
   });
   const payload = ticket.getPayload();
-  return payload; // Contains user info like email, name, etc.
+  return payload; 
 }
 
 // Endpoint to verify the user token
