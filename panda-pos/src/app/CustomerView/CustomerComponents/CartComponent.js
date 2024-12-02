@@ -10,7 +10,7 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
   const [biggerPlatePrice, setBiggerPlatePrice] = useState(null);
   const [appetizersPrice, setAppetizersPrice] = useState(null);
   const [drinkPrice, setDrinkPrice] = useState(null);
-  // const [ALaCartePrice, setALaCartePricePrice] = useState(null);
+  const [ALaCartePrice, setALaCartePrice] = useState(null);
 
   const [totalPrice, setTotalPrice] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState(''); // State for selected payment method
@@ -257,6 +257,7 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
     getPriceFromDB("Bigger Plate", setBiggerPlatePrice);
     getPriceFromDB("Appetizer", setAppetizersPrice);
     getPriceFromDB("Drink", setDrinkPrice);
+    getPriceFromDB("A La Carte", setALaCartePrice);
   }, []);
   
   // Calculate total price
@@ -371,7 +372,7 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
                               : item.type === 'Drink'
                                 ? drinkPrice
                                 : item.type === 'A La Carte'
-                                  ? '20.00'  // FIXME
+                                  ? ALaCartePrice
                                   : 'N/A'}
                     </span>
                   )}
