@@ -1090,3 +1090,19 @@ app.post('/getPriceID', async (req, res) => {
 });
 
 // module.exports = router;
+
+////Load reviews for customers
+app.get('/ReviewsLoad', async (req, res) => {
+    try {
+        const query = {  
+            text: 'SELECT * FROM reviews;',  // Select all reviews
+        };
+        
+        const result = await pool.query(query);
+
+        res.status(200).json(result.rows);  // Return all reviews
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
