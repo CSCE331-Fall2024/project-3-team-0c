@@ -12,7 +12,10 @@ const dotenv = require('dotenv').config();
 // Creating Express app
 const app = express();
 app.use(express.json()); 
-app.use(cors());
+app.use(cors({
+    origin: ["http://localhost:3000", "https://project-3-team-0c-chix.onrender.com"], // Allow dev and production origins
+    credentials: true, // Allow cookies if necessary
+  }));
 
 // Start the Express server
 app.listen(PORT, () => {
