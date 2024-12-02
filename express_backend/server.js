@@ -1136,3 +1136,32 @@ app.post('/addReview', async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });
+// Google Oath2 authentication
+// packages are installed in the backend folder
+const { OAuth2Client } = require('google-auth-library'); 
+
+const CLIENT_ID = '425214390685-r9egee7vvho2ip1fepevds0i7htide9e.apps.googleusercontent.com';
+const client = new OAuth2Client(CLIENT_ID);
+
+// Verify the token sent by the frontend
+async function verifyToken(token) {
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience: CLIENT_ID,
+  });
+  const payload = ticket.getPayload();
+  return payload; // Contains user info like email, name, etc.
+}
+
+// Endpoint to verify the user token
+app.post('/auth/google', async (req, res) => {
+  const token = req.body.token;
+  try {
+    const userData = await verifyToken(token);
+    // Authenticate or register the user in your system
+    res.status(200).json({ success: true, user: userData });
+  } catch (error) {
+    res.status(401).json({ success: false, error: 'Invalid token' });
+  }
+});
+
