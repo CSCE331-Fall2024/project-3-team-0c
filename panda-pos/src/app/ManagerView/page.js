@@ -46,7 +46,7 @@ function ManagerView() {
               Note for Manager: It's {((weather.temperature_2m * 9 / 5) + 32).toFixed(1)}°F outside.{" "}
               {((weather.temperature_2m * 9 / 5) + 32) < 55
                 ? "It's chilly, so people might prefer comfort food to warm up!"
-                : "It's warm, but people might still crave something refreshing!"}
+                : "It's warm, but people might still crave something!"}
             </>
           ) : (
             <span className={styles.weathertext}>Loading weather data...</span>
