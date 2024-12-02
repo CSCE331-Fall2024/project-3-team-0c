@@ -329,23 +329,6 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
           <option value="dining dollars">Dining Dollars</option>
         </select>
       </div>
-      <div className={styles['row'] + ' ' + styles['zoom-controls']}>
-        <button><Image
-          src="/photos/zoom-in.png"
-          alt="Zoom In"
-          className={styles['zoom-icon']}
-          width={24}
-          height={24} />
-        </button>
-        <button>
-          <Image
-            src="/photos/zoom-out.png"
-            alt="Zoom Out"
-            className={styles['zoom-icon']}
-            width={24}
-            height={24} />
-        </button>
-      </div>
       <div>
 
       </div>

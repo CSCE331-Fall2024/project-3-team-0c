@@ -114,3 +114,10 @@
     flex-wrap: wrap;
 }
 
+.pageZoom {
+    transform-origin: top left;
+    width: 100%; /* Ensures the width is set to 100% */
+    height: 100vh;
+    overflow: auto; /* Allows both horizontal and vertical scrolling */
+    display: block; /* Ensure it's block-level for scrolling */
+}

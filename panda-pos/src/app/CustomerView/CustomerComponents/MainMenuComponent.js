@@ -56,27 +56,6 @@ const MainMenuComponent = ({ message, addToCart }) => {
                 </div>
             )}
         <div className={styles['grid-container']}>
-
-            <div className={styles['row'] + ' ' + styles['zoom-controls']}>
-            <button onClick={zoomIn}>
-                        <Image
-                            src="/photos/zoom-in.png"
-                            alt="Zoom In"
-                            className={styles['zoom-icon']}
-                            width={24}
-                            height={24}
-                        />
-                    </button>
-                    <button onClick={zoomOut}>
-                        <Image
-                            src="/photos/zoom-out.png"
-                            alt="Zoom Out"
-                            className={styles['zoom-icon']}
-                            width={24}
-                            height={24}
-                        />
-                    </button>
-            </div>
             <div className={styles['row'] + ' ' + styles['center-text']}>
                 <h2>{message}</h2>
             </div>

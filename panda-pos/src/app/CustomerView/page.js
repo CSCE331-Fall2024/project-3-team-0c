@@ -5,11 +5,13 @@ import MainMenuComponent from './CustomerComponents/MainMenuComponent';
 import AppetizersComponent from './CustomerComponents/AppetizersComponent';
 import DrinksComponent from './CustomerComponents/DrinksComponent';
 import CartComponent from './CustomerComponents/CartComponent';
+import Image from 'next/image';
 
 const CustomerView = () => {
     const [time, setTime] = useState(new Date().toLocaleTimeString());
     const [activeSection, setActiveSection] = useState('home');
     const [cart, setCartItems] = useState([]);
+    const [zoomLevel, setZoomLevel] = useState(1);
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -26,6 +28,15 @@ const CustomerView = () => {
 
     const addToCart = (item) => {
         setCartItems([...cart, item]);
+    };
+
+    const zoomIn = () => {
+        setZoomLevel(prevZoom => Math.min(prevZoom + 0.1, 3)); // Max zoom level = 3
+    };
+
+    // Zoom out function
+    const zoomOut = () => {
+        setZoomLevel(prevZoom => Math.max(prevZoom - 0.1, 0.5)); // Min zoom level = 0.5
     };
 
     /*
@@ -68,10 +79,33 @@ const CustomerView = () => {
     * all items are available with organization tabs for bowl, plate, etc.
     */
     return (
-        <div className={styles.customerView}>
+        <div className={styles.customerView} style={{
+            transform: `scale(${zoomLevel})`,
+            transformOrigin: "0 0", // Ensures scaling starts from the top-left
+            width: `${100 / zoomLevel}%`, // Adjust width dynamically
+            height: `${100 / zoomLevel}%`, // Adjust height dynamically
+        }}>
             <header className={styles.header}>
                 <div className={styles.time}>{time}</div>
                 <h1 className={styles.title}>Customer View</h1>
+                <button onClick={zoomIn}>
+                        <Image
+                            src="/photos/zoom-in.png"
+                            alt="Zoom In"
+                            className={styles['zoom-icon']}
+                            width={24}
+                            height={24}
+                        />
+                    </button>
+                    <button onClick={zoomOut}>
+                        <Image
+                            src="/photos/zoom-out.png"
+                            alt="Zoom Out"
+                            className={styles['zoom-icon']}
+                            width={24}
+                            height={24}
+                        />
+                    </button>
             </header>
             <div className={styles.mainView}>
                 <nav className={styles.navigation}>

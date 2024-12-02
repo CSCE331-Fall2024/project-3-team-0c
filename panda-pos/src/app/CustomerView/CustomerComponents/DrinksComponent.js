@@ -17,34 +17,8 @@ const DrinksComponent = ({ message, addToCart }) => {
     };
 
     return (
-        <div
-        className={styles.pageZoom}
-        style={{
-            transform: `scale(${zoomLevel})`,
-            transformOrigin: "0 0", // Ensures scaling starts from the top-left
-        }}
-        >
         <div className={styles['grid-container']}>
-            <div className={styles['row'] + ' ' + styles['zoom-controls']}>
-            <button onClick={zoomIn}>
-                        <Image
-                            src="/photos/zoom-in.png"
-                            alt="Zoom In"
-                            className={styles['zoom-icon']}
-                            width={24}
-                            height={24}
-                        />
-                    </button>
-                    <button onClick={zoomOut}>
-                        <Image
-                            src="/photos/zoom-out.png"
-                            alt="Zoom Out"
-                            className={styles['zoom-icon']}
-                            width={24}
-                            height={24}
-                        />
-                    </button>
-            </div>
+            
             <div className={styles['row'] + ' ' + styles['button-row']}>
                 <div className={styles.card} onClick={() => addToCart({name: 'Water Bottle', type: message, isMainSelection: true})}>
                     <img src="/photos/waterbottle.png" alt="Water Bottle" className={styles.image} />
@@ -88,7 +62,6 @@ const DrinksComponent = ({ message, addToCart }) => {
                 </div>
             </div>
 
-        </div>
         </div>
     );
 };
