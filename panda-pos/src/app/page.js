@@ -62,6 +62,7 @@ const HomePage = () => {
 
 
   return (
+    <div className= {styles.background}>
     <div className={styles.container}>
       
       <Image
@@ -106,6 +107,7 @@ const HomePage = () => {
       </nav>
       <div id="google_translate_element"></div>
     </div>
+  </div>
   );
 };
 
