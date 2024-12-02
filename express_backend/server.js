@@ -1106,3 +1106,33 @@ app.get('/ReviewsLoad', async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });
+
+//Add review for an item
+app.post('/addReview', async (req, res) => {
+    try {
+
+        const { rating, review_text, menu_item } = req.body;
+        // Construct the query to calculate max id + 1 
+        const statement = {
+            text: `
+                INSERT INTO reviews (review_id, rating, review_text, menu_item)
+                VALUES (
+                    (SELECT COALESCE(MAX(review_id), 0) + 1 FROM reviews),
+                    $1, $2, $3
+                );
+            `,
+            values: [rating, review_text, menu_item],
+        };
+
+        const result = await pool.query(statement);
+
+        if (result.rowCount === 1) {  // Confirm a single row was inserted
+            res.status(200).json({ success: true, message: 'Review added' });
+        } else {  // Handle unexpected cases
+            res.status(404).json({ success: false, message: 'Failed to add review' });
+        }
+    } catch (error) {
+        console.error('Error adding review:', error);  // Log error details
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
