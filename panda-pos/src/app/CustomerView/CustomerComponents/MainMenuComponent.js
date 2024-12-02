@@ -137,9 +137,6 @@ const MainMenuComponent = ({ message, addToCart }) => {
                     <img src="/photos/Beef_BeijingBeef.png" alt="Beijing Beef" className={styles.image} />
                     <button className={styles.button}>Beijing Beef</button>
                 </div>
-                <div className={styles['row'] + ' ' + styles['right-align']}>
-                    <button className={styles.button}>Add To Cart</button>
-                </div>
             </div>
 
 

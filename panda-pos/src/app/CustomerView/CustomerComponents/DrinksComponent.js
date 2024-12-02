@@ -87,9 +87,6 @@ const DrinksComponent = ({ message, addToCart }) => {
                     <button className={styles.button}>Apple Juice</button>
                 </div>
             </div>
-            <div className={styles['row'] + ' ' + styles['right-align']}>
-                <button className={styles.button}>Add To Cart</button>
-            </div>
 
         </div>
         </div>
