@@ -5,20 +5,9 @@ import Image from 'next/image';
 
 // drinks view and layout for customer view
 const DrinksComponent = ({ message, addToCart }) => {
-    const [zoomLevel, setZoomLevel] = useState(1);
-
-    const zoomIn = () => {
-        setZoomLevel(prevZoom => Math.min(prevZoom + 0.1, 3)); // Max zoom level = 3
-    };
-
-    // Zoom out function
-    const zoomOut = () => {
-        setZoomLevel(prevZoom => Math.max(prevZoom - 0.1, 0.5)); // Min zoom level = 0.5
-    };
 
     return (
         <div className={styles['grid-container']}>
-            
             <div className={styles['row'] + ' ' + styles['button-row']}>
                 <div className={styles.card} onClick={() => addToCart({name: 'Water Bottle', type: message, isMainSelection: true})}>
                     <img src="/photos/waterbottle.png" alt="Water Bottle" className={styles.image} />

@@ -4,18 +4,8 @@ import styles from './MainMenuStyle.module.css';
 import Image from 'next/image';
 
 const AppetizersComponent = ({ message, addToCart }) => {
-    const [zoomLevel, setZoomLevel] = useState(1); // Initial zoom level
     const [showAlert, setShowAlert] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
-
-    const zoomIn = () => {
-        setZoomLevel(prevZoom => Math.min(prevZoom + 0.1, 3)); // Max zoom level = 3
-    };
-
-    // Zoom out function
-    const zoomOut = () => {
-        setZoomLevel(prevZoom => Math.max(prevZoom - 0.1, 0.5)); // Min zoom level = 0.5
-    };
 
     const handleItemClick = (item) => {
         setSelectedItem(item); // Set the selected item
@@ -31,6 +21,12 @@ const AppetizersComponent = ({ message, addToCart }) => {
     };
 
     return (
+        <div
+            className={styles.pageZoom}
+            style={{
+                transformOrigin: "0 0", // Ensures scaling starts from the top-left
+            }}
+        >
         <div>
             {/* Allergy Alert Modal */}
             {showAlert && (
@@ -48,7 +44,6 @@ const AppetizersComponent = ({ message, addToCart }) => {
                 </div>
             )}
             <div className={styles['grid-container']}>
-                
                 <div className={styles['row'] + ' ' + styles['button-row']}>
                     <div className={styles.card} onClick={() => handleItemClick({ name: 'Veggie Spring Roll', type: message, isMainSelection: true  })}>
                         <img src="/photos/veggie.png" alt="Veggie Spring Roll" className={styles.image} />
@@ -64,6 +59,7 @@ const AppetizersComponent = ({ message, addToCart }) => {
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     );
 };
