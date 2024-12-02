@@ -58,8 +58,8 @@ const CustomerView = () => {
                 instructionmessage = "Checkout"
                 return <CartComponent message={instructionmessage} cartItems={cart} setCartItems={setCartItems}/>;
             default:
-                instructionmessage = ""
-                return <MainMenuComponent message={instructionmessage} addToCart={addToCart} cartItems={cart} />;
+                instructionmessage = "Bowl"
+                return <MainMenuComponent message={instructionmessage} addToCart={addToCart}/>;
         }
     };
 

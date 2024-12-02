@@ -266,6 +266,7 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
   useEffect(() => {
 
     let total = 0;
+
     for (let index = 0; index < cartItems.length; index++) {
       let item = cartItems[index];
       if (item.isMainSelection || item.type === 'A La Carte') {
