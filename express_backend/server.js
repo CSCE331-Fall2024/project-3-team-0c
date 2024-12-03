@@ -12,7 +12,10 @@ const dotenv = require('dotenv').config();
 // Creating Express app
 const app = express();
 app.use(express.json()); 
-app.use(cors());
+app.use(cors({
+    origin: ["http://localhost:3000", "https://project-3-team-0c-chix.onrender.com"], // Allow dev and production origins
+    credentials: true, // Allow cookies if necessary
+  }));
 
 // Start the Express server
 app.listen(PORT, () => {
@@ -1136,3 +1139,32 @@ app.post('/addReview', async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });
+// Google Oath2 authentication
+// packages are installed in the backend folder
+const { OAuth2Client } = require('google-auth-library'); 
+
+const CLIENT_ID = '425214390685-r9egee7vvho2ip1fepevds0i7htide9e.apps.googleusercontent.com';
+const client = new OAuth2Client(CLIENT_ID);
+
+// Verify the token sent by the frontend
+async function verifyToken(token) {
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience: CLIENT_ID,
+  });
+  const payload = ticket.getPayload();
+  return payload; 
+}
+
+// Endpoint to verify the user token
+app.post('/auth/google', async (req, res) => {
+  const token = req.body.token;
+  try {
+    const userData = await verifyToken(token);
+    // Authenticate or register the user in your system
+    res.status(200).json({ success: true, user: userData });
+  } catch (error) {
+    res.status(401).json({ success: false, error: 'Invalid token' });
+  }
+});
+

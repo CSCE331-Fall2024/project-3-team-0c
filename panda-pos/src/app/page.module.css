@@ -13,6 +13,27 @@
   width: 100%; /* Ensure it takes the full width */
 }
 
+.background {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #df2929, #d15757, #f4f1f3);
+  background-size: 300% 300%;
+  animation: gradientBackground 7s ease infinite;
+}
+
+@keyframes gradientBackground {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
+
 .button {
   display: inline-block;
   text-decoration: none;

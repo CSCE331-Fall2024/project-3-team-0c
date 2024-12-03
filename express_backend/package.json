@@ -13,7 +13,10 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
-    "pg": "^8.13.1"
+    "gapi-script": "^1.2.0",
+    "google-auth-library": "^9.15.0",
+    "pg": "^8.13.1",
+    "react-google-login": "^5.2.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"

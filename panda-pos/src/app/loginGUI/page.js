@@ -16,6 +16,14 @@ function Login() {
   * @author Jaden
   */
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.google) {
+      window.google.accounts.id.initialize({
+        client_id: "425214390685-r9egee7vvho2ip1fepevds0i7htide9e.apps.googleusercontent.com", 
+        callback: handleGoogleLoginResponse,
+      });
+    }
+  }, []);
 
   const handleEmployeeLogin = async () => {  //need to incorporate authentication api next sprint
     try {
@@ -56,7 +64,8 @@ function Login() {
       const data = await response.json();
       if (data.success) {
         setMessage("Manager login successful!");
-        router.push("/ManagerView");
+        triggerGoogleAuth();
+        // router.push("/ManagerView");
 
       } else {
         setMessage("Invalid manager credentials.");
@@ -67,6 +76,44 @@ function Login() {
     }
   };
 
+  const triggerGoogleAuth = () => {
+    if (typeof window.google !== "undefined") {
+      window.google.accounts.id.prompt(); // Trigger Google login dialog
+    } else {
+      console.error("Google Identity Services script not loaded.");
+    }
+  };
+  const handleGoogleLoginResponse = async (response) => {
+    try {
+      const idToken = response.credential;
+  
+      // Send the Google ID token to your backend for verification
+      const backendResponse = await fetch("http://localhost:8080/auth/google", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token: idToken }),
+      });
+  
+      const data = await backendResponse.json();
+  
+      if (data.success) {
+        setMessage("Google login successful!");
+  
+        // Redirect to the manager page after successful Google authentication
+        router.push("/ManagerView");
+      } else {
+        setMessage("Google login failed.");
+      }
+    } catch (error) {
+      setMessage("An error occurred during Google login.");
+      console.error("Google login error:", error);
+    }
+  };
+  
+
+  
 
   /*
   * returns the login gui for users to choose to login as manager or cashier
