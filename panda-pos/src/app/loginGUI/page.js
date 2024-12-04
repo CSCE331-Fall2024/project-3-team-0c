@@ -214,7 +214,7 @@ function Login() {
       if (data.success) {
         setMessage("Login successful!");
         // Redirect user based on their role
-        if (data.role === "Manager") {
+        if (data.user.role === "Manager") {
           router.push("/ManagerView");
         } else if (data.user.role === "employee") {
           router.push("/CashierView");

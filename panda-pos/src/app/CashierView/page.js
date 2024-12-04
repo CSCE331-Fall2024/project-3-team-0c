@@ -17,9 +17,10 @@ const CashierView = () => {
     setTotalPrice(item.price);
   };
 
-  const handleRemoveItem = (index) => { // remove item from the cart
+  const handleRemoveItem = (index) => {
     const newCart = [...cart];
     newCart.splice(index, 1);
+    setCart(newCart);
   };
 
   const calculateTotal = () => {
