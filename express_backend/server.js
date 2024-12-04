@@ -1,11 +1,12 @@
 
 // Imports express.js
+ 
 const express = require("express");
 const cors = require("cors");
 const PORT = process.env.PORT || 8080;
 const { Pool } = require('pg');
 const dotenv = require('dotenv').config();
-
+const { OAuth2Client } = require('google-auth-library'); 
 // // Imports Client class from PostegreSQL
 // const { Client } = require('pg');
 
@@ -1141,7 +1142,7 @@ app.post('/addReview', async (req, res) => {
 });
 // Google Oath2 authentication
 // packages are installed in the backend folder
-// const { OAuth2Client } = require('google-auth-library'); 
+
 
 // const CLIENT_ID = '425214390685-r9egee7vvho2ip1fepevds0i7htide9e.apps.googleusercontent.com';
 // const client = new OAuth2Client(CLIENT_ID);
@@ -1171,11 +1172,12 @@ app.post('/addReview', async (req, res) => {
 
 // google auth - grace
 // findByEmail so not just anyone can login
-const client = new OAuth2Client("425214390685-r9egee7vvho2ip1fepevds0i7htide9e.apps.googleusercontent.com");
+const client = new OAuth2Client("425214390685-pida2qb7nfe95a3fe5gq2hp525493ee2.apps.googleusercontent.com");
 
-async function findUserByEmail(email) {
+async function findUserByEmail(email, role) {
   try {
-    const result = await pool.query("SELECT * FROM employee WHERE email = $1", [email]);
+    console.log(role);
+    const result = await pool.query("SELECT * FROM employee WHERE email = $1 AND is_manager = $2", [email, role]);
     return result.rows[0]; // Return the first matching row, or undefined if no match
   } catch (error) {
     console.error("Error querying the database:", error);
@@ -1190,24 +1192,27 @@ module.exports = findUserByEmail;
 //const client = new OAuth2Client("425214390685-r9egee7vvho2ip1fepevds0i7htide9e.apps.googleusercontent.com");
 
 app.post("/auth/google", async (req, res) => {
-  const { token } = req.body;
+const { token, role_id } = req.body;
+
 
   try {
     const ticket = await client.verifyIdToken({
       idToken: token,
-      audience: "425214390685-r9egee7vvho2ip1fepevds0i7htide9e.apps.googleusercontent.com",
+      audience: "425214390685-pida2qb7nfe95a3fe5gq2hp525493ee2.apps.googleusercontent.com",
     });
 
     const payload = ticket.getPayload();
     const userEmail = payload.email;
+    console.log(role_id);
+    const role = (role_id == "Manager") ? "t" : "f";
 
     //Validate the user's role based on email
-    const user = await findUserByEmail(userEmail); // Query your database
+    const user = await findUserByEmail(userEmail, role); // Query your database
     console.log(user);
     if (user) {
-        res.json({ success: true, user: { email: userEmail, role: "Manager" } });
+        res.json({ success: true});
     } else {
-      res.json({ success: false, message: "User not found" });
+      res.json({ success: false});
     }
   } catch (error) {
     console.error("Google authentication error:", error);
