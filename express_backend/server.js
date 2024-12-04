@@ -1141,30 +1141,109 @@ app.post('/addReview', async (req, res) => {
 });
 // Google Oath2 authentication
 // packages are installed in the backend folder
-const { OAuth2Client } = require('google-auth-library'); 
+// const { OAuth2Client } = require('google-auth-library'); 
 
-const CLIENT_ID = '425214390685-r9egee7vvho2ip1fepevds0i7htide9e.apps.googleusercontent.com';
-const client = new OAuth2Client(CLIENT_ID);
+// const CLIENT_ID = '425214390685-r9egee7vvho2ip1fepevds0i7htide9e.apps.googleusercontent.com';
+// const client = new OAuth2Client(CLIENT_ID);
 
-// Verify the token sent by the frontend
-async function verifyToken(token) {
-  const ticket = await client.verifyIdToken({
-    idToken: token,
-    audience: CLIENT_ID,
-  });
-  const payload = ticket.getPayload();
-  return payload; 
+// // Verify the token sent by the frontend
+// async function verifyToken(token) {
+//   const ticket = await client.verifyIdToken({
+//     idToken: token,
+//     audience: CLIENT_ID,
+//   });
+//   const payload = ticket.getPayload();
+//   return payload; 
+// }
+
+// // Endpoint to verify the user token
+// app.post('/auth/google', async (req, res) => {
+//   const token = req.body.token;
+//   try {
+//     const userData = await verifyToken(token);
+//     // Authenticate or register the user in your system
+//     res.status(200).json({ success: true, user: userData });
+//   } catch (error) {
+//     res.status(401).json({ success: false, error: 'Invalid token' });
+//   }
+// });
+
+
+// google auth - grace
+// findByEmail so not just anyone can login
+const client = new OAuth2Client("425214390685-r9egee7vvho2ip1fepevds0i7htide9e.apps.googleusercontent.com");
+
+async function findUserByEmail(email) {
+  try {
+    const result = await pool.query("SELECT * FROM employee WHERE email = $1", [email]);
+    return result.rows[0]; // Return the first matching row, or undefined if no match
+  } catch (error) {
+    console.error("Error querying the database:", error);
+    throw error; // Re-throw the error for the caller to handle
+  }
 }
 
-// Endpoint to verify the user token
-app.post('/auth/google', async (req, res) => {
-  const token = req.body.token;
+module.exports = findUserByEmail;
+
+// google auth
+//const { OAuth2Client } = require("google-auth-library");
+//const client = new OAuth2Client("425214390685-r9egee7vvho2ip1fepevds0i7htide9e.apps.googleusercontent.com");
+
+app.post("/auth/google", async (req, res) => {
+  const { token } = req.body;
+
   try {
-    const userData = await verifyToken(token);
-    // Authenticate or register the user in your system
-    res.status(200).json({ success: true, user: userData });
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: "425214390685-r9egee7vvho2ip1fepevds0i7htide9e.apps.googleusercontent.com",
+    });
+
+    const payload = ticket.getPayload();
+    const userEmail = payload.email;
+
+    //Validate the user's role based on email
+    const user = await findUserByEmail(userEmail); // Query your database
+    console.log(user);
+    if (user) {
+        res.json({ success: true, user: { email: userEmail, role: "Manager" } });
+    } else {
+      res.json({ success: false, message: "User not found" });
+    }
   } catch (error) {
-    res.status(401).json({ success: false, error: 'Invalid token' });
+    console.error("Google authentication error:", error);
+    res.status(500).json({ success: false, message: "Authentication failed" });
   }
 });
+// google auth
+
+
+// this works - hard codes the roles and 
+// app.post("/auth/google", async (req, res) => {
+//     const { token } = req.body;
+  
+//     try {
+//       // Verify the ID token with Google
+//       const ticket = await client.verifyIdToken({
+//         idToken: token,
+//         audience: "425214390685-r9egee7vvho2ip1fepevds0i7htide9e.apps.googleusercontent.com", // Replace with your Google Client ID
+//       });
+  
+//       const payload = ticket.getPayload();
+//       const userEmail = payload.email;
+  
+//       // Define the allowed email address
+//       const allowedEmail = "graceung56@gmail.com";
+
+//       // Check if the email matches the allowed email
+//       if (userEmail === allowedEmail) {
+//         res.json({ success: true, user: { email: userEmail, role: "employee" } });
+//       } else {
+//         res.json({ success: false, message: "Access denied" });
+//       }
+//     } catch (error) {
+//       console.error("Internal Google authentication error:", error);
+//       res.status(500).json({ success: false, message: "Authentication failed" });
+//     }
+//   });
+  
 
