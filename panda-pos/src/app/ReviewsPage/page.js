@@ -94,7 +94,7 @@ const Page = () => {
     ? (
         filteredReviewsaverage.reduce((sum, review) => sum + parseFloat(review.rating), 0) /
         filteredReviewsaverage.length
-      ).toFixed(1) // Round to 1 decimal place
+      ).toFixed(1) 
     : null;
 
   return (
