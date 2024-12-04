@@ -50,6 +50,9 @@ const CashierView = () => {
     }
   };
 
+  const submitOrder = () => { // hey daniel !!
+  };
+
   // Effect to fetch all prices on component mount
   useEffect(() => {
     fetchPrice("Bowl", setBowlPrice);
@@ -84,7 +87,7 @@ const CashierView = () => {
         </ul>
         {/* Display total price */}
         <div className={styles.totalPrice}>
-          <button>Submit</button>
+          <button onClick={() => submitOrder()}>Submit</button>
         
   </div>
       </div>
