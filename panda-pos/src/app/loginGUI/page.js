@@ -213,11 +213,10 @@ function Login() {
 
       if (data.success) {
         setMessage("Login successful!");
-
         // Redirect user based on their role
-        if (data.role === "manager") {
+        if (data.role === "Manager") {
           router.push("/ManagerView");
-        } else if (data.role === "employee") {
+        } else if (data.user.role === "employee") {
           router.push("/CashierView");
         } else {
           setMessage("Unauthorized role. Please contact support.");
@@ -227,7 +226,7 @@ function Login() {
       }
     } catch (error) {
       setMessage("An error occurred during login.");
-      console.error("Login error:", error);
+      alert("Login error:", error);
     }
   };
 
