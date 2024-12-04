@@ -84,6 +84,7 @@ const CashierView = () => {
         </ul>
         {/* Display total price */}
         <div className={styles.totalPrice}>
+          <button>Submit</button>
         
   </div>
       </div>
