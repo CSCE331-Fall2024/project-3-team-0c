@@ -15,13 +15,16 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState(''); // State for selected payment method
   
+  /**
+   * @description iterates through cartItems adding each item to an order item and submitting to the database
+   * @param orderID The ID of the order being created
+   * @returns completed order item
+   * @author Daniel Fuhrmann
+   */
   async function processCart(orderID) {
     for (let index = 0; index < cartItems.length; index++) {
       let item = cartItems[index];
-    // }
-    // cartItems.forEach(async (item) => {
       // TODO: Get menu item id for each item
-      // console.log(item);
       let itemMenuID;
       try {
         const itemIDResponse = await fetch("http://localhost:8080/getMenuID", {
@@ -32,7 +35,6 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
           body: JSON.stringify({ "itemName": item.name })
         });
         const itemIDResult = await itemIDResponse.json();
-        // console.log(itemIDResult);
         if (!itemIDResult.success) {
           console.error(itemIDResult);
         }
@@ -143,6 +145,10 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
     return globalThis.orderItem;
   }
 
+  /**
+   * @description Create a new order and calls processCart to add items to the new order
+   * @author Daniel Fuhrmann
+   */
   const placeOrder = async () => {
     globalThis.orderItem = { "orderID": -1 };
     // TODO: Create empty order
@@ -229,6 +235,12 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
     }
   };
   
+  /**
+   * @description Sets the price for a given price type in the front end
+   * @param {string} itemName name of price type
+   * @param {string} setState state to set
+   * @author Daniel Fuhrmann
+   */
   const getPriceFromDB = async (itemName, setState) => {
     try {
       const response = await fetch("http://localhost:8080/getPrice", {
