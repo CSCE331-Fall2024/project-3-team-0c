@@ -121,3 +121,22 @@
     overflow: auto; /* Allows both horizontal and vertical scrolling */
     display: block; /* Ensure it's block-level for scrolling */
 }
+.adjustments {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.adjustButton {
+    margin: 0 10px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.adjustButton:hover {
+    background-color: #f0f0f0;
+}

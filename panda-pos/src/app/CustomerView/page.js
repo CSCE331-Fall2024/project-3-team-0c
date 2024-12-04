@@ -12,6 +12,7 @@ const CustomerView = () => {
     const [activeSection, setActiveSection] = useState('home');
     const [cart, setCartItems] = useState([]);
     const [zoomLevel, setZoomLevel] = useState(1);
+    const [contrast, setContrast] = useState(1); // Default contrast value
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -19,7 +20,6 @@ const CustomerView = () => {
         }, 1000);
         return () => clearInterval(timer);
     }, []);
-
 
     useEffect(() => {
         // Force a small state update after initial render to ensure everything is ready
@@ -37,6 +37,16 @@ const CustomerView = () => {
     // Zoom out function
     const zoomOut = () => {
         setZoomLevel(prevZoom => Math.max(prevZoom - 0.1, 0.5)); // Min zoom level = 0.5
+    };
+
+    // Increase contrast
+    const increaseContrast = () => {
+        setContrast(prevContrast => Math.min(prevContrast + 0.1, 2)); // Max contrast = 2
+    };
+
+    // Decrease contrast
+    const decreaseContrast = () => {
+        setContrast(prevContrast => Math.max(prevContrast - 0.1, 0.5)); // Min contrast = 0.5
     };
 
     /*
@@ -84,6 +94,7 @@ const CustomerView = () => {
             transformOrigin: "0 0", // Ensures scaling starts from the top-left
             width: `${100 / zoomLevel}%`, // Adjust width dynamically
             height: `${100 / zoomLevel}%`, // Adjust height dynamically
+            filter: `contrast(${contrast})`, // Apply contrast filter
         }}>
             <header className={styles.header}>
                 <div className={styles.time}>{time}</div>
@@ -106,6 +117,10 @@ const CustomerView = () => {
                             height={24}
                         />
                     </button>
+                    <div className={styles.adjustments}>
+                <button onClick={increaseContrast} className={styles.adjustButton}>Increase Contrast</button>
+                <button onClick={decreaseContrast} className={styles.adjustButton}>Decrease Contrast</button>
+            </div>
             </header>
             <div className={styles.mainView}>
                 <nav className={styles.navigation}>
@@ -123,6 +138,7 @@ const CustomerView = () => {
                     </div>
                 </div>
             </div>
+           
         </div>
     );
 };
