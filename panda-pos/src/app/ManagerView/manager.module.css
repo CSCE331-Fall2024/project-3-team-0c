@@ -14,7 +14,7 @@
   
   .header {
     font-size: 36px;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
     color: #ffffff;
   }
   
@@ -53,5 +53,12 @@
   .link {
     color: #fcfcfc;
     text-decoration: none;
+  }
+
+  .weathertext{
+    color: white;
+    justify-content: center;
+    margin-bottom: 20px;
+    align-items: center;
   }
   

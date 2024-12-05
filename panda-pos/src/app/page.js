@@ -22,7 +22,7 @@ const HomePage = () => {
             const { latitude, longitude } = position.coords;
 
             // Fetch weather data from Open-Meteo API
-            const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m`);
+            const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,wind_speed_10m`);
             const data = await response.json();
 
             // Set the weather state with the fetched data
@@ -62,6 +62,7 @@ const HomePage = () => {
 
 
   return (
+    <div className= {styles.background}>
     <div className={styles.container}>
       
       <Image
@@ -79,9 +80,10 @@ const HomePage = () => {
       ) : weather ? (
         <div className={styles.weatherInfo}>
           <h2 className={styles.weatherTitle}>Current Weather</h2>
-          <p>Temperature: {weather.temperature_2m}°C</p>
+          <p>Temperature: {(weather.temperature_2m * 9/5)+32}°F</p> 
+
           <p>Wind Speed: {weather.wind_speed_10m} m/s</p>
-          <p>Humidity: {weather.relative_humidity_2m}%</p>
+         
         </div>
       ) : (
         <p>Loading weather data...</p>
@@ -93,6 +95,9 @@ const HomePage = () => {
             <Link href="/CustomerView" className={styles.button}>Start an Order</Link>
           </li>
           <li className={styles.navItem}>
+            <Link href="/ReviewsPage" className={styles.button}>Reviews</Link>
+          </li>
+          <li className={styles.navItem}>
             <Link href="/MenuBoardView" className={styles.button}>View Menu Board</Link>
           </li>
           <li className={styles.navItem}>
@@ -102,6 +107,7 @@ const HomePage = () => {
       </nav>
       <div id="google_translate_element"></div>
     </div>
+  </div>
   );
 };
 

@@ -128,3 +128,11 @@
     color: black;
     text-align: center;
 }
+
+.adjustButton{
+    font-size: 15px;
+    position: absolute; 
+    top: 0; 
+    right: 0;
+    margin: 10px;
+}
