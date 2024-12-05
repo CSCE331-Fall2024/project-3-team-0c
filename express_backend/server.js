@@ -1177,7 +1177,14 @@ const client = new OAuth2Client("425214390685-pida2qb7nfe95a3fe5gq2hp525493ee2.a
 async function findUserByEmail(email, role) {
   try {
     console.log(role);
-    const result = await pool.query("SELECT * FROM employee WHERE email = $1 AND is_manager = $2", [email, role]);
+    result = false;
+    if (role === 't') {
+        result = await pool.query("SELECT * FROM employee WHERE email = $1 AND is_manager = $2", [email, role]);
+       
+      } else {
+        result = await pool.query("SELECT * FROM employee WHERE email = $1", [email]);
+      }
+    
     return result.rows[0]; // Return the first matching row, or undefined if no match
   } catch (error) {
     console.error("Error querying the database:", error);
@@ -1203,7 +1210,7 @@ const { token, role_id } = req.body;
 
     const payload = ticket.getPayload();
     const userEmail = payload.email;
-    console.log(role_id);
+
     const role = (role_id == "Manager") ? "t" : "f";
 
     //Validate the user's role based on email
