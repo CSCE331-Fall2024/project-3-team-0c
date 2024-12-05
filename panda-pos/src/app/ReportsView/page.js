@@ -146,7 +146,7 @@ function ReportsView() {
         const payload = { begin: new Date(startDate).getMonth() + 1, end: new Date(endDate).getMonth() + 1 };
         console.log("Payload for Sales Report:", payload);
 
-        const response = await fetch("http://localhost:8080/salesReport", {
+        const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/salesReport", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
@@ -177,7 +177,7 @@ function ReportsView() {
         end: new Date(endDate).getMonth() + 1,
       };
 
-      const response = await fetch("http://localhost:8080/productUsage", {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/productUsage", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -199,7 +199,7 @@ function ReportsView() {
     try {
       setIsLoading(true);
       const response = await fetch(
-        "http://localhost:8080/managerViewMonthlySalesHistory",
+        "https://project-3-team-0c-n4yn.onrender.com/managerViewMonthlySalesHistory",
         { method: "GET" }
       );
   
@@ -230,7 +230,7 @@ function ReportsView() {
     try {
         setIsLoading(true);
         const response = await fetch(
-            "http://localhost:8080/managerViewPopularItems",
+            "https://project-3-team-0c-n4yn.onrender.com/managerViewPopularItems",
             { method: "GET" }
         );
 

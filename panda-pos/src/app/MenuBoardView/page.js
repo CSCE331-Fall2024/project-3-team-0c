@@ -25,7 +25,7 @@ const MenuBoardView = () => {
 
     const fetchPrice = async (itemName, setState) => {
         try {
-            const response = await fetch("http://localhost:8080/getPrice", {
+            const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/getPrice", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

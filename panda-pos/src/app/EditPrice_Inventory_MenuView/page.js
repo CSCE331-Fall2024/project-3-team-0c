@@ -35,7 +35,7 @@ function EditMenuAndPrices() {
   // Load menu items
   const loadMenu = async () => {
     try {
-      const response = await fetch("http://localhost:8080/menuLoad", {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/menuLoad", {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
@@ -72,7 +72,7 @@ function EditMenuAndPrices() {
   ///function to add menu
   const addMenu = async () => {
     try {
-      const response = await fetch("http://localhost:8080/addMenuItem", {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/addMenuItem", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: menuName }),
@@ -90,7 +90,7 @@ function EditMenuAndPrices() {
   ///function to delete menu item
   const deleteMenu = async () => {
     try {
-      const response = await fetch("http://localhost:8080/deleteMenuItem", {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/deleteMenuItem", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ menu_id: parseInt(menuId) }),
@@ -109,7 +109,7 @@ function EditMenuAndPrices() {
   ///function to load prices into dropdown
   const loadPrices = async () => {
     try {
-      const response = await fetch("http://localhost:8080/loadPrice", {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/loadPrice", {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
@@ -147,7 +147,7 @@ function EditMenuAndPrices() {
   ///edit prices items function
  const editPrices = async () => {
   try {
-    const response = await fetch("http://localhost:8080/editPrice", {
+    const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/editPrice", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
