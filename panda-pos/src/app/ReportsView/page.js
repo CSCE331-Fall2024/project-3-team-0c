@@ -120,7 +120,7 @@ function ReportsView() {
   // Fetch inventory data from the server
   const loadInventory = async () => {
     try {
-      const response = await fetch("http://localhost:8080/InventoryLoad", {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/InventoryLoad", {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
