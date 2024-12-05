@@ -233,6 +233,7 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
     } catch (error) {
       console.error(error.message);
     }
+    alert("Order Placed!");
   };
   
   /**
