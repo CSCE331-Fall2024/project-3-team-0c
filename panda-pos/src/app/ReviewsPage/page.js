@@ -15,7 +15,7 @@ const Page = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch("http://localhost:8080/ReviewsLoad"); // Call your backend API
+        const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/ReviewsLoad"); // Call your backend API
         if (response.ok) {
           const data = await response.json();
           setReviews(data);
@@ -51,7 +51,7 @@ const Page = () => {
     }
 
     try {
-        const response = await fetch("http://localhost:8080/addReview", {
+        const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/addReview", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
