@@ -37,7 +37,7 @@ const CashierView = () => {
 
   const fetchPrice = async (itemName, setState) => { // get the price of each product
     try {
-      const response = await fetch("http://localhost:8080/getPrice", {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/getPrice", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,7 +64,7 @@ const CashierView = () => {
         if (globalThis.orderItem.hasOwnProperty("menuItem1")) {
           // console.log("Spot A");
           try {
-            const orderItemResponse = await fetch("http://localhost:8080/addCustomerOrderItem", {
+            const orderItemResponse = await fetch("https://project-3-team-0c-n4yn.onrender.com/addCustomerOrderItem", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -89,7 +89,7 @@ const CashierView = () => {
         // TODO Get PriceID
         let priceID;
         try {
-          const priceIDResponse = await fetch("http://localhost:8080/getPriceID", {
+          const priceIDResponse = await fetch("https://project-3-team-0c-n4yn.onrender.com/getPriceID", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -114,7 +114,7 @@ const CashierView = () => {
       else {
         let itemMenuID;
         try {
-          const itemIDResponse = await fetch("http://localhost:8080/getMenuID", {
+          const itemIDResponse = await fetch("https://project-3-team-0c-n4yn.onrender.com/getMenuID", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -161,7 +161,7 @@ const CashierView = () => {
     globalThis.orderItem = { "orderID": -1 };
     // TODO: Create empty order
     try {
-      const response = await fetch("http://localhost:8080/createCustomerOrder", {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/createCustomerOrder", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -180,7 +180,7 @@ const CashierView = () => {
     // TODO: Get Latest Order_ID
     let orderID;
     try {
-      const orderIDResponse = await fetch("http://localhost:8080/getLatestOrderID", {
+      const orderIDResponse = await fetch("https://project-3-team-0c-n4yn.onrender.com/getLatestOrderID", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -203,7 +203,7 @@ const CashierView = () => {
 
 
     try {
-      const orderItemResponse = await fetch("http://localhost:8080/addCustomerOrderItem", {
+      const orderItemResponse = await fetch("https://project-3-team-0c-n4yn.onrender.com/addCustomerOrderItem", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
