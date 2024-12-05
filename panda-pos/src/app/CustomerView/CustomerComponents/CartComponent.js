@@ -14,6 +14,7 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
 
   const [totalPrice, setTotalPrice] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState(''); // State for selected payment method
+
   
   /**
    * @description iterates through cartItems adding each item to an order item and submitting to the database
@@ -166,7 +167,6 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
     } catch (error) {
       console.error(error.message);
     }
-
 
 
     // TODO: Get Latest Order_ID

@@ -56,6 +56,7 @@ function EditMenuAndPrices() {
     fetchMenu();
   }, []);
 
+  ////menu item dropdown
   const handleMenuItemSelect = (e) => {
     const menuItemId = e.target.value;
     const menuItem = menuItems.find(
@@ -68,6 +69,7 @@ function EditMenuAndPrices() {
     }
   };
 
+  ///function to add menu
   const addMenu = async () => {
     try {
       const response = await fetch("http://localhost:8080/addMenuItem", {
@@ -85,6 +87,7 @@ function EditMenuAndPrices() {
     }
   };
 
+  ///function to delete menu item
   const deleteMenu = async () => {
     try {
       const response = await fetch("http://localhost:8080/deleteMenuItem", {
@@ -103,7 +106,7 @@ function EditMenuAndPrices() {
   };
 
   //////////prices section logic/////////////////////////////////////////
-
+  ///function to load prices into dropdown
   const loadPrices = async () => {
     try {
       const response = await fetch("http://localhost:8080/loadPrice", {
@@ -127,6 +130,7 @@ function EditMenuAndPrices() {
     fetchMenu();
   }, []);
 
+  ///function to handle price item dropdown selection
   const handlePriceItemSelect = (e) => {
     const priceItemId = e.target.value;
     const priceItem = priceItems.find(
@@ -140,6 +144,7 @@ function EditMenuAndPrices() {
     }
  };
 
+  ///edit prices items function
  const editPrices = async () => {
   try {
     const response = await fetch("http://localhost:8080/editPrice", {
@@ -194,6 +199,7 @@ function EditMenuAndPrices() {
     fetchInventory();
   }, []);
 
+  //function to handle inventory dropdown
   const handleInventorySelect = (e) => {
     const inventoryItemId = e.target.value;
     const inventoryItem = inventoryItems.find(
@@ -207,6 +213,7 @@ function EditMenuAndPrices() {
     }
   };
 
+  //function to edit an invenotry item
   const editInventory = async () => {
     try {
       const response = await fetch("http://localhost:8080/InventoryUpdate", {
@@ -230,6 +237,7 @@ function EditMenuAndPrices() {
     }
   };
 
+  //function to add inventory item
   const addInventory = async () => {
     try {
       const response = await fetch("http://localhost:8080/InventoryAdd", {
@@ -247,6 +255,7 @@ function EditMenuAndPrices() {
     }
   };
 
+  ///function to delete an inventory item
   const deleteInventory = async () => {
     try {
       const response = await fetch("http://localhost:8080/InventoryDelete", {
@@ -264,6 +273,8 @@ function EditMenuAndPrices() {
     }
   };
 
+
+  ///frontend html creates 3 sections with fill in blanks for data values
   return (
     <div className={styles.container}>
       <h1 className={styles.header}>Database Editor Dashboard</h1>

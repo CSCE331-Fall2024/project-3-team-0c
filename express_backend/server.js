@@ -1082,7 +1082,7 @@ app.post('/getPriceID', async (req, res) => {
         const result = await pool.query(statement);
 
         if (result.rowCount == 1) {  // Only one row should be returned
-            // The menu item ID is found in the first returned of the result
+            // The price item ID is found in the first returned of the result
             res.status(200).json({ success: true, price_ID: result.rows[0].price_id });
         } else {  // If rowCount != 1, then something other than the intended operation occurred; therefor error
             res.status(404).json({ success: false, message: 'Failed to get price' });
