@@ -129,6 +129,7 @@ const MenuBoardView = () => {
                                 </div>
                             </div>
                         </div>
+                        <button  onClick={() => (window.location.href = "..")} className={styles.adjustButton}>Go Back</button>
                     </div>
                 </>
             ) : (
@@ -202,6 +203,7 @@ const MenuBoardView = () => {
                                 </div>
                             </div>
                         </div>
+                        <button  onClick={() => (window.location.href = "..")} className={styles.adjustButton}>Go Back</button>
                     </div>
                 </>
             )}

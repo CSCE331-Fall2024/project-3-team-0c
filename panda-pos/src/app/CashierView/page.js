@@ -12,6 +12,11 @@ const CashierView = () => {
   const [drinkPrice, setDrinkPrice] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
 
+  /**
+   * @description Adds selected menu item to the cart
+   * @param {Object} item menu item being added to cart
+   * @author Grace Ung
+   */
   const handleAddItem = (item) => { // add item to the cart
     setCart([...cart, item]);
     setTotalPrice(item.price);

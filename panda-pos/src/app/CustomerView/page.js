@@ -120,6 +120,7 @@ const CustomerView = () => {
                     <div className={styles.adjustments}>
                 <button onClick={increaseContrast} className={styles.adjustButton}>Increase Contrast</button>
                 <button onClick={decreaseContrast} className={styles.adjustButton}>Decrease Contrast</button>
+                <button  onClick={() => (window.location.href = "..")} className={styles.adjustButton}>Go Back</button>
             </div>
             </header>
             <div className={styles.mainView}>
