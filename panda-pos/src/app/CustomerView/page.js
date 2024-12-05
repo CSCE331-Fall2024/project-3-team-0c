@@ -5,11 +5,14 @@ import MainMenuComponent from './CustomerComponents/MainMenuComponent';
 import AppetizersComponent from './CustomerComponents/AppetizersComponent';
 import DrinksComponent from './CustomerComponents/DrinksComponent';
 import CartComponent from './CustomerComponents/CartComponent';
+import Image from 'next/image';
 
 const CustomerView = () => {
     const [time, setTime] = useState(new Date().toLocaleTimeString());
     const [activeSection, setActiveSection] = useState('home');
     const [cart, setCartItems] = useState([]);
+    const [zoomLevel, setZoomLevel] = useState(1);
+    const [contrast, setContrast] = useState(1); // Default contrast value
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -21,7 +24,6 @@ const CustomerView = () => {
     
    
 
-
     useEffect(() => {
         // Force a small state update after initial render to ensure everything is ready
         setCartItems([]);  // Clear the cart if needed on mount, or make sure it's initialized
@@ -29,6 +31,25 @@ const CustomerView = () => {
 
     const addToCart = (item) => {
         setCartItems([...cart, item]);
+    };
+
+    const zoomIn = () => {
+        setZoomLevel(prevZoom => Math.min(prevZoom + 0.1, 3)); // Max zoom level = 3
+    };
+
+    // Zoom out function
+    const zoomOut = () => {
+        setZoomLevel(prevZoom => Math.max(prevZoom - 0.1, 0.5)); // Min zoom level = 0.5
+    };
+
+    // Increase contrast
+    const increaseContrast = () => {
+        setContrast(prevContrast => Math.min(prevContrast + 0.1, 2)); // Max contrast = 2
+    };
+
+    // Decrease contrast
+    const decreaseContrast = () => {
+        setContrast(prevContrast => Math.max(prevContrast - 0.1, 0.5)); // Min contrast = 0.5
     };
 
     /*
@@ -61,8 +82,8 @@ const CustomerView = () => {
                 instructionmessage = "Checkout"
                 return <CartComponent message={instructionmessage} cartItems={cart} setCartItems={setCartItems}/>;
             default:
-                instructionmessage = ""
-                return <MainMenuComponent message={instructionmessage} addToCart={addToCart} cartItems={cart} />;
+                instructionmessage = "Bowl"
+                return <MainMenuComponent message={instructionmessage} addToCart={addToCart}/>;
         }
     };
 
@@ -71,10 +92,39 @@ const CustomerView = () => {
     * all items are available with organization tabs for bowl, plate, etc.
     */
     return (
-        <div className={styles.customerView}>
+        <div className={styles.customerView} style={{
+            transform: `scale(${zoomLevel})`,
+            transformOrigin: "0 0", // Ensures scaling starts from the top-left
+            width: `${100 / zoomLevel}%`, // Adjust width dynamically
+            height: `${100 / zoomLevel}%`, // Adjust height dynamically
+            filter: `contrast(${contrast})`, // Apply contrast filter
+        }}>
             <header className={styles.header}>
                 <div className={styles.time}>{time}</div>
                 <h1 className={styles.title}>Customer View</h1>
+                <button onClick={zoomIn}>
+                        <Image
+                            src="/photos/zoom-in.png"
+                            alt="Zoom In"
+                            className={styles['zoom-icon']}
+                            width={24}
+                            height={24}
+                        />
+                    </button>
+                    <button onClick={zoomOut}>
+                        <Image
+                            src="/photos/zoom-out.png"
+                            alt="Zoom Out"
+                            className={styles['zoom-icon']}
+                            width={24}
+                            height={24}
+                        />
+                    </button>
+                    <div className={styles.adjustments}>
+                <button onClick={increaseContrast} className={styles.adjustButton}>Increase Contrast</button>
+                <button onClick={decreaseContrast} className={styles.adjustButton}>Decrease Contrast</button>
+                <button  onClick={() => (window.location.href = "..")} className={styles.adjustButton}>Go Back</button>
+            </div>
             </header>
             <div className={styles.mainView}>
                 <nav className={styles.navigation}>
@@ -92,6 +142,7 @@ const CustomerView = () => {
                     </div>
                 </div>
             </div>
+           
         </div>
     );
 };

@@ -3,7 +3,6 @@ import styles from './MainMenuStyle.module.css';
 import Image from 'next/image';
 
 // cart view and layout for customer view
-
 const CartComponent = ({ message, cartItems, setCartItems }) => {
   const [showMainMenu, setShowMainMenu] = useState(true);
   const [bowlPrice, setBowlPrice] = useState(null);
@@ -11,63 +10,306 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
   const [biggerPlatePrice, setBiggerPlatePrice] = useState(null);
   const [appetizersPrice, setAppetizersPrice] = useState(null);
   const [drinkPrice, setDrinkPrice] = useState(null);
-  // const [ALaCartePrice, setALaCartePricePrice] = useState(null);
+  const [ALaCartePrice, setALaCartePrice] = useState(null);
 
   const [totalPrice, setTotalPrice] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState(''); // State for selected payment method
 
-  const getPriceFromDB = async (itemName, setState) => {
-    try {
-      // Get price of an item given the name of the price type (ex: "Bowl")
-      const response = await fetch("http://localhost:8080/getPrice", {
+  
+  /**
+   * @description iterates through cartItems adding each item to an order item and submitting to the database
+   * @param orderID The ID of the order being created
+   * @returns completed order item
+   * @author Daniel Fuhrmann
+   */
+  async function processCart(orderID) {
+    for (let index = 0; index < cartItems.length; index++) {
+      let item = cartItems[index];
+      // TODO: Get menu item id for each item
+      let itemMenuID;
+      try {
+        const itemIDResponse = await fetch("http://localhost:8080/getMenuID", {
           method: "POST",
           headers: {
-              "Content-Type": "application/json",
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify({ name: itemName }),
-      });
-
-      if (!response.ok) { // Throw error if failure to get price
-          throw new Error(`Failed to fetch price for ${itemName}`);
+          body: JSON.stringify({ "itemName": item.name })
+        });
+        const itemIDResult = await itemIDResponse.json();
+        if (!itemIDResult.success) {
+          console.error(itemIDResult);
+        }
+        else {
+          itemMenuID = itemIDResult.menuItemID;
+        }
+      } catch (error) {
+        console.error(error.message);
       }
 
-      const data = await response.json();
-      setState(data.price); // Update the corresponding state
-  } catch (error) {
-      console.error(`An error occurred requesting ${itemName} price:`, error.message);
-  }
-  };
+      if (item.isMainSelection || item.type === 'A La Carte') {
+        // TODO check if it orderItem has a menu item already - if so submit order
+        if (globalThis.orderItem.hasOwnProperty("menuItem1")) {
+          // console.log("Spot A");
+          try {
+            const orderItemResponse = await fetch("http://localhost:8080/addCustomerOrderItem", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(globalThis.orderItem)  // FIXME
+            });
+            const orderItemResult = await orderItemResponse.json();
+            if (!orderItemResult.success) {
+              console.error(orderItemResult);
+            }
+          } catch (error) {
+            console.error(error.message);
+          }
+        }
+        
+        
+        // globalThis.orderItem = {};
+        for (const key in globalThis.orderItem) {
+          delete globalThis.orderItem[key];
+        }
 
+        // TODO Get PriceID
+        let priceID;
+        try {
+          const priceIDResponse = await fetch("http://localhost:8080/getPriceID", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ "name": item.type })
+          });
+          const priceIDResult = await priceIDResponse.json();
+          if (!priceIDResult.success) {
+            console.error(priceIDResult);
+          }
+          else {
+            priceID = priceIDResult.price_ID;
+          }
+        } catch (error) {
+          console.error(error.message);
+        }
+        // console.log(priceID);
+        // TODO Add menu item to order item
+        globalThis.orderItem["orderID"] = orderID;
+        globalThis.orderItem["priceID"] = priceID;
+        globalThis.orderItem["menuItem1"] = itemMenuID;
+
+        // console.log(JSON.stringify(globalThis.orderItem));
+  
+  
+        // TODO if A la Carte: submit order item
+        if (item.type === 'A La Carte') {
+          try {
+            // console.log("Spot B");
+            const orderItemResponse = await fetch("http://localhost:8080/addCustomerOrderItem", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(globalThis.orderItem)  // FIXME
+            });
+            const orderItemResult = await orderItemResponse.json();
+            if (!orderItemResult.success) {
+              console.error(orderItemResult);
+            }
+          } catch (error) {
+            console.error(error.message);
+          }
+        }
+      }
+      else {
+        // TODO add menu item to orderItem
+        if (globalThis.orderItem.hasOwnProperty("menuItem2")) {
+          if (globalThis.orderItem.hasOwnProperty("menuItem3")) {
+            if (!globalThis.orderItem.hasOwnProperty("menuItem4")) {
+              globalThis.orderItem["menuItem4"] = itemMenuID;
+            }
+          }
+          else {
+            globalThis.orderItem["menuItem3"] = itemMenuID;
+          }
+        }
+        else {
+          globalThis.orderItem["menuItem2"] = itemMenuID;
+        }
+      }
+      // console.log("Spot D");
+      // console.log(globalThis.orderItem);
+    }//);
+    // console.log("Spot H");
+    // console.log(globalThis.orderItem);
+    return globalThis.orderItem;
+  }
+
+  /**
+   * @description Create a new order and calls processCart to add items to the new order
+   * @author Daniel Fuhrmann
+   */
+  const placeOrder = async () => {
+    globalThis.orderItem = { "orderID": -1 };
+    // TODO: Create empty order
+    try {
+      const response = await fetch("http://localhost:8080/createCustomerOrder", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+      const createResult = await response.json();
+      if (!createResult.success) {
+        console.error(createResult);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+
+
+    // TODO: Get Latest Order_ID
+    var orderID;
+    try {
+      const orderIDResponse = await fetch("http://localhost:8080/getLatestOrderID", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+      const orderIDResult = await orderIDResponse.json();
+      if (!orderIDResult.success) {
+        console.error(orderIDResult);
+      }
+      else {
+        orderID = orderIDResult.orderID;
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+
+    // TODO: Set Payment Type
+    var paymentType = paymentMethod
+    try {
+      const paymentTypeResponse = await fetch("http://localhost:8080/updatePaymentType", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ paymentType, orderID })
+      });
+      const paymentTypeResult = await paymentTypeResponse.json();
+      if (!paymentTypeResult.success) {
+        console.error(paymentTypeResult);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+
+
+    // TODO: Add order items to Order
+    // let orderItem = { "orderID": -1 };
+
+    
+    const processCartResult = await processCart(orderID);
+
+    
+    // console.log("Spot b.2");
+    // console.log(processCartResult);
+    try {
+      // console.log("Spot c");
+      const orderItemResponse = await fetch("http://localhost:8080/addCustomerOrderItem", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(processCartResult)  // FIXME
+      });
+      const orderItemResult = await orderItemResponse.json();
+      if (!orderItemResult.success) {
+        console.error(orderItemResult);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  
+  /**
+   * @description Sets the price for a given price type in the front end
+   * @param {string} itemName name of price type
+   * @param {string} setState state to set
+   * @author Daniel Fuhrmann
+   */
+  const getPriceFromDB = async (itemName, setState) => {
+    try {
+      const response = await fetch("http://localhost:8080/getPrice", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: itemName }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Failed to fetch price for ${itemName}`);
+      }
+  
+      const data = await response.json();
+      console.log(data.price);
+      setState(data.price); // Update the corresponding state
+    } catch (error) {
+      console.error(`An error occurred requesting ${itemName} price:`, error.message);
+    }
+  };
+  
   useEffect(() => {
     getPriceFromDB("Bowl", setBowlPrice);
     getPriceFromDB("Plate", setPlatePrice);
     getPriceFromDB("Bigger Plate", setBiggerPlatePrice);
     getPriceFromDB("Appetizer", setAppetizersPrice);
     getPriceFromDB("Drink", setDrinkPrice);
-}, []);
-
+    getPriceFromDB("A La Carte", setALaCartePrice);
+  }, []);
+  
   // Calculate total price
+  
+
   useEffect(() => {
+
     let total = 0;
-    cartItems.forEach((item) => {
-      // Only add prices for items that are main selections or A La Carte
+
+    for (let index = 0; index < cartItems.length; index++) {
+      let item = cartItems[index];
       if (item.isMainSelection || item.type === 'A La Carte') {
-        total +=
-          item.type === 'Bowl'
-            ? 8.30
-            : item.type === 'Plate'
-              ? 9.80
-              : item.type === 'Bigger Plate'
-                ? 11.30
-                : item.type === 'Appetizer'
-                  ? 2.00
-                  : item.type === 'Drink'
-                    ? 2.10
-                    : item.type === 'A La Carte'
-                      ? 20.00
-                      : 0; // Default to 0 if no match
+        switch (item.type) {
+          case 'Bowl':
+            // await getPriceFromDB("Bowl", setBowlPrice);
+            console.log(bowlPrice);
+            total += 8.30;
+            break;
+          case 'Plate':
+            total += 9.80;
+            break;
+          case 'Bigger Plate':
+            total += 8.30;
+            break;
+          case 'Appetizer':
+            total += 8.30;
+            break;
+          case 'A La Carte':
+            total += 8.30;
+            break;
+          case 'Drink':
+            total += 8.30;
+            break;
+        
+          default:
+            total += 0;
+            break;
+        }
       }
-    });
+    }
     setTotalPrice(total); // Update the totalPrice state
   }, [cartItems]);
 
@@ -99,23 +341,6 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
           <option value="dining dollars">Dining Dollars</option>
         </select>
       </div>
-      <div className={styles['row'] + ' ' + styles['zoom-controls']}>
-        <button><Image
-          src="/photos/zoom-in.png"
-          alt="Zoom In"
-          className={styles['zoom-icon']}
-          width={24}
-          height={24} />
-        </button>
-        <button>
-          <Image
-            src="/photos/zoom-out.png"
-            alt="Zoom Out"
-            className={styles['zoom-icon']}
-            width={24}
-            height={24} />
-        </button>
-      </div>
       <div>
 
       </div>
@@ -143,7 +368,7 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
                               : item.type === 'Drink'
                                 ? drinkPrice
                                 : item.type === 'A La Carte'
-                                  ? '20.00'  // FIXME
+                                  ? ALaCartePrice
                                   : 'N/A'}
                     </span>
                   )}
@@ -164,7 +389,7 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
         )}
         
       </div>
-      <button className={styles.button}>Place Order</button>
+      <button className={styles.button} onClick={placeOrder}>Place Order</button>
     </div>
   );
 };

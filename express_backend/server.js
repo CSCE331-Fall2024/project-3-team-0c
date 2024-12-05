@@ -1,18 +1,22 @@
 
 // Imports express.js
+ 
 const express = require("express");
 const cors = require("cors");
 const PORT = process.env.PORT || 8080;
 const { Pool } = require('pg');
 const dotenv = require('dotenv').config();
-
+const { OAuth2Client } = require('google-auth-library'); 
 // // Imports Client class from PostegreSQL
 // const { Client } = require('pg');
 
 // Creating Express app
 const app = express();
 app.use(express.json()); 
-app.use(cors());
+app.use(cors({
+    origin: ["http://localhost:3000", "https://project-3-team-0c-chix.onrender.com"], // Allow dev and production origins
+    credentials: true, // Allow cookies if necessary
+  }));
 
 // Start the Express server
 app.listen(PORT, () => {
@@ -1090,3 +1094,168 @@ app.post('/getPriceID', async (req, res) => {
 });
 
 // module.exports = router;
+
+////Load reviews for customers
+app.get('/ReviewsLoad', async (req, res) => {
+    try {
+        const query = {  
+            text: 'SELECT * FROM reviews;',  // Select all reviews
+        };
+        
+        const result = await pool.query(query);
+
+        res.status(200).json(result.rows);  // Return all reviews
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+//Add review for an item
+app.post('/addReview', async (req, res) => {
+    try {
+
+        const { rating, review_text, menu_item } = req.body;
+        // Construct the query to calculate max id + 1 
+        const statement = {
+            text: `
+                INSERT INTO reviews (review_id, rating, review_text, menu_item)
+                VALUES (
+                    (SELECT COALESCE(MAX(review_id), 0) + 1 FROM reviews),
+                    $1, $2, $3
+                );
+            `,
+            values: [rating, review_text, menu_item],
+        };
+
+        const result = await pool.query(statement);
+
+        if (result.rowCount === 1) {  // Confirm a single row was inserted
+            res.status(200).json({ success: true, message: 'Review added' });
+        } else {  // Handle unexpected cases
+            res.status(404).json({ success: false, message: 'Failed to add review' });
+        }
+    } catch (error) {
+        console.error('Error adding review:', error);  // Log error details
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+// Google Oath2 authentication
+// packages are installed in the backend folder
+
+
+// const CLIENT_ID = '425214390685-r9egee7vvho2ip1fepevds0i7htide9e.apps.googleusercontent.com';
+// const client = new OAuth2Client(CLIENT_ID);
+
+// // Verify the token sent by the frontend
+// async function verifyToken(token) {
+//   const ticket = await client.verifyIdToken({
+//     idToken: token,
+//     audience: CLIENT_ID,
+//   });
+//   const payload = ticket.getPayload();
+//   return payload; 
+// }
+
+// // Endpoint to verify the user token
+// app.post('/auth/google', async (req, res) => {
+//   const token = req.body.token;
+//   try {
+//     const userData = await verifyToken(token);
+//     // Authenticate or register the user in your system
+//     res.status(200).json({ success: true, user: userData });
+//   } catch (error) {
+//     res.status(401).json({ success: false, error: 'Invalid token' });
+//   }
+// });
+
+
+// google auth - grace
+// findByEmail so not just anyone can login
+const client = new OAuth2Client("425214390685-pida2qb7nfe95a3fe5gq2hp525493ee2.apps.googleusercontent.com");
+
+async function findUserByEmail(email, role) {
+  try {
+    console.log(role);
+    result = false;
+    if (role === 't') {
+        result = await pool.query("SELECT * FROM employee WHERE email = $1 AND is_manager = $2", [email, role]);
+       
+      } else {
+        result = await pool.query("SELECT * FROM employee WHERE email = $1", [email]);
+      }
+    
+    return result.rows[0]; // Return the first matching row, or undefined if no match
+  } catch (error) {
+    console.error("Error querying the database:", error);
+    throw error; // Re-throw the error for the caller to handle
+  }
+}
+
+module.exports = findUserByEmail;
+
+// google auth
+//const { OAuth2Client } = require("google-auth-library");
+//const client = new OAuth2Client("425214390685-r9egee7vvho2ip1fepevds0i7htide9e.apps.googleusercontent.com");
+
+app.post("/auth/google", async (req, res) => {
+const { token, role_id } = req.body;
+
+
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: "425214390685-pida2qb7nfe95a3fe5gq2hp525493ee2.apps.googleusercontent.com",
+    });
+
+    const payload = ticket.getPayload();
+    const userEmail = payload.email;
+
+    const role = (role_id == "Manager") ? "t" : "f";
+
+    //Validate the user's role based on email
+    const user = await findUserByEmail(userEmail, role); // Query your database
+    console.log(user);
+    if (user) {
+        res.json({ success: true});
+    } else {
+      res.json({ success: false});
+    }
+  } catch (error) {
+    console.error("Google authentication error:", error);
+    res.status(500).json({ success: false, message: "Authentication failed" });
+  }
+});
+// google auth
+
+
+// this works - hard codes the roles and 
+// app.post("/auth/google", async (req, res) => {
+//     const { token } = req.body;
+  
+//     try {
+//       // Verify the ID token with Google
+//       const ticket = await client.verifyIdToken({
+//         idToken: token,
+//         audience: "425214390685-r9egee7vvho2ip1fepevds0i7htide9e.apps.googleusercontent.com", // Replace with your Google Client ID
+//       });
+  
+//       const payload = ticket.getPayload();
+//       const userEmail = payload.email;
+  
+//       // Define the allowed email address
+//       const allowedEmail = "graceung56@gmail.com";
+
+//       // Check if the email matches the allowed email
+//       if (userEmail === allowedEmail) {
+//         res.json({ success: true, user: { email: userEmail, role: "employee" } });
+//       } else {
+//         res.json({ success: false, message: "Access denied" });
+//       }
+//     } catch (error) {
+//       console.error("Internal Google authentication error:", error);
+//       res.status(500).json({ success: false, message: "Authentication failed" });
+//     }
+//   });
+  
+

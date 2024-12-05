@@ -147,3 +147,11 @@
   .deleteButton {
     margin-left: 20px; /* Space between price and button */
   }
+
+  .totalPrice {
+    margin-top: 1rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-align: right;
+  }
+  
