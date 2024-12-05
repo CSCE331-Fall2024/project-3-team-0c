@@ -178,7 +178,7 @@ function EditMenuAndPrices() {
   // Load inventory items
   const loadInventory = async () => {
     try {
-      const response = await fetch("http://localhost:8080/InventoryLoad", {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/InventoryLoad", {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
@@ -216,7 +216,7 @@ function EditMenuAndPrices() {
   //function to edit an invenotry item
   const editInventory = async () => {
     try {
-      const response = await fetch("http://localhost:8080/InventoryUpdate", {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/InventoryUpdate", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -240,7 +240,7 @@ function EditMenuAndPrices() {
   //function to add inventory item
   const addInventory = async () => {
     try {
-      const response = await fetch("http://localhost:8080/InventoryAdd", {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/InventoryAdd", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, quantity }),
@@ -258,7 +258,7 @@ function EditMenuAndPrices() {
   ///function to delete an inventory item
   const deleteInventory = async () => {
     try {
-      const response = await fetch("http://localhost:8080/InventoryDelete", {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/InventoryDelete", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ inventoryId }),
