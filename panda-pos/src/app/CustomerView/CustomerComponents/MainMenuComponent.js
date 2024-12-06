@@ -106,6 +106,11 @@ const MainMenuComponent = ({ message, addToCart }) => {
                         <img src="/photos/Beef_BeijingBeef.png" alt="Beijing Beef" className={styles.image} />
                         <button className={styles.button}>Beijing Beef</button>
                     </div>
+                    <div className={styles.card} onClick={() => addToCart({ name: 'Honey Walnut Shrimp', type: message })}>
+                        <img src="/photos/Seafood_HoneyWalnutShrimp.png" alt="Honey Walnut Shrimp" className={styles.image} />
+                        <button className={styles.button}>Honey Walnut Shrimp</button>
+                    
+                    </div>
                 </div>
 
 
