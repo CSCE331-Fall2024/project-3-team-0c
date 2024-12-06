@@ -285,6 +285,7 @@ const CashierView = () => {
           <button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Grilled Teriyaki Chicken' })}>Grilled Teriyaki Chicken</button>
           <button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Mushroom Chicken' })}>Mushroom Chicken</button>
           <button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Beijing Beef' })}>Beijing Beef</button>
+          <button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Honey Walnut Shrimp' })}>Honey Walnut Shrimp</button>
         </div>
         <div className={styles['buttonRow']}>
           <button className={styles['buttonApp']} onClick={() => handleAddItem({ name: 'Veggie Spring Roll', price: appetizersPrice })}>Veggie Spring Roll</button>
