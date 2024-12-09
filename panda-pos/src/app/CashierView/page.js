@@ -2,6 +2,26 @@
 import React, { useState, useEffect } from 'react';
 import styles from './CashierView.module.css';
 
+/**
+   * @description Adds selected menu item to the cart
+   * @param {Object} item menu item being added to cart
+   * @author Grace Ung
+   */
+const handleAddItem = (item) => { // add item to the cart
+  setCart([...cart, item]);
+  setTotalPrice(item.price);
+};
+
+/**
+   * @description Adds selected menu item to the cart
+   * @param {Object} item menu item being added to cart
+   * @author Grace Ung
+   */
+const handleRemoveItem = (index) => {
+  const newCart = [...cart];
+  newCart.splice(index, 1);
+  setCart(newCart);
+};
 const CashierView = () => {
   // handle adding and removing items to the cart
   const [cart, setCart] = useState([]);
@@ -12,21 +32,8 @@ const CashierView = () => {
   const [drinkPrice, setDrinkPrice] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
 
-  /**
-   * @description Adds selected menu item to the cart
-   * @param {Object} item menu item being added to cart
-   * @author Grace Ung
-   */
-  const handleAddItem = (item) => { // add item to the cart
-    setCart([...cart, item]);
-    setTotalPrice(item.price);
-  };
-
-  const handleRemoveItem = (index) => {
-    const newCart = [...cart];
-    newCart.splice(index, 1);
-    setCart(newCart);
-  };
+  
+  
 
   const calculateTotal = () => {
     return cart
