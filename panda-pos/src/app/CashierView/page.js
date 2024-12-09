@@ -2,7 +2,21 @@
 import React, { useState, useEffect } from 'react';
 import styles from './CashierView.module.css';
 
+
+
+const CashierView = () => {
+  // handle adding and removing items to the cart
+  
+const [cart, setCart] = useState([]);
+const [bowlPrice, setBowlPrice] = useState(null);
+const [platePrice, setPlatePrice] = useState(null);
+const [biggerPlatePrice, setBiggerPlatePrice] = useState(null);
+const [appetizersPrice, setAppetizersPrice] = useState(null);
+const [drinkPrice, setDrinkPrice] = useState(null);
+const [totalPrice, setTotalPrice] = useState(0);
+
 /**
+   * @function handleAddItem 
    * @description Adds selected menu item to the cart
    * @param {Object} item menu item being added to cart
    * @author Grace Ung
@@ -13,8 +27,9 @@ const handleAddItem = (item) => { // add item to the cart
 };
 
 /**
-   * @description Adds selected menu item to the cart
-   * @param {Object} item menu item being added to cart
+   * @function handleRemoveItem 
+   * @description Removes selected menu item to the cart
+   * @param {Object} item menu item being removed from cart
    * @author Grace Ung
    */
 const handleRemoveItem = (index) => {
@@ -22,47 +37,42 @@ const handleRemoveItem = (index) => {
   newCart.splice(index, 1);
   setCart(newCart);
 };
-const CashierView = () => {
-  // handle adding and removing items to the cart
-  const [cart, setCart] = useState([]);
-  const [bowlPrice, setBowlPrice] = useState(null);
-  const [platePrice, setPlatePrice] = useState(null);
-  const [biggerPlatePrice, setBiggerPlatePrice] = useState(null);
-  const [appetizersPrice, setAppetizersPrice] = useState(null);
-  const [drinkPrice, setDrinkPrice] = useState(null);
-  const [totalPrice, setTotalPrice] = useState(0);
 
-  
-  
+/**
+   * @function fetchPrice 
+   * @description Gets the price from the database
+   * @param {Object} itemName menu item price being fetched
+   * @param {Object} setState sets the state for the item 
+   * @author Daniel Furhmann
+   */
+const fetchPrice = async (itemName, setState) => { // get the price of each product
+  try {
+    const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/getPrice", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: itemName }),
+    });
 
-  const calculateTotal = () => {
-    return cart
-      .filter(item => item.price != null) // Only include items with a price
-      .reduce((total, item) => total + item.price, 0); // Sum up the prices
-  };
-
-
-  const fetchPrice = async (itemName, setState) => { // get the price of each product
-    try {
-      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/getPrice", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name: itemName }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch price for ${itemName}`);
-      }
-
-      const data = await response.json();
-      setState(data.price); // Update the corresponding state
-    } catch (error) {
-      console.error(`An error occurred requesting ${itemName} price:`, error.message);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch price for ${itemName}`);
     }
-  };
 
+    const data = await response.json();
+    setState(data.price); // Update the corresponding state
+  } catch (error) {
+    console.error(`An error occurred requesting ${itemName} price:`, error.message);
+  }
+};
+
+
+/**
+   * @function processCart 
+   * @description Processes the elements in the cart
+   * @param {Object} orderID the order ID of the cart 
+   * @author Daniel Furhmann
+   */
   async function processCart(orderID) {
     for (let index = 0; index < cart.length; index++) {
       let item = cart[index];
@@ -164,6 +174,11 @@ const CashierView = () => {
     return globalThis.orderItem;
   };
 
+  /**
+   * @function submitOrder
+   * @description Submits the order
+   * @author Daniel Furhmann
+   */
   const submitOrder = async () => {
     globalThis.orderItem = { "orderID": -1 };
     // TODO: Create empty order
