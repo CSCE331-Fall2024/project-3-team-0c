@@ -12,7 +12,12 @@ const HomePage = () => {
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState(null);
 
-  // Fetch weather data on component mount
+
+  /**
+     * @function fetchWeather
+     * @description Fetch weather data on component mount
+     * @author Adarsh Vadlapatla
+     */
   useEffect(() => {
     const fetchWeather = async () => {
       try {

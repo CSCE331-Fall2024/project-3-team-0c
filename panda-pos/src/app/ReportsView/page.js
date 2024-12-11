@@ -121,7 +121,11 @@ function ReportsView() {
   const [chartData, setChartData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch inventory data from the server
+  /**
+     * @function loadInventory
+     * @description Fetch inventory data from the server
+     * @author Abel Thomas
+     */
   const loadInventory = async () => {
     try {
       const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/InventoryLoad", {
@@ -144,6 +148,11 @@ function ReportsView() {
   }, []);
 
   // Generate report for Sales History
+  /**
+     * @function handleGenerateSalesReport
+     * @description Generate report for Sales History
+     * @author Abel Thomas
+     */
   const handleGenerateSalesReport = async () => {
     try {
         setIsLoading(true);
@@ -172,7 +181,12 @@ function ReportsView() {
         setIsLoading(false);
     }
 };
-  // Generate report for Product Usage
+
+  /**
+     * @function handleGenerateProductUsage
+     * @description Generate report for Product Usage
+     * @author Abel Thomas
+     */
   const handleGenerateProductUsage = async () => {
     try {
       setIsLoading(true);
@@ -198,7 +212,12 @@ function ReportsView() {
       setIsLoading(false);
     }
   };
-// Generate Report for monthly sales history
+  
+/**
+     * @function handleGenerateMonthlySalesHistory
+     * @description Generate Report for monthly sales history
+     * @author Abel Thomas
+     */
   const handleGenerateMonthlySalesHistory = async () => {
     try {
       setIsLoading(true);
@@ -229,7 +248,11 @@ function ReportsView() {
   
   
 
-  // Generate report for Popular Items
+  /**
+     * @function handleGeneratePopularItems
+     * @description Generate report for Popular Items
+     * @author Abel Thomas
+     */
   const handleGeneratePopularItems = async () => {
     try {
         setIsLoading(true);
@@ -253,7 +276,12 @@ function ReportsView() {
     }
 };
 
-// Generate chart from drop down selected
+
+/**
+     * @function handleGenerateChart
+     * @description Generate chart from drop down selected
+     * @author Abel Thomas
+     */
   const handleGenerateChart = async () => {
     if (selectedGraph === "Select Graph") {
       alert("Please select a valid graph type.");

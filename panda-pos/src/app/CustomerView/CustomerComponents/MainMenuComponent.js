@@ -8,12 +8,22 @@ const MainMenuComponent = ({ message, addToCart }) => {
     const [showAlert, setShowAlert] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
 
-
+    /**
+     * @function handleItemClick
+     * @description Adds selected menu item to the cart, shows allergy alert
+     * @param {Object} item menu item being added to cart
+     * @author Grace Ung
+     */
     const handleItemClick = (item) => {
         setSelectedItem(item); // Set the selected item
         setShowAlert(true); // Show the allergy alert
     };
 
+    /**
+     * @function handleConfirm
+     * @description removes the allergy alert from screen
+     * @author Grace Ung
+     */
     const handleConfirm = () => {
         setShowAlert(false);
         if (selectedItem) {

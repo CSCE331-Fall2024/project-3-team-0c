@@ -29,25 +29,50 @@ const CustomerView = () => {
         setCartItems([]);  // Clear the cart if needed on mount, or make sure it's initialized
     }, []);
 
+    /**
+     * @function addToCart
+     * @description Adds selected menu items to a global cart
+     * @param {Object} item menu item being added to cart
+     * @author Grace Ung
+     */
     const addToCart = (item) => {
         setCartItems([...cart, item]);
     };
 
+    /**
+     * @function zoomIn
+     * @description Enlarge the view of the screen
+     * @author Grace Ung
+     */
     const zoomIn = () => {
         setZoomLevel(prevZoom => Math.min(prevZoom + 0.1, 3)); // Max zoom level = 3
     };
 
-    // Zoom out function
+    /**
+     * @function zoomOut
+     * @description Minimize the view of the screen
+     * @author Grace Ung
+     */
     const zoomOut = () => {
         setZoomLevel(prevZoom => Math.max(prevZoom - 0.1, 0.5)); // Min zoom level = 0.5
     };
 
     // Increase contrast
+    /**
+     * @function increaseContrast
+     * @description Increase the contrast of the screen
+     * @author Adarsh Vadlapatla
+     */
     const increaseContrast = () => {
         setContrast(prevContrast => Math.min(prevContrast + 0.1, 2)); // Max contrast = 2
     };
 
     // Decrease contrast
+    /**
+     * @function decreaseContrast
+     * @description decrease the contrast of the screen
+     * @author Adarsh Vadlapatla
+     */
     const decreaseContrast = () => {
         setContrast(prevContrast => Math.max(prevContrast - 0.1, 0.5)); // Min contrast = 0.5
     };
@@ -56,6 +81,11 @@ const CustomerView = () => {
     * Provide instructions for each type of order on each rednering clicked
     * based on the tab clicked provide different food options
     */
+   /**
+     * @function renderContent
+     * @description Changes the look of the screen
+     * @author Grace Ung
+     */
     const renderContent = () => {
         let instructionmessage = "";
         switch (activeSection) {

@@ -23,6 +23,13 @@ const MenuBoardView = () => {
         return () => clearInterval(interval);
     }, []);
 
+    /**
+     * @function fetchPrice
+     * @description Gets the price from the backend
+     * @param {Object} itemName menu item of the price needed
+     * @param {Object} setState variable to hold the price fetched
+     * @author Daniel Furhmann
+     */
     const fetchPrice = async (itemName, setState) => {
         try {
             const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/getPrice", {

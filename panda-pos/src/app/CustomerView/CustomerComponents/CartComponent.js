@@ -17,6 +17,7 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
 
   
   /**
+   * @function processCart
    * @description iterates through cartItems adding each item to an order item and submitting to the database
    * @param orderID The ID of the order being created
    * @returns completed order item
@@ -147,6 +148,7 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
   }
 
   /**
+   * @function placeOrder
    * @description Create a new order and calls processCart to add items to the new order
    * @author Daniel Fuhrmann
    */
@@ -237,6 +239,7 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
   };
   
   /**
+   * @function getPriceFromDB
    * @description Sets the price for a given price type in the front end
    * @param {string} itemName name of price type
    * @param {string} setState state to set
@@ -312,12 +315,24 @@ const CartComponent = ({ message, cartItems, setCartItems }) => {
     setTotalPrice(total); // Update the totalPrice state
   }, [cartItems]);
 
+  /**
+     * @function handleRemoveItem
+     * @description Removes unwanted item from cart
+     * @param {Object} index item index to be removed from cart
+     * @author Grace Ung
+     */
   const handleRemoveItem = (index) => {
     const newCart = [...cartItems];
     newCart.splice(index, 1);
     setCartItems(newCart);
   };
 
+  /**
+     * @function handlePaymentChange
+     * @description Changes payment type when value changes
+     * @param {Object} e action listener
+     * @author Grace Ung
+     */
   const handlePaymentChange = (e) => {
     setPaymentMethod(e.target.value); // Update the selected payment method
   };
