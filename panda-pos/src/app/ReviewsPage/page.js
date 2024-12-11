@@ -4,16 +4,16 @@
      * @author Jaden Ninan
      */
 "use client";
-
-
 import React, { useState, useEffect } from "react";
 //import { useNavigate } from "react-router-dom";
 import "./Reviews.modules.css";
 
-/**
- * Reviews page for cutomers to read and add reviews on specific menu items
- */
 
+/**
+ * @function Page
+ * @description The main interface for the reviews page
+ * @author Jaden Ninan
+ */
 const Page = () => {
   const [selectedItem, setSelectedItem] = useState("");
   const [reviews, setReviews] = useState([]);
@@ -50,6 +50,11 @@ const Page = () => {
     fetchReviews();
   }, []); // Runs once on component mount
 
+  /**
+ * @function handleAddReview
+ * @description Handles taking in a rating and text review and adding it to the database through calling the server api
+ * @author Jaden Ninan
+ */
   const handleAddReview = async () => {
     const { rating, review_text } = newReview;
 
@@ -91,18 +96,30 @@ const Page = () => {
     }
   };
 
-  //filtering all reviews specific to that item for average calculation
+  /**
+   * @constant filteredReviewsaverage
+   * @description Filters all reviews for the selected menu item to calculate the average rating
+   * @author Jaden Ninan
+   */
   const filteredReviewsaverage = reviews.filter(
     (review) => review.menu_item == selectedItem
   );
 
-  //filtering all reviews specific to that item and that contain text reviews to display 
+  /**
+   * @constant filteredReviews
+   * @description Filters all reviews for the selected menu item and only includes those with text
+   * @author Jaden Ninan
+   */ 
   const filteredReviews = reviews
     .filter((review) => review.menu_item === selectedItem)
     .filter((review) => review.review_text && review.review_text.trim());
 
 
-  //calcualte average rating for an item
+  /**
+   * @constant averageRating
+   * @description Calculates the average of all ratings for that item
+   * @author Jaden Ninan
+   */
   const averageRating = filteredReviews.length
     ? (
         filteredReviewsaverage.reduce((sum, review) => sum + parseFloat(review.rating), 0) /

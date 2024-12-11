@@ -1,6 +1,6 @@
 /**
      * @file loginGUI
-     * @description sets up format and functionality of the login view
+     * @description sets up format and functionality of the login view with google authentification
      * @author Grace Ung, Daniel Furhmann, Adarsh Vadlapatla, Abel Thomas, Jaden Ninan
      */
 "use client";
@@ -10,9 +10,10 @@ import styles from "./Login.module.css";
 import Image from 'next/image';
 
 /**
- * Login Page where goole authentification is used to allow employees and managers to access their respective pages
+ * @function Login
+ * @description The main login page component providing login options and Google authentication
+ * @author Adarsh Vadlapatla
  */
-
 function Login() {
   const router = useRouter();
   const [message, setMessage] = useState("");
@@ -37,16 +38,32 @@ function Login() {
     }
   }, [showGoogleButton]); // Run this effect whenever `showGoogleButton` changes
 
+  /**
+   * @function handleManagerLogin
+   * @description Prepares login for Manager role and displays Google Sign-In button
+   * @author Daniel Furhmann
+   */
   const handleManagerLogin = () => {
     setRole("Manager");
     setShowGoogleButton(true); // Show Google Sign-In button after selecting Manager
   };
 
+  /**
+   * @function handleEmployeeLogin
+   * @description Prepares login for Employee role and displays Google Sign-In button
+   * @author Grace Ung
+   */
   const handleEmployeeLogin = () => {
     setRole("Employee");
     setShowGoogleButton(true); // Show Google Sign-In button after selecting Employee
   };
 
+  /**
+   * @function handleGoogleLoginResponse
+   * @description Handles Google authentication response and validates the user role with the backend
+   * @param {Object} response - Google login response with the ID token
+   * @author Abel Thomas
+   */
   const handleGoogleLoginResponse = async (response) => {
     try {
       const idToken = response.credential;
@@ -96,8 +113,6 @@ function Login() {
           width={200}
           height={200}
         />
-
-
         <div className={styles.buttonGroup}>
           <button className={styles.button} onClick={handleManagerLogin}>Login as Manager</button>
           <button className={styles.button} onClick={handleEmployeeLogin}>Login as Employee</button>

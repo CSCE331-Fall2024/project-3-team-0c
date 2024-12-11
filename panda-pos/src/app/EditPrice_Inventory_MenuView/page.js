@@ -1,17 +1,16 @@
 /**
      * @file EditPrice_Inventory_MenuView
      * @description sets up format and functionality of the editing of prices, inventory, and menu
-     * @author Grace Ung
+     * @author Grace Ung, Jaden Ninan
      */
 "use client";
 import React, { useState, useEffect } from "react";
 import styles from "./EditPrice_Inventory_Menu.module.css";
 
-/*
- * Edit Menu, Prices, and Inventory interface frontend code and button logic implementation
- * will be a part of employee management to allow managers to interact directly with database values
+/**
+ * @function EditMenuAndPrices
+ * @description Provides UI for interacting with price, inventory, and menu details and integrates with backend API calls.
  */
-
 function EditMenuAndPrices() {
   // State variables
   const [selectedMenuItem, setSelectedMenuItem] = useState(null);
@@ -38,12 +37,12 @@ function EditMenuAndPrices() {
   const [Pricemessage, setPriceMessage] = useState("");
 
 
- /*
- * Menu Editor code button functions
- * implementations fo laoding database values, creating dropdown display, and adding and deleting values
+  /**
+ * @function loadMenu
+ * @description Fetches menu items from the database
+ * @returns {Promise<Object[]>} List of menu items or an empty array on error
+ * @author Grace Ung
  */
-
-  // Load menu items
   const loadMenu = async () => {
     try {
       const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/menuLoad", {
@@ -67,7 +66,12 @@ function EditMenuAndPrices() {
     fetchMenu();
   }, []);
 
-  ////menu item dropdown
+  /**
+ * @function handleMenuItemSelect
+ * @description Handles the selection of a menu item from the dropdown and updates the state with the selected item
+ * @param {Object} e The event object from the dropdown selection
+ * @author Grace Ung
+ */
   const handleMenuItemSelect = (e) => {
     const menuItemId = e.target.value;
     const menuItem = menuItems.find(
@@ -80,7 +84,11 @@ function EditMenuAndPrices() {
     }
   };
 
-  ///function to add menu items to database
+/**
+ * @function addMenu
+ * @description Adds a new menu item to the database
+ * @author Grace Ung
+ */
   const addMenu = async () => {
     try {
       const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/addMenuItem", {
@@ -98,7 +106,11 @@ function EditMenuAndPrices() {
     }
   };
 
-  ///function to delete menu item from database
+ /**
+ * @function deleteMenu
+ * @description Deletes a selected menu item from the database.
+ * @author Grace Ung
+ */
   const deleteMenu = async () => {
     try {
       const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/deleteMenuItem", {
@@ -122,7 +134,12 @@ function EditMenuAndPrices() {
   * implementations fo laoding database values, creating dropdown display, and editing price values
   */
 
-  ///function to load prices into dropdown
+  /**
+ * @function loadPrices
+ * @description Fetches price items from the database
+ * @returns {Promise<Object[]>} List of price items or an empty array on error
+ * @author Jaden Ninan
+ */
   const loadPrices = async () => {
     try {
       const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/loadPrice", {
@@ -146,7 +163,12 @@ function EditMenuAndPrices() {
     fetchMenu();
   }, []);
 
-  ///function to handle price item dropdown selection
+  /**
+ * @function handlePriceItemSelect
+ * @description Handles the selection of a price item from the dropdown and updates the state with the selected item
+ * @param {Object} e The event object from the dropdown selection
+ * @author Jaden Ninan
+ */
   const handlePriceItemSelect = (e) => {
     const priceItemId = e.target.value;
     const priceItem = priceItems.find(
@@ -160,7 +182,11 @@ function EditMenuAndPrices() {
     }
  };
 
-  ///edit prices items function
+ /**
+ * @function editPrices
+ * @description Updates the selected price item's details in the database
+ * @author Jaden Ninan
+ */
  const editPrices = async () => {
   try {
     const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/editPrice", {
@@ -186,14 +212,17 @@ function EditMenuAndPrices() {
 
 
 
-
-
 /*
 * Inventory  Editor code button functions
 * implementations for laoding database values, creating dropdown display, and adding, editing, and deleting values
 */
 
-  // Load inventory items from database
+  /**
+ * @function loadInventory
+ * @description Fetches inventory items from the database
+ * @returns {Promise<Object[]>} List of inventory items or an empty array on error
+ * @author Jaden Ninan
+ */
   const loadInventory = async () => {
     try {
       const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/InventoryLoad", {
@@ -217,7 +246,12 @@ function EditMenuAndPrices() {
     fetchInventory();
   }, []);
 
-  //function to handle inventory dropdown
+  /**
+ * @function handleInventorySelect
+ * @description Handles the selection of an inventory item from the dropdown and updates the state with the selected item
+ * @param {Object} e The event object from the dropdown selection
+ * @author Jaden Ninan
+ */
   const handleInventorySelect = (e) => {
     const inventoryItemId = e.target.value;
     const inventoryItem = inventoryItems.find(
@@ -231,7 +265,11 @@ function EditMenuAndPrices() {
     }
   };
 
-  //function to edit an inventory item
+  /**
+ * @function editInventory
+ * @description Updates the selected inventory item's details in the database
+ * @author Jaden Ninan
+ */
   const editInventory = async () => {
     try {
       const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/InventoryUpdate", {
@@ -255,7 +293,11 @@ function EditMenuAndPrices() {
     }
   };
 
-  //function to add inventory item
+  /**
+ * @function addInventory
+ * @description Adds an inventory item to the database
+ * @author Jaden Ninan
+ */
   const addInventory = async () => {
     try {
       const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/InventoryAdd", {
@@ -273,7 +315,11 @@ function EditMenuAndPrices() {
     }
   };
 
-  ///function to delete an inventory item
+  /**
+ * @function deleteInventory
+ * @description Deletes a selected inventory item from the database
+ * @author Grace Ung
+ */
   const deleteInventory = async () => {
     try {
       const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/InventoryDelete", {

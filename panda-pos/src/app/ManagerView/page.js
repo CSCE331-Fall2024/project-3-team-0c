@@ -1,6 +1,6 @@
 /**
      * @file ManagerView
-     * @description sets up format and functionality of the manager view
+     * @description sets up format and functionality of the manager view navigation
      * @author Adarsh Vadlapatla, Jaden Ninan
      */
 "use client";
@@ -9,10 +9,10 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 
 /**
- * 
- * Navigation page for managers to see all the options they have to visit
+ * @function ManagerView
+ * @description The main navigation page format for manager view
+ * @author Jaden Ninan
  */
-
 function ManagerView() {
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState(null);

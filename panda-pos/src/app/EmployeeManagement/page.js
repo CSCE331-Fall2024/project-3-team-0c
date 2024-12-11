@@ -8,10 +8,10 @@ import React, { useState, useEffect } from "react";
 import styles from "./employee.module.css";
 import { useRouter } from 'next/navigation';
 
-/*
-* employee mangement frontend interface code as well as logic and api call for backend for buttons
-*/
-
+/**
+ * @function EmployeeManagement
+ * @description Provides UI for interacting with employee details and integrates with backend API calls.
+ */
 function EmployeeManagement() {
   const router = useRouter();
   const [firstName, setfirstName] = useState("");
@@ -27,7 +27,12 @@ function EmployeeManagement() {
   const [employees, setEmployees] = useState([]);   
   const [isLoading, setIsLoading] = useState(true); 
 
-  // Fetch employee data from the server
+  /**
+   * @function loadEmployee
+   * @description Fetches the list of employees from the server
+   * @returns {Promise<Object[]>} List of employee data or an empty array if an error occurs
+   * @author Jaden Ninan
+   */
   const loadEmployee = async () => {
     try {
       const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/employeeLoad", { //calling backend function from server.js
@@ -69,7 +74,12 @@ function EmployeeManagement() {
 
   console.log(employees);
 
-  // Handle employee selection from the dropdown
+  /**
+   * @function handleEmployeeSelect
+   * @description Handles the selection of an employee from the dropdown and populates the form with their details
+   * @param {Object} e The event object triggered by the dropdown selection
+   * @author Adarsh Vadlapatla
+   */
   const handleEmployeeSelect = (e) => {
     const employeeId = e.target.value;
     const employee = employees.find((emp) => emp.employee_id === parseInt(employeeId)); 
@@ -86,7 +96,11 @@ function EmployeeManagement() {
     }
   };
 
-  // Edit employee details
+  /**
+   * @function editEmployee
+   * @description Request the server to update the details of the selected employee
+   * @author Jaden Ninan
+   */
   const editEmployee = async () => {
     try {
       const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/updateEmployee", {
@@ -106,7 +120,11 @@ function EmployeeManagement() {
     }
   };
 
-  // Add a new employee
+  /**
+   * @function addEmployee
+   * @description Request the server to add a new employee
+   * @author Jaden Ninan
+   */
   const addEmployee = async () => {
     try {
       const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/addEmployee", {
@@ -127,7 +145,11 @@ function EmployeeManagement() {
     }
   };
 
-  // Delete an employee
+  /**
+   * @function deleteEmployee
+   * @description Request the server to delete the selected employee
+   * @author Jaden Ninan
+   */
   const deleteEmployee = async () => {
     try {
       const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/deleteEmployee", {
@@ -147,6 +169,12 @@ function EmployeeManagement() {
       console.error(error);
     }
   };
+
+  /**
+   * @function handleReload
+   * @description Reloads the employee list by calling loadEmployee again
+   * @author Adarsh Vadlapatla
+   */
   const handleReload = () => {
     loadEmployee(); 
   };
