@@ -12,6 +12,10 @@ import {
   Legend,
 } from "chart.js";
 
+/**
+ * Data reports page to allow managers to generate different analytics that they might want
+ */
+
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 // Label mappings for different chart types

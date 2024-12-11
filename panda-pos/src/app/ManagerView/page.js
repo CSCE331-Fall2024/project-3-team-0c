@@ -4,6 +4,11 @@ import styles from "./manager.module.css"
 import React from 'react';
 import { useEffect, useState } from 'react';
 
+/**
+ * 
+ * Navigation page for managers to see all the options they have to visit
+ */
+
 function ManagerView() {
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState(null);

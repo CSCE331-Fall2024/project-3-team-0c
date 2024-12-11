@@ -3,8 +3,10 @@ import React, { useState, useEffect } from "react";
 import styles from "./EditPrice_Inventory_Menu.module.css";
 
 /*
- * Edit Menu, Prices, and Inventory in this frontend interface
+ * Edit Menu, Prices, and Inventory interface frontend code and button logic implementation
+ * will be a part of employee management to allow managers to interact directly with database values
  */
+
 function EditMenuAndPrices() {
   // State variables
   const [selectedMenuItem, setSelectedMenuItem] = useState(null);
@@ -31,7 +33,11 @@ function EditMenuAndPrices() {
   const [Pricemessage, setPriceMessage] = useState("");
 
 
-  /////menu section logic////////////////////////////////////////////////////////////
+ /*
+ * Menu Editor code button functions
+ * implementations fo laoding database values, creating dropdown display, and adding and deleting values
+ */
+
   // Load menu items
   const loadMenu = async () => {
     try {
@@ -69,7 +75,7 @@ function EditMenuAndPrices() {
     }
   };
 
-  ///function to add menu
+  ///function to add menu items to database
   const addMenu = async () => {
     try {
       const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/addMenuItem", {
@@ -87,7 +93,7 @@ function EditMenuAndPrices() {
     }
   };
 
-  ///function to delete menu item
+  ///function to delete menu item from database
   const deleteMenu = async () => {
     try {
       const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/deleteMenuItem", {
@@ -105,7 +111,12 @@ function EditMenuAndPrices() {
     }
   };
 
-  //////////prices section logic/////////////////////////////////////////
+
+  /*
+  * Price Editor code button functions
+  * implementations fo laoding database values, creating dropdown display, and editing price values
+  */
+
   ///function to load prices into dropdown
   const loadPrices = async () => {
     try {
@@ -172,10 +183,12 @@ function EditMenuAndPrices() {
 
 
 
+/*
+* Inventory  Editor code button functions
+* implementations for laoding database values, creating dropdown display, and adding, editing, and deleting values
+*/
 
-  //////invenotry section logic///////////////////////////////
-
-  // Load inventory items
+  // Load inventory items from database
   const loadInventory = async () => {
     try {
       const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/InventoryLoad", {
@@ -213,7 +226,7 @@ function EditMenuAndPrices() {
     }
   };
 
-  //function to edit an invenotry item
+  //function to edit an inventory item
   const editInventory = async () => {
     try {
       const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/InventoryUpdate", {
@@ -274,7 +287,11 @@ function EditMenuAndPrices() {
   };
 
 
-  ///frontend html creates 3 sections with fill in blanks for data values
+
+  /**
+   * Frontend html to create 3 different forms on front end to allow acces to databse buttons for price table, menu table, and inventory
+   */
+  
   return (
     <div className={styles.container}>
       <h1 className={styles.header}>Database Editor Dashboard</h1>

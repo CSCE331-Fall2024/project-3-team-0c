@@ -5,6 +5,10 @@ import React, { useState, useEffect } from "react";
 //import { useNavigate } from "react-router-dom";
 import "./Reviews.modules.css";
 
+/**
+ * Reviews page for cutomers to read and add reviews on specific menu items
+ */
+
 const Page = () => {
   const [selectedItem, setSelectedItem] = useState("");
   const [reviews, setReviews] = useState([]);
@@ -82,14 +86,18 @@ const Page = () => {
     }
   };
 
+  //filtering all reviews specific to that item for average calculation
   const filteredReviewsaverage = reviews.filter(
     (review) => review.menu_item == selectedItem
   );
 
+  //filtering all reviews specific to that item and that contain text reviews to display 
   const filteredReviews = reviews
     .filter((review) => review.menu_item === selectedItem)
     .filter((review) => review.review_text && review.review_text.trim());
 
+
+  //calcualte average rating for an item
   const averageRating = filteredReviews.length
     ? (
         filteredReviewsaverage.reduce((sum, review) => sum + parseFloat(review.rating), 0) /

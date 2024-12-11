@@ -4,6 +4,10 @@ import { useRouter } from "next/navigation";
 import styles from "./Login.module.css";
 import Image from 'next/image';
 
+/**
+ * Login Page where goole authentification is used to allow employees and managers to access their respective pages
+ */
+
 function Login() {
   const router = useRouter();
   const [message, setMessage] = useState("");

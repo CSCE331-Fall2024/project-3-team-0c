@@ -4,8 +4,9 @@ import styles from "./employee.module.css";
 import { useRouter } from 'next/navigation';
 
 /*
-* employee mangement page front end code
+* employee mangement frontend interface code as well as logic and api call for backend for buttons
 */
+
 function EmployeeManagement() {
   const router = useRouter();
   const [firstName, setfirstName] = useState("");
@@ -24,7 +25,7 @@ function EmployeeManagement() {
   // Fetch employee data from the server
   const loadEmployee = async () => {
     try {
-      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/employeeLoad", {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/employeeLoad", { //calling backend function from server.js
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -62,6 +63,7 @@ function EmployeeManagement() {
   }, []); 
 
   console.log(employees);
+
   // Handle employee selection from the dropdown
   const handleEmployeeSelect = (e) => {
     const employeeId = e.target.value;
@@ -144,6 +146,10 @@ function EmployeeManagement() {
     loadEmployee(); 
   };
 
+
+  /**
+   * frontend html to create form display to interact with employee database details for manager
+   */
   return (
     <div className={styles.container}>
       <h1 className={styles.header}>Employee Management</h1>
