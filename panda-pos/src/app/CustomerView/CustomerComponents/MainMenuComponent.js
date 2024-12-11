@@ -1,3 +1,8 @@
+/**
+     * @file MainMenuComponent
+     * @description sets up format and functionality of the main menu component
+     * @author Grace Ung
+     */
 import { useState, React } from 'react';
 import styles from './MainMenuStyle.module.css';
 import Image from 'next/image';

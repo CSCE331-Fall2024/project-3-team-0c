@@ -1,3 +1,8 @@
+/**
+     * @file CashierView
+     * @description sets up format and functionality of the cashier view
+     * @author Grace Ung, Daniel Fuhrmann
+     */
 "use client"
 import React, { useState, useEffect } from 'react';
 import styles from './CashierView.module.css';

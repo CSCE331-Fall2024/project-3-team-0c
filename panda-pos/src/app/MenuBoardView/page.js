@@ -1,3 +1,8 @@
+/**
+     * @file MenuBoardView
+     * @description sets up format and functionality of the menu board view
+     * @author Grace Ung
+     */
 "use client";
 import React from 'react';
 import { useEffect, useState } from 'react';

@@ -1,4 +1,8 @@
-
+/**
+     * @file AppetizersComponent
+     * @description sets up format and functionality of the appetizer component
+     * @author Grace Ung
+     */
 import React, { useState } from 'react';
 import styles from './MainMenuStyle.module.css';
 import Image from 'next/image';

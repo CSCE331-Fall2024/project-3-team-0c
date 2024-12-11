@@ -1,3 +1,8 @@
+/**
+     * @file EditPrice_Inventory_MenuView
+     * @description sets up format and functionality of the editing of prices, inventory, and menu
+     * @author Grace Ung
+     */
 "use client";
 import React, { useState, useEffect } from "react";
 import styles from "./EditPrice_Inventory_Menu.module.css";

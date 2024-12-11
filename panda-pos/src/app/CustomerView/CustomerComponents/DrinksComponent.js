@@ -1,4 +1,8 @@
-// HomeContent.js
+/**
+     * @file DrinksComponent
+     * @description sets up format and functionality of the drinks component
+     * @author Grace Ung
+     */
 import {useState, React} from 'react';
 import styles from './MainMenuStyle.module.css';
 import Image from 'next/image';

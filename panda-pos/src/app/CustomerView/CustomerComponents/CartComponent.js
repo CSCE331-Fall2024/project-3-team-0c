@@ -1,3 +1,8 @@
+/**
+     * @file CartComponent
+     * @description sets up format and functionality of the cart component
+     * @author Grace Ung, Daniel Fuhrmann
+     */
 import React, { useState, useEffect } from 'react';
 import styles from './MainMenuStyle.module.css';
 import Image from 'next/image';

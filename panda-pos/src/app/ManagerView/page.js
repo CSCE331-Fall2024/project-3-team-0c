@@ -1,4 +1,8 @@
-// src/views/ManagerView.js
+/**
+     * @file ManagerView
+     * @description sets up format and functionality of the manager view
+     * @author Adarsh Vadlapatla, Jaden Ninan
+     */
 "use client";
 import styles from "./manager.module.css"
 import React from 'react';

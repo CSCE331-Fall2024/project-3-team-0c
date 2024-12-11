@@ -1,3 +1,8 @@
+/**
+     * @file EmployeeManagement
+     * @description sets up format and functionality of the employee managment 
+     * @author Jaden Ninan, Adarsh Vadlapatla
+     */
 "use client";
 import React, { useState, useEffect } from "react";
 import styles from "./employee.module.css";

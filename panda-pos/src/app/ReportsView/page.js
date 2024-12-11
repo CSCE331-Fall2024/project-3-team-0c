@@ -1,3 +1,8 @@
+/**
+     * @file ReportsView
+     * @description sets up format and functionality of the reports view
+     * @author Abel Thomas
+     */
 "use client";
 import React, { useState, useEffect } from "react";
 import styles from "./Reports.module.css";

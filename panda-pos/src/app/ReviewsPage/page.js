@@ -1,3 +1,8 @@
+/**
+     * @file ReviewsPage
+     * @description sets up format and functionality of the reviews page
+     * @author Jaden Ninan
+     */
 "use client";
 
 

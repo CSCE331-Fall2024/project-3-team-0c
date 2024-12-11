@@ -1,3 +1,8 @@
+/**
+     * @file loginGUI
+     * @description sets up format and functionality of the login view
+     * @author Grace Ung, Daniel Furhmann, Adarsh Vadlapatla, Abel Thomas, Jaden Ninan
+     */
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
