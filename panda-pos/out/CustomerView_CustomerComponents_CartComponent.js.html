@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: CustomerView/CustomerComponents/CartComponent.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: CustomerView/CustomerComponents/CartComponent.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+     * @file CartComponent
+     * @description sets up format and functionality of the cart component
+     * @author Grace Ung, Daniel Fuhrmann
+     */
+import React, { useState, useEffect } from 'react';
+import styles from './MainMenuStyle.module.css';
+import Image from 'next/image';
+
+// cart view and layout for customer view
+const CartComponent = ({ message, cartItems, setCartItems }) => {
+  const [showMainMenu, setShowMainMenu] = useState(true);
+  const [bowlPrice, setBowlPrice] = useState(null);
+  const [platePrice, setPlatePrice] = useState(null);
+  const [biggerPlatePrice, setBiggerPlatePrice] = useState(null);
+  const [appetizersPrice, setAppetizersPrice] = useState(null);
+  const [drinkPrice, setDrinkPrice] = useState(null);
+  const [ALaCartePrice, setALaCartePrice] = useState(null);
+
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [paymentMethod, setPaymentMethod] = useState(''); // State for selected payment method
+
+  
+  /**
+   * @function processCart
+   * @description iterates through cartItems adding each item to an order item and submitting to the database
+   * @param orderID The ID of the order being created
+   * @returns completed order item
+   * @author Daniel Fuhrmann
+   */
+  async function processCart(orderID) {
+    for (let index = 0; index &lt; cartItems.length; index++) {
+      let item = cartItems[index];
+      // TODO: Get menu item id for each item
+      let itemMenuID;
+      try {
+        const itemIDResponse = await fetch("https://project-3-team-0c-n4yn.onrender.com/getMenuID", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ "itemName": item.name })
+        });
+        const itemIDResult = await itemIDResponse.json();
+        if (!itemIDResult.success) {
+          console.error(itemIDResult);
+        }
+        else {
+          itemMenuID = itemIDResult.menuItemID;
+        }
+      } catch (error) {
+        console.error(error.message);
+      }
+
+      if (item.isMainSelection || item.type === 'A La Carte') {
+        // TODO check if it orderItem has a menu item already - if so submit order
+        if (globalThis.orderItem.hasOwnProperty("menuItem1")) {
+          // console.log("Spot A");
+          try {
+            const orderItemResponse = await fetch("https://project-3-team-0c-n4yn.onrender.com/addCustomerOrderItem", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(globalThis.orderItem)  // FIXME
+            });
+            const orderItemResult = await orderItemResponse.json();
+            if (!orderItemResult.success) {
+              console.error(orderItemResult);
+            }
+          } catch (error) {
+            console.error(error.message);
+          }
+        }
+        
+        
+        // globalThis.orderItem = {};
+        for (const key in globalThis.orderItem) {
+          delete globalThis.orderItem[key];
+        }
+
+        // TODO Get PriceID
+        let priceID;
+        try {
+          const priceIDResponse = await fetch("https://project-3-team-0c-n4yn.onrender.com/getPriceID", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ "name": item.type })
+          });
+          const priceIDResult = await priceIDResponse.json();
+          if (!priceIDResult.success) {
+            console.error(priceIDResult);
+          }
+          else {
+            priceID = priceIDResult.price_ID;
+          }
+        } catch (error) {
+          console.error(error.message);
+        }
+        // console.log(priceID);
+        // TODO Add menu item to order item
+        globalThis.orderItem["orderID"] = orderID;
+        globalThis.orderItem["priceID"] = priceID;
+        globalThis.orderItem["menuItem1"] = itemMenuID;
+
+        // console.log(JSON.stringify(globalThis.orderItem));
+  
+  
+        // TODO if A la Carte: submit order item
+        if (item.type === 'A La Carte') {
+          try {
+            // console.log("Spot B");
+            const orderItemResponse = await fetch("https://project-3-team-0c-n4yn.onrender.com/addCustomerOrderItem", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(globalThis.orderItem)  // FIXME
+            });
+            const orderItemResult = await orderItemResponse.json();
+            if (!orderItemResult.success) {
+              console.error(orderItemResult);
+            }
+          } catch (error) {
+            console.error(error.message);
+          }
+        }
+      }
+      else {
+        // TODO add menu item to orderItem
+        if (globalThis.orderItem.hasOwnProperty("menuItem2")) {
+          if (globalThis.orderItem.hasOwnProperty("menuItem3")) {
+            if (!globalThis.orderItem.hasOwnProperty("menuItem4")) {
+              globalThis.orderItem["menuItem4"] = itemMenuID;
+            }
+          }
+          else {
+            globalThis.orderItem["menuItem3"] = itemMenuID;
+          }
+        }
+        else {
+          globalThis.orderItem["menuItem2"] = itemMenuID;
+        }
+      }
+      // console.log("Spot D");
+      // console.log(globalThis.orderItem);
+    }//);
+    // console.log("Spot H");
+    // console.log(globalThis.orderItem);
+    return globalThis.orderItem;
+  }
+
+  /**
+   * @function placeOrder
+   * @description Create a new order and calls processCart to add items to the new order
+   * @author Daniel Fuhrmann
+   */
+  const placeOrder = async () => {
+    globalThis.orderItem = { "orderID": -1 };
+    // TODO: Create empty order
+    try {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/createCustomerOrder", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+      const createResult = await response.json();
+      if (!createResult.success) {
+        console.error(createResult);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+
+
+    // TODO: Get Latest Order_ID
+    var orderID;
+    try {
+      const orderIDResponse = await fetch("https://project-3-team-0c-n4yn.onrender.com/getLatestOrderID", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+      const orderIDResult = await orderIDResponse.json();
+      if (!orderIDResult.success) {
+        console.error(orderIDResult);
+      }
+      else {
+        orderID = orderIDResult.orderID;
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+
+    // TODO: Set Payment Type
+    var paymentType = paymentMethod
+    try {
+      const paymentTypeResponse = await fetch("https://project-3-team-0c-n4yn.onrender.com/updatePaymentType", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ paymentType, orderID })
+      });
+      const paymentTypeResult = await paymentTypeResponse.json();
+      if (!paymentTypeResult.success) {
+        console.error(paymentTypeResult);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+
+
+    // TODO: Add order items to Order
+    // let orderItem = { "orderID": -1 };
+
+    
+    const processCartResult = await processCart(orderID);
+
+    
+    // console.log("Spot b.2");
+    // console.log(processCartResult);
+    try {
+      // console.log("Spot c");
+      const orderItemResponse = await fetch("https://project-3-team-0c-n4yn.onrender.com/addCustomerOrderItem", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(processCartResult)  // FIXME
+      });
+      const orderItemResult = await orderItemResponse.json();
+      if (!orderItemResult.success) {
+        console.error(orderItemResult);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+    alert("Order Placed!");
+  };
+  
+  /**
+   * @function getPriceFromDB
+   * @description Sets the price for a given price type in the front end
+   * @param {string} itemName name of price type
+   * @param {string} setState state to set
+   * @author Daniel Fuhrmann
+   */
+  const getPriceFromDB = async (itemName, setState) => {
+    try {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/getPrice", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: itemName }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Failed to fetch price for ${itemName}`);
+      }
+  
+      const data = await response.json();
+      console.log(data.price);
+      setState(data.price); // Update the corresponding state
+    } catch (error) {
+      console.error(`An error occurred requesting ${itemName} price:`, error.message);
+    }
+  };
+  
+  useEffect(() => {
+    getPriceFromDB("Bowl", setBowlPrice);
+    getPriceFromDB("Plate", setPlatePrice);
+    getPriceFromDB("Bigger Plate", setBiggerPlatePrice);
+    getPriceFromDB("Appetizer", setAppetizersPrice);
+    getPriceFromDB("Drink", setDrinkPrice);
+    getPriceFromDB("A La Carte", setALaCartePrice);
+  }, []);
+  
+  // Calculate total price
+  
+
+  useEffect(() => {
+
+    let total = 0;
+
+    for (let index = 0; index &lt; cartItems.length; index++) {
+      let item = cartItems[index];
+      if (item.isMainSelection || item.type === 'A La Carte') {
+        switch (item.type) {
+          case 'Bowl':
+            total += 8.30;
+            break;
+          case 'Plate':
+            total += 9.70;
+            break;
+          case 'Bigger Plate':
+            total += 11.30;
+            break;
+          case 'Appetizer':
+            total += 1.00;
+            break;
+          case 'A La Carte':
+            total += 20.00;
+            break;
+          case 'Drink':
+            total += 2.10;
+            break;
+        
+          default:
+            total += 0;
+            break;
+        }
+      }
+    }
+    setTotalPrice(total); // Update the totalPrice state
+  }, [cartItems]);
+
+  /**
+     * @function handleRemoveItem
+     * @description Removes unwanted item from cart
+     * @param {Object} index item index to be removed from cart
+     * @author Grace Ung
+     */
+  const handleRemoveItem = (index) => {
+    const newCart = [...cartItems];
+    newCart.splice(index, 1);
+    setCartItems(newCart);
+  };
+
+  /**
+     * @function handlePaymentChange
+     * @description Changes payment type when value changes
+     * @param {Object} e action listener
+     * @author Grace Ung
+     */
+  const handlePaymentChange = (e) => {
+    setPaymentMethod(e.target.value); // Update the selected payment method
+  };
+
+  return (
+    &lt;div className={styles['grid-container']}>
+      &lt;h2>Receipt&lt;/h2>
+      {/* Payment Dropdown */}
+      &lt;div className={styles.paymentSection}>
+        &lt;label htmlFor="paymentOptions">Select Payment Method:&lt;/label>
+        &lt;select
+          id="paymentOptions"
+          name="paymentOptions"
+          value={paymentMethod}
+          onChange={handlePaymentChange}
+        >
+          &lt;option value="">Select...&lt;/option>
+          &lt;option value="card">Card&lt;/option>
+          &lt;option value="apple pay">Apple Pay&lt;/option>
+          &lt;option value="dining dollars">Dining Dollars&lt;/option>
+        &lt;/select>
+      &lt;/div>
+      &lt;div>
+
+      &lt;/div>
+      &lt;div className={styles['row'] + ' ' + styles['center-text']}>
+        {/* &lt;p>{message}&lt;/p> */}
+        {cartItems.length > 0 ? (
+          &lt;ul>
+            {cartItems.map((item, index) => (
+              &lt;li key={index} className={styles.listItem}>
+                &lt;div className={styles.itemInfo}>
+                  &lt;span className={styles.itemName}>{item.name}&lt;/span>
+                  &lt;span className={styles.dashes}>&lt;/span>
+                  {(item.isMainSelection || item.type === 'A La Carte') &amp;&amp; (
+                    // Show price and type only for sides
+                    &lt;span className={styles.price}>
+                      {item.type} - 
+                      {item.type === 'Bowl'
+                        ? bowlPrice
+                        : item.type === 'Plate'
+                          ? platePrice
+                          : item.type === 'Bigger Plate'
+                            ? biggerPlatePrice
+                            : item.type === 'Appetizer'
+                              ? appetizersPrice
+                              : item.type === 'Drink'
+                                ? drinkPrice
+                                : item.type === 'A La Carte'
+                                  ? ALaCartePrice
+                                  : 'N/A'}
+                    &lt;/span>
+                  )}
+                &lt;/div>
+                &lt;button
+                  className={styles.deleteButton}
+                  onClick={() => handleRemoveItem(index)}
+                >
+                  Remove
+                &lt;/button>
+              &lt;/li>
+            ))}
+            &lt;span style={{ fontWeight: 'bold' }}>Total: ${totalPrice.toFixed(2)}&lt;/span>
+          &lt;/ul>
+
+        ) : (
+          &lt;p>Your cart is empty&lt;/p>
+        )}
+        
+      &lt;/div>
+      &lt;button className={styles.button} onClick={placeOrder}>Place Order&lt;/button>
+    &lt;/div>
+  );
+};
+
+export default CartComponent;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#EditMenuAndPrices">EditMenuAndPrices</a></li><li><a href="global.html#EmployeeManagement">EmployeeManagement</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#ManagerView">ManagerView</a></li><li><a href="global.html#Page">Page</a></li><li><a href="global.html#ReportsView">ReportsView</a></li><li><a href="global.html#addEmployee">addEmployee</a></li><li><a href="global.html#addInventory">addInventory</a></li><li><a href="global.html#addMenu">addMenu</a></li><li><a href="global.html#addToCart">addToCart</a></li><li><a href="global.html#averageRating">averageRating</a></li><li><a href="global.html#decreaseContrast">decreaseContrast</a></li><li><a href="global.html#deleteEmployee">deleteEmployee</a></li><li><a href="global.html#deleteInventory">deleteInventory</a></li><li><a href="global.html#deleteMenu">deleteMenu</a></li><li><a href="global.html#editEmployee">editEmployee</a></li><li><a href="global.html#editInventory">editInventory</a></li><li><a href="global.html#editPrices">editPrices</a></li><li><a href="global.html#fetchPrice">fetchPrice</a></li><li><a href="global.html#fetchWeather">fetchWeather</a></li><li><a href="global.html#filteredReviews">filteredReviews</a></li><li><a href="global.html#filteredReviewsaverage">filteredReviewsaverage</a></li><li><a href="global.html#getPriceFromDB">getPriceFromDB</a></li><li><a href="global.html#handleAddItem">handleAddItem</a></li><li><a href="global.html#handleAddReview">handleAddReview</a></li><li><a href="global.html#handleConfirm">handleConfirm</a></li><li><a href="global.html#handleEmployeeLogin">handleEmployeeLogin</a></li><li><a href="global.html#handleEmployeeSelect">handleEmployeeSelect</a></li><li><a href="global.html#handleGenerateChart">handleGenerateChart</a></li><li><a href="global.html#handleGenerateMonthlySalesHistory">handleGenerateMonthlySalesHistory</a></li><li><a href="global.html#handleGeneratePopularItems">handleGeneratePopularItems</a></li><li><a href="global.html#handleGenerateProductUsage">handleGenerateProductUsage</a></li><li><a href="global.html#handleGenerateSalesReport">handleGenerateSalesReport</a></li><li><a href="global.html#handleGoogleLoginResponse">handleGoogleLoginResponse</a></li><li><a href="global.html#handleInventorySelect">handleInventorySelect</a></li><li><a href="global.html#handleItemClick">handleItemClick</a></li><li><a href="global.html#handleManagerLogin">handleManagerLogin</a></li><li><a href="global.html#handleMenuItemSelect">handleMenuItemSelect</a></li><li><a href="global.html#handlePaymentChange">handlePaymentChange</a></li><li><a href="global.html#handlePriceItemSelect">handlePriceItemSelect</a></li><li><a href="global.html#handleReload">handleReload</a></li><li><a href="global.html#handleRemoveItem">handleRemoveItem</a></li><li><a href="global.html#increaseContrast">increaseContrast</a></li><li><a href="global.html#loadEmployee">loadEmployee</a></li><li><a href="global.html#loadInventory">loadInventory</a></li><li><a href="global.html#loadMenu">loadMenu</a></li><li><a href="global.html#loadPrices">loadPrices</a></li><li><a href="global.html#placeOrder">placeOrder</a></li><li><a href="global.html#processCart">processCart</a></li><li><a href="global.html#renderContent">renderContent</a></li><li><a href="global.html#submitOrder">submitOrder</a></li><li><a href="global.html#zoomIn">zoomIn</a></li><li><a href="global.html#zoomOut">zoomOut</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Dec 11 2024 20:00:50 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

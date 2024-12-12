@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: page.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: page.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use client";
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import styles from './page.module.css'; 
+
+
+/*
+* Home welcome page with weather info included.
+*/
+const HomePage = () => {
+  const [weather, setWeather] = useState(null);
+  const [error, setError] = useState(null);
+
+
+  /**
+     * @function fetchWeather
+     * @description Fetch weather data on component mount
+     * @author Adarsh Vadlapatla
+     */
+  useEffect(() => {
+    const fetchWeather = async () => {
+      try {
+        // Get the current position of the user (latitude and longitude)
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const { latitude, longitude } = position.coords;
+
+            // Fetch weather data from Open-Meteo API
+            const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&amp;longitude=${longitude}&amp;current=temperature_2m,wind_speed_10m&amp;hourly=temperature_2m,wind_speed_10m`);
+            const data = await response.json();
+
+            // Set the weather state with the fetched data
+            setWeather(data.current);
+          },
+          (err) => {
+            setError('Unable to retrieve your location');
+          }
+        );
+      } catch (err) {
+        setError('Error fetching weather data');
+      }
+    };
+
+    fetchWeather();
+    // Load the Google Translate script dynamically
+    const script = document.createElement('script');
+    script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    script.async = true;
+    document.body.appendChild(script);
+
+    // Initialize the Google Translate widget
+    window.googleTranslateElementInit = () => {
+      new window.google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'es,fr,de,it,pt', // Add languages you want to support
+        layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+      }, 'google_translate_element');
+    };
+
+    return () => {
+      document.body.removeChild(script); // Clean up script on component unmount
+    };
+
+  }, []); // Empty dependency array to run once when the component mounts
+
+
+
+  return (
+    &lt;div className= {styles.background}>
+    &lt;div className={styles.container}>
+      
+      &lt;Image
+        src="/photos/pandaLogo.png" // Make sure the image exists under /public/photos/
+        alt="Panda Express Logo"
+        className={styles.logo} // Use the CSS module class for logo
+        width={300} 
+        height={300} 
+      />
+      &lt;h1 className={styles.title}>All Aboard The Panda Express!&lt;/h1>
+
+      {/* Display weather data or error message */}
+      {error ? (
+        &lt;p className={styles.error}>{error}&lt;/p>
+      ) : weather ? (
+        &lt;div className={styles.weatherInfo}>
+          &lt;h2 className={styles.weatherTitle}>Current Weather&lt;/h2>
+          &lt;p>Temperature: {(weather.temperature_2m * 9/5)+32}°F&lt;/p> 
+
+          &lt;p>Wind Speed: {weather.wind_speed_10m} m/s&lt;/p>
+         
+        &lt;/div>
+      ) : (
+        &lt;p>Loading weather data...&lt;/p>
+      )}
+
+      &lt;nav>
+        &lt;ul className={styles.navList}>
+          &lt;li className={styles.navItem}>
+            &lt;Link href="/CustomerView" className={styles.button}>Start an Order&lt;/Link>
+          &lt;/li>
+          &lt;li className={styles.navItem}>
+            &lt;Link href="/ReviewsPage" className={styles.button}>Reviews&lt;/Link>
+          &lt;/li>
+          &lt;li className={styles.navItem}>
+            &lt;Link href="/MenuBoardView" className={styles.button}>View Menu Board&lt;/Link>
+          &lt;/li>
+          &lt;li className={styles.navItem}>
+            &lt;Link href="/loginGUI" className={styles.button}>Log in Manager/Cashier&lt;/Link> 
+          &lt;/li> 
+        &lt;/ul>
+      &lt;/nav>
+      &lt;div id="google_translate_element">&lt;/div>
+    &lt;/div>
+  &lt;/div>
+  );
+};
+
+export default HomePage;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#EditMenuAndPrices">EditMenuAndPrices</a></li><li><a href="global.html#EmployeeManagement">EmployeeManagement</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#ManagerView">ManagerView</a></li><li><a href="global.html#Page">Page</a></li><li><a href="global.html#ReportsView">ReportsView</a></li><li><a href="global.html#addEmployee">addEmployee</a></li><li><a href="global.html#addInventory">addInventory</a></li><li><a href="global.html#addMenu">addMenu</a></li><li><a href="global.html#addToCart">addToCart</a></li><li><a href="global.html#averageRating">averageRating</a></li><li><a href="global.html#decreaseContrast">decreaseContrast</a></li><li><a href="global.html#deleteEmployee">deleteEmployee</a></li><li><a href="global.html#deleteInventory">deleteInventory</a></li><li><a href="global.html#deleteMenu">deleteMenu</a></li><li><a href="global.html#editEmployee">editEmployee</a></li><li><a href="global.html#editInventory">editInventory</a></li><li><a href="global.html#editPrices">editPrices</a></li><li><a href="global.html#fetchPrice">fetchPrice</a></li><li><a href="global.html#fetchWeather">fetchWeather</a></li><li><a href="global.html#filteredReviews">filteredReviews</a></li><li><a href="global.html#filteredReviewsaverage">filteredReviewsaverage</a></li><li><a href="global.html#getPriceFromDB">getPriceFromDB</a></li><li><a href="global.html#handleAddItem">handleAddItem</a></li><li><a href="global.html#handleAddReview">handleAddReview</a></li><li><a href="global.html#handleConfirm">handleConfirm</a></li><li><a href="global.html#handleEmployeeLogin">handleEmployeeLogin</a></li><li><a href="global.html#handleEmployeeSelect">handleEmployeeSelect</a></li><li><a href="global.html#handleGenerateChart">handleGenerateChart</a></li><li><a href="global.html#handleGenerateMonthlySalesHistory">handleGenerateMonthlySalesHistory</a></li><li><a href="global.html#handleGeneratePopularItems">handleGeneratePopularItems</a></li><li><a href="global.html#handleGenerateProductUsage">handleGenerateProductUsage</a></li><li><a href="global.html#handleGenerateSalesReport">handleGenerateSalesReport</a></li><li><a href="global.html#handleGoogleLoginResponse">handleGoogleLoginResponse</a></li><li><a href="global.html#handleInventorySelect">handleInventorySelect</a></li><li><a href="global.html#handleItemClick">handleItemClick</a></li><li><a href="global.html#handleManagerLogin">handleManagerLogin</a></li><li><a href="global.html#handleMenuItemSelect">handleMenuItemSelect</a></li><li><a href="global.html#handlePaymentChange">handlePaymentChange</a></li><li><a href="global.html#handlePriceItemSelect">handlePriceItemSelect</a></li><li><a href="global.html#handleReload">handleReload</a></li><li><a href="global.html#handleRemoveItem">handleRemoveItem</a></li><li><a href="global.html#increaseContrast">increaseContrast</a></li><li><a href="global.html#loadEmployee">loadEmployee</a></li><li><a href="global.html#loadInventory">loadInventory</a></li><li><a href="global.html#loadMenu">loadMenu</a></li><li><a href="global.html#loadPrices">loadPrices</a></li><li><a href="global.html#placeOrder">placeOrder</a></li><li><a href="global.html#processCart">processCart</a></li><li><a href="global.html#renderContent">renderContent</a></li><li><a href="global.html#submitOrder">submitOrder</a></li><li><a href="global.html#zoomIn">zoomIn</a></li><li><a href="global.html#zoomOut">zoomOut</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Dec 11 2024 20:00:50 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

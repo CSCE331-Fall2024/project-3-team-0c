@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: loginGUI/page.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: loginGUI/page.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+     * @file loginGUI
+     * @description sets up format and functionality of the login view with google authentification
+     * @author Grace Ung, Daniel Furhmann, Adarsh Vadlapatla, Abel Thomas, Jaden Ninan
+     */
+"use client";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import styles from "./Login.module.css";
+import Image from 'next/image';
+
+/**
+ * @function Login
+ * @description The main login page component providing login options and Google authentication
+ * @author Adarsh Vadlapatla
+ */
+function Login() {
+  const router = useRouter();
+  const [message, setMessage] = useState("");
+  const [showGoogleButton, setShowGoogleButton] = useState(false);
+  const [role, setRole] = useState(""); // To track the selected role (Manager or Employee)
+
+  useEffect(() => {
+    if (typeof window !== "undefined" &amp;&amp; window.google &amp;&amp; showGoogleButton) {
+      window.google.accounts.id.initialize({
+        client_id: "425214390685-pida2qb7nfe95a3fe5gq2hp525493ee2.apps.googleusercontent.com",
+        callback: handleGoogleLoginResponse,
+      });
+
+      // Render the Google Sign-In button
+      window.google.accounts.id.renderButton(
+        document.getElementById("googleSignInButton"),
+        {
+          theme: "outline",
+          size: "large",
+        }
+      );
+    }
+  }, [showGoogleButton]); // Run this effect whenever `showGoogleButton` changes
+
+  /**
+   * @function handleManagerLogin
+   * @description Prepares login for Manager role and displays Google Sign-In button
+   * @author Daniel Furhmann
+   */
+  const handleManagerLogin = () => {
+    setRole("Manager");
+    setShowGoogleButton(true); // Show Google Sign-In button after selecting Manager
+  };
+
+  /**
+   * @function handleEmployeeLogin
+   * @description Prepares login for Employee role and displays Google Sign-In button
+   * @author Grace Ung
+   */
+  const handleEmployeeLogin = () => {
+    setRole("Employee");
+    setShowGoogleButton(true); // Show Google Sign-In button after selecting Employee
+  };
+
+  /**
+   * @function handleGoogleLoginResponse
+   * @description Handles Google authentication response and validates the user role with the backend
+   * @param {Object} response - Google login response with the ID token
+   * @author Abel Thomas
+   */
+  const handleGoogleLoginResponse = async (response) => {
+    try {
+      const idToken = response.credential;
+
+      // Send the Google ID token to your backend for verification and role validation
+      const backendResponse = await fetch("https://project-3-team-0c-n4yn.onrender.com/auth/google", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token: idToken, role_id: role}),
+      });
+      const data = await backendResponse.json();
+
+      if (data.success) {
+        setMessage("Login successful!");
+
+  
+        // Redirect user based on their role
+        if (role == "Manager") {
+        router.push("/ManagerView");
+        }  else {
+          router.push("/CashierView");
+        }
+      } else {
+        setMessage("Google authentication failed.");
+      }
+    } catch (error) {
+      // Log the full error to the console for debugging
+      console.error("Error during login:", error);
+  
+      // Set a user-friendly error message
+      setMessage("An error occurred during login.");
+  
+      // Optionally, show the error message in an alert or log it in more detail
+      alert("Login error: " + (error.message || error));  // `error.message` gives you a more descriptive error
+    }
+  };
+
+  return (
+    &lt;div className={styles.page}>
+      &lt;main className={styles.main}>
+        &lt;h1 className={styles.title}>Sign in to PANDA-of-Sales&lt;/h1>
+        &lt;Image
+          src="/photos/pandaLogo.png"
+          alt="Panda Express Logo"
+          width={200}
+          height={200}
+        />
+        &lt;div className={styles.buttonGroup}>
+          &lt;button className={styles.button} onClick={handleManagerLogin}>Login as Manager&lt;/button>
+          &lt;button className={styles.button} onClick={handleEmployeeLogin}>Login as Employee&lt;/button>
+        &lt;/div>
+        {message &amp;&amp; &lt;div className={styles.message}>{message}&lt;/div>}
+
+        {/* Render Google Sign-In button conditionally */}
+        {showGoogleButton &amp;&amp; (
+          &lt;div id="googleSignInButton">&lt;/div>
+        )}
+
+        {message &amp;&amp; &lt;div className={styles.message}>{message}&lt;/div>}
+      &lt;/main>
+
+      &lt;footer className={styles.footer}>
+        &lt;a href="/" className={styles.link}>Go Back&lt;/a>
+      &lt;/footer>
+    &lt;/div>
+  );
+}
+
+export default Login;
+
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#EditMenuAndPrices">EditMenuAndPrices</a></li><li><a href="global.html#EmployeeManagement">EmployeeManagement</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#ManagerView">ManagerView</a></li><li><a href="global.html#Page">Page</a></li><li><a href="global.html#ReportsView">ReportsView</a></li><li><a href="global.html#addEmployee">addEmployee</a></li><li><a href="global.html#addInventory">addInventory</a></li><li><a href="global.html#addMenu">addMenu</a></li><li><a href="global.html#addToCart">addToCart</a></li><li><a href="global.html#averageRating">averageRating</a></li><li><a href="global.html#decreaseContrast">decreaseContrast</a></li><li><a href="global.html#deleteEmployee">deleteEmployee</a></li><li><a href="global.html#deleteInventory">deleteInventory</a></li><li><a href="global.html#deleteMenu">deleteMenu</a></li><li><a href="global.html#editEmployee">editEmployee</a></li><li><a href="global.html#editInventory">editInventory</a></li><li><a href="global.html#editPrices">editPrices</a></li><li><a href="global.html#fetchPrice">fetchPrice</a></li><li><a href="global.html#fetchWeather">fetchWeather</a></li><li><a href="global.html#filteredReviews">filteredReviews</a></li><li><a href="global.html#filteredReviewsaverage">filteredReviewsaverage</a></li><li><a href="global.html#getPriceFromDB">getPriceFromDB</a></li><li><a href="global.html#handleAddItem">handleAddItem</a></li><li><a href="global.html#handleAddReview">handleAddReview</a></li><li><a href="global.html#handleConfirm">handleConfirm</a></li><li><a href="global.html#handleEmployeeLogin">handleEmployeeLogin</a></li><li><a href="global.html#handleEmployeeSelect">handleEmployeeSelect</a></li><li><a href="global.html#handleGenerateChart">handleGenerateChart</a></li><li><a href="global.html#handleGenerateMonthlySalesHistory">handleGenerateMonthlySalesHistory</a></li><li><a href="global.html#handleGeneratePopularItems">handleGeneratePopularItems</a></li><li><a href="global.html#handleGenerateProductUsage">handleGenerateProductUsage</a></li><li><a href="global.html#handleGenerateSalesReport">handleGenerateSalesReport</a></li><li><a href="global.html#handleGoogleLoginResponse">handleGoogleLoginResponse</a></li><li><a href="global.html#handleInventorySelect">handleInventorySelect</a></li><li><a href="global.html#handleItemClick">handleItemClick</a></li><li><a href="global.html#handleManagerLogin">handleManagerLogin</a></li><li><a href="global.html#handleMenuItemSelect">handleMenuItemSelect</a></li><li><a href="global.html#handlePaymentChange">handlePaymentChange</a></li><li><a href="global.html#handlePriceItemSelect">handlePriceItemSelect</a></li><li><a href="global.html#handleReload">handleReload</a></li><li><a href="global.html#handleRemoveItem">handleRemoveItem</a></li><li><a href="global.html#increaseContrast">increaseContrast</a></li><li><a href="global.html#loadEmployee">loadEmployee</a></li><li><a href="global.html#loadInventory">loadInventory</a></li><li><a href="global.html#loadMenu">loadMenu</a></li><li><a href="global.html#loadPrices">loadPrices</a></li><li><a href="global.html#placeOrder">placeOrder</a></li><li><a href="global.html#processCart">processCart</a></li><li><a href="global.html#renderContent">renderContent</a></li><li><a href="global.html#submitOrder">submitOrder</a></li><li><a href="global.html#zoomIn">zoomIn</a></li><li><a href="global.html#zoomOut">zoomOut</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Dec 11 2024 20:00:50 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

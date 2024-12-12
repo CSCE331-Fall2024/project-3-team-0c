@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: CustomerView/CustomerComponents/DrinksComponent.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: CustomerView/CustomerComponents/DrinksComponent.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+     * @file DrinksComponent
+     * @description sets up format and functionality of the drinks component
+     * @author Grace Ung
+     */
+import {useState, React} from 'react';
+import styles from './MainMenuStyle.module.css';
+import Image from 'next/image';
+
+// drinks view and layout for customer view
+const DrinksComponent = ({ message, addToCart }) => {
+
+    return (
+        &lt;div className={styles['grid-container']}>
+            &lt;div className={styles['row'] + ' ' + styles['button-row']}>
+                &lt;div className={styles.card} onClick={() => addToCart({name: 'Water Bottle', type: message, isMainSelection: true})}>
+                    &lt;img src="/photos/waterbottle.png" alt="Water Bottle" className={styles.image} />
+                    &lt;button className={styles.button}>Water Bottle&lt;/button>
+                &lt;/div>
+                &lt;div className={styles.card} onClick={() => addToCart({name: 'Sprite', type: message, isMainSelection: true})}>
+                    &lt;img src="/photos/sprite.png" alt="Sprite" className={styles.image} />
+                    &lt;button className={styles.button}>Sprite&lt;/button>
+                &lt;/div>
+                &lt;div className={styles.card} onClick={() => addToCart({name: 'Root Beer', type: message, isMainSelection: true})}>
+                    &lt;img src="/photos/rootbeer.png" alt="Root Beer" className={styles.image} />
+                    &lt;button className={styles.button}>Root Beer&lt;/button>
+                &lt;/div>
+                &lt;div className={styles.card} onClick={() => addToCart({name: 'Mexican Coke', type: message, isMainSelection: true})}>
+                    &lt;img src="/photos/mexcoke.png" alt="Mexican Coke" className={styles.image} />
+                    &lt;button className={styles.button}>Mexican Coke&lt;/button>
+                &lt;/div>
+                &lt;div className={styles.card} onClick={() => addToCart({name: 'Lemonade', type: message, isMainSelection: true})}>
+                    &lt;img src="/photos/lemonade.png" alt="Lemonade" className={styles.image} />
+                    &lt;button className={styles.button}>Lemonade&lt;/button>
+                &lt;/div>
+                &lt;div className={styles.card} onClick={() => addToCart({name: 'Fanta', type: message, isMainSelection: true})}>
+                    &lt;img src="/photos/fanta.png" alt="Fanta" className={styles.image} />
+                    &lt;button className={styles.button}>Fanta&lt;/button>
+                &lt;/div>
+                &lt;div className={styles.card} onClick={() => addToCart({name: 'Dr Pepper', type: message, isMainSelection: true})}>
+                    &lt;img src="/photos/drpepper.png" alt="Dr Pepper" className={styles.image} />
+                    &lt;button className={styles.button}>Dr Pepper&lt;/button>
+                &lt;/div>
+                &lt;div className={styles.card} onClick={() => addToCart({name: 'Diet Coke', type: message, isMainSelection: true})}>
+                    &lt;img src="/photos/dietcoke.png" alt="Diet Coke" className={styles.image} />
+                    &lt;button className={styles.button}>Diet Coke&lt;/button>
+                &lt;/div>
+                &lt;div className={styles.card} onClick={() => addToCart({name: 'Coke', type: message, isMainSelection: true})}>
+                    &lt;img src="/photos/coke.png" alt="Coke" className={styles.image} />
+                    &lt;button className={styles.button}>Coke&lt;/button>
+                &lt;/div>
+                &lt;div className={styles.card} onClick={() => addToCart({name: 'Apple Juice', type: message, isMainSelection: true})}>
+                    &lt;img src="/photos/applejuice.png" alt="Apple Juice" className={styles.image} />
+                    &lt;button className={styles.button}>Apple Juice&lt;/button>
+                &lt;/div>
+            &lt;/div>
+
+        &lt;/div>
+    );
+};
+
+export default DrinksComponent;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#EditMenuAndPrices">EditMenuAndPrices</a></li><li><a href="global.html#EmployeeManagement">EmployeeManagement</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#ManagerView">ManagerView</a></li><li><a href="global.html#Page">Page</a></li><li><a href="global.html#ReportsView">ReportsView</a></li><li><a href="global.html#addEmployee">addEmployee</a></li><li><a href="global.html#addInventory">addInventory</a></li><li><a href="global.html#addMenu">addMenu</a></li><li><a href="global.html#addToCart">addToCart</a></li><li><a href="global.html#averageRating">averageRating</a></li><li><a href="global.html#decreaseContrast">decreaseContrast</a></li><li><a href="global.html#deleteEmployee">deleteEmployee</a></li><li><a href="global.html#deleteInventory">deleteInventory</a></li><li><a href="global.html#deleteMenu">deleteMenu</a></li><li><a href="global.html#editEmployee">editEmployee</a></li><li><a href="global.html#editInventory">editInventory</a></li><li><a href="global.html#editPrices">editPrices</a></li><li><a href="global.html#fetchPrice">fetchPrice</a></li><li><a href="global.html#fetchWeather">fetchWeather</a></li><li><a href="global.html#filteredReviews">filteredReviews</a></li><li><a href="global.html#filteredReviewsaverage">filteredReviewsaverage</a></li><li><a href="global.html#getPriceFromDB">getPriceFromDB</a></li><li><a href="global.html#handleAddItem">handleAddItem</a></li><li><a href="global.html#handleAddReview">handleAddReview</a></li><li><a href="global.html#handleConfirm">handleConfirm</a></li><li><a href="global.html#handleEmployeeLogin">handleEmployeeLogin</a></li><li><a href="global.html#handleEmployeeSelect">handleEmployeeSelect</a></li><li><a href="global.html#handleGenerateChart">handleGenerateChart</a></li><li><a href="global.html#handleGenerateMonthlySalesHistory">handleGenerateMonthlySalesHistory</a></li><li><a href="global.html#handleGeneratePopularItems">handleGeneratePopularItems</a></li><li><a href="global.html#handleGenerateProductUsage">handleGenerateProductUsage</a></li><li><a href="global.html#handleGenerateSalesReport">handleGenerateSalesReport</a></li><li><a href="global.html#handleGoogleLoginResponse">handleGoogleLoginResponse</a></li><li><a href="global.html#handleInventorySelect">handleInventorySelect</a></li><li><a href="global.html#handleItemClick">handleItemClick</a></li><li><a href="global.html#handleManagerLogin">handleManagerLogin</a></li><li><a href="global.html#handleMenuItemSelect">handleMenuItemSelect</a></li><li><a href="global.html#handlePaymentChange">handlePaymentChange</a></li><li><a href="global.html#handlePriceItemSelect">handlePriceItemSelect</a></li><li><a href="global.html#handleReload">handleReload</a></li><li><a href="global.html#handleRemoveItem">handleRemoveItem</a></li><li><a href="global.html#increaseContrast">increaseContrast</a></li><li><a href="global.html#loadEmployee">loadEmployee</a></li><li><a href="global.html#loadInventory">loadInventory</a></li><li><a href="global.html#loadMenu">loadMenu</a></li><li><a href="global.html#loadPrices">loadPrices</a></li><li><a href="global.html#placeOrder">placeOrder</a></li><li><a href="global.html#processCart">processCart</a></li><li><a href="global.html#renderContent">renderContent</a></li><li><a href="global.html#submitOrder">submitOrder</a></li><li><a href="global.html#zoomIn">zoomIn</a></li><li><a href="global.html#zoomOut">zoomOut</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Dec 11 2024 20:00:50 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

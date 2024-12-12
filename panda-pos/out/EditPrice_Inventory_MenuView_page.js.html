@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: EditPrice_Inventory_MenuView/page.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: EditPrice_Inventory_MenuView/page.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+     * @file EditPrice_Inventory_MenuView
+     * @description sets up format and functionality of the editing of prices, inventory, and menu
+     * @author Grace Ung, Jaden Ninan
+     */
+"use client";
+import React, { useState, useEffect } from "react";
+import styles from "./EditPrice_Inventory_Menu.module.css";
+
+/**
+ * @function EditMenuAndPrices
+ * @description Provides UI for interacting with price, inventory, and menu details and integrates with backend API calls.
+ */
+function EditMenuAndPrices() {
+  // State variables
+  const [selectedMenuItem, setSelectedMenuItem] = useState(null);
+  const [selectedPriceItem, setSelectedPriceItem] = useState(null);
+  const [selectedInventory, setSelectedInventory] = useState(null);
+
+  const [menuItems, setMenuItems] = useState([]);
+  const [menuName, setMenuName] = useState("");
+  const [menuId, setMenuId] = useState("");
+
+  const [priceItems, setPriceItems] = useState([]);
+  const [priceId, setPriceId] = useState("");
+  const [priceName, setPriceName] = useState("");
+  const [priceValue, setPriceValue] = useState("");
+
+  const [inventoryId, setInventoryId] = useState("");
+  const [name, setName] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [inventoryItems, setInventoryItems] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [Menumessage, setMenuMessage] = useState("");
+  const [Inventorymessage, setInventoryMessage] = useState("");
+  const [Pricemessage, setPriceMessage] = useState("");
+
+
+  /**
+ * @function loadMenu
+ * @description Fetches menu items from the database
+ * @returns {Promise&lt;Object[]>} List of menu items or an empty array on error
+ * @author Grace Ung
+ */
+  const loadMenu = async () => {
+    try {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/menuLoad", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!response.ok) throw new Error("Network response was not ok");
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching menu data:", error);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    const fetchMenu = async () => {
+      const result = await loadMenu();
+      setMenuItems(Array.isArray(result) ? result : []);
+    };
+    fetchMenu();
+  }, []);
+
+  /**
+ * @function handleMenuItemSelect
+ * @description Handles the selection of a menu item from the dropdown and updates the state with the selected item
+ * @param {Object} e The event object from the dropdown selection
+ * @author Grace Ung
+ */
+  const handleMenuItemSelect = (e) => {
+    const menuItemId = e.target.value;
+    const menuItem = menuItems.find(
+      (item) => item.menu_id === parseInt(menuItemId)
+    );
+    setSelectedMenuItem(menuItem);
+    if (menuItem) {
+      setMenuId(menuItem.menu_id);
+      setMenuName(menuItem.name);
+    }
+  };
+
+/**
+ * @function addMenu
+ * @description Adds a new menu item to the database
+ * @author Grace Ung
+ */
+  const addMenu = async () => {
+    try {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/addMenuItem", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: menuName }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setMenuMessage("New Menu Item Added");
+        window.location.reload();
+      }
+    } catch (error) {
+      setMenuMessage("An error occurred. Please try again.");
+    }
+  };
+
+ /**
+ * @function deleteMenu
+ * @description Deletes a selected menu item from the database.
+ * @author Grace Ung
+ */
+  const deleteMenu = async () => {
+    try {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/deleteMenuItem", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ menu_id: parseInt(menuId) }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setMenuMessage("Menu Item Deleted");
+        window.location.reload();
+      }
+    } catch (error) {
+      setMenuMessage("An error occurred. Please try again.");
+    }
+  };
+
+
+  /*
+  * Price Editor code button functions
+  * implementations fo laoding database values, creating dropdown display, and editing price values
+  */
+
+  /**
+ * @function loadPrices
+ * @description Fetches price items from the database
+ * @returns {Promise&lt;Object[]>} List of price items or an empty array on error
+ * @author Jaden Ninan
+ */
+  const loadPrices = async () => {
+    try {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/loadPrice", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!response.ok) throw new Error("Network response was not ok");
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching menu data:", error);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    const fetchMenu = async () => {
+      const result = await loadPrices();
+      setPriceItems(Array.isArray(result) ? result : []);
+    };
+    fetchMenu();
+  }, []);
+
+  /**
+ * @function handlePriceItemSelect
+ * @description Handles the selection of a price item from the dropdown and updates the state with the selected item
+ * @param {Object} e The event object from the dropdown selection
+ * @author Jaden Ninan
+ */
+  const handlePriceItemSelect = (e) => {
+    const priceItemId = e.target.value;
+    const priceItem = priceItems.find(
+      (item) => item.price_id === parseInt(priceItemId)
+    );
+    setSelectedPriceItem(priceItem);
+    if (priceItem) {
+      setPriceId(priceItem.price_id);
+      setPriceName(priceItem.name);
+      setPriceValue(priceItem.price);
+    }
+ };
+
+ /**
+ * @function editPrices
+ * @description Updates the selected price item's details in the database
+ * @author Jaden Ninan
+ */
+ const editPrices = async () => {
+  try {
+    const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/editPrice", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        priceId: parseInt(priceId),
+        priceName,
+        priceValue: parseFloat(priceValue),
+      }),
+    });
+    const data = await response.json();
+    if (data.success) {
+      setPriceMessage("Price Item Updated");
+      window.location.reload();
+    } else {
+      setPriceMessage("Failed to update prices. Please try again.");
+    }
+  } catch (error) {
+    setPriceMessage("An error occurred. Please try again.");
+  }
+};
+
+
+
+/*
+* Inventory  Editor code button functions
+* implementations for laoding database values, creating dropdown display, and adding, editing, and deleting values
+*/
+
+  /**
+ * @function loadInventory
+ * @description Fetches inventory items from the database
+ * @returns {Promise&lt;Object[]>} List of inventory items or an empty array on error
+ * @author Jaden Ninan
+ */
+  const loadInventory = async () => {
+    try {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/InventoryLoad", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!response.ok) throw new Error("Network response was not ok");
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching inventory data:", error);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    const fetchInventory = async () => {
+      const result = await loadInventory();
+      setInventoryItems(Array.isArray(result) ? result : []);
+    };
+    fetchInventory();
+  }, []);
+
+  /**
+ * @function handleInventorySelect
+ * @description Handles the selection of an inventory item from the dropdown and updates the state with the selected item
+ * @param {Object} e The event object from the dropdown selection
+ * @author Jaden Ninan
+ */
+  const handleInventorySelect = (e) => {
+    const inventoryItemId = e.target.value;
+    const inventoryItem = inventoryItems.find(
+      (item) => item.inventory_id === parseInt(inventoryItemId)
+    );
+    setSelectedInventory(inventoryItem);
+    if (inventoryItem) {
+      setInventoryId(inventoryItem.inventory_id);
+      setName(inventoryItem.name);
+      setQuantity(inventoryItem.quantity);
+    }
+  };
+
+  /**
+ * @function editInventory
+ * @description Updates the selected inventory item's details in the database
+ * @author Jaden Ninan
+ */
+  const editInventory = async () => {
+    try {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/InventoryUpdate", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          inventoryId: parseInt(inventoryId),
+          name,
+          quantity: parseInt(quantity),
+        }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setInventoryMessage("Inventory Item Updated");
+        window.location.reload();
+      } else {
+        setInventoryMessage("Failed to update inventory. Please try again.");
+      }
+    } catch (error) {
+      setInventoryMessage("An error occurred. Please try again.");
+    }
+  };
+
+  /**
+ * @function addInventory
+ * @description Adds an inventory item to the database
+ * @author Jaden Ninan
+ */
+  const addInventory = async () => {
+    try {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/InventoryAdd", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, quantity }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setInventoryMessage("New Inventory Item Added");
+        window.location.reload();
+      }
+    } catch (error) {
+      setInventoryMessage("An error occurred. Please try again.");
+    }
+  };
+
+  /**
+ * @function deleteInventory
+ * @description Deletes a selected inventory item from the database
+ * @author Grace Ung
+ */
+  const deleteInventory = async () => {
+    try {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/InventoryDelete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ inventoryId }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setInventoryMessage("Inventory Item Deleted");
+        window.location.reload();
+      }
+    } catch (error) {
+      setInventoryMessage("An error occurred. Please try again.");
+    }
+  };
+
+
+
+  /**
+   * Frontend html to create 3 different forms on front end to allow acces to databse buttons for price table, menu table, and inventory
+   */
+  
+  return (
+    &lt;div className={styles.container}>
+      &lt;h1 className={styles.header}>Database Editor Dashboard&lt;/h1>
+
+      &lt;div className={styles.sections}>
+        {/* Menu Section */}
+        &lt;div className={styles.section}>
+          &lt;h2 className={styles.sectionHeader}>Menu Editor&lt;/h2>
+          &lt;div className={styles.form}>
+            &lt;label className={styles.label}>Select Menu Item:&lt;/label>
+            &lt;select onChange={handleMenuItemSelect} className={styles.select}>
+              &lt;option value="">Select...&lt;/option>
+              {menuItems.map((item) => (
+                &lt;option key={item.menu_id} value={item.menu_id}>
+                  {item.name}
+                &lt;/option>
+              ))}
+            &lt;/select>
+            &lt;label className={styles.label}>Menu ID:&lt;/label>
+            &lt;input type="text" value={menuId} readOnly className={styles.input} />
+            &lt;label className={styles.label}>Menu Name:&lt;/label>
+            &lt;input
+              type="text"
+              value={menuName}
+              onChange={(e) => setMenuName(e.target.value)}
+              className={styles.input}
+            />
+            &lt;button className={styles.button} onClick={addMenu}>
+              Add Menu Item
+            &lt;/button>
+            &lt;button className={styles.button} onClick={deleteMenu}>
+              Delete Menu Item
+            &lt;/button>
+          &lt;/div>
+          {Menumessage &amp;&amp; &lt;p className = {styles.message}>{Menumessage}&lt;/p>}
+        &lt;/div>
+
+        {/* Price Section */}
+        &lt;div className={styles.section}>
+          &lt;h2 className={styles.sectionHeader}>Price Editor&lt;/h2>
+          &lt;div className={styles.form}>
+            &lt;label className={styles.label}>Select Price Item:&lt;/label>
+            &lt;select onChange={handlePriceItemSelect} className={styles.select}>
+              &lt;option value="">Select...&lt;/option>
+              {priceItems.map((item) => (
+                &lt;option key={item.price_id} value={item.price_id}>
+                  {item.name}
+                &lt;/option>
+              ))}
+            &lt;/select>
+            &lt;label className={styles.label}>Price ID:&lt;/label>
+            &lt;input type="text" value={priceId} readOnly className={styles.input} />
+            &lt;label className={styles.label}>Price Item:&lt;/label>
+            &lt;input
+              type="text"
+              value={priceName}
+              onChange={(e) => setPriceName(e.target.value)}
+              className={styles.input}
+            />
+            &lt;label className={styles.label}>Price Item Cost:&lt;/label>
+            &lt;input
+              type="text"
+              value={priceValue}
+              onChange={(e) => setPriceValue(e.target.value)}
+              className={styles.input}
+            />
+             &lt;button className={styles.button} onClick={editPrices}>
+              Edit Prices
+            &lt;/button>
+          &lt;/div>
+
+          {Pricemessage &amp;&amp; &lt;p className = {styles.message}>{Pricemessage}&lt;/p>}
+        &lt;/div>
+
+        {/* Inventory Section */}
+        &lt;div className={styles.section}>
+          &lt;h2 className={styles.sectionHeader}>Inventory Editor&lt;/h2>
+          &lt;div className={styles.form}>
+            &lt;label className={styles.label}>Select Inventory Item:&lt;/label>
+            &lt;select onChange={handleInventorySelect} className={styles.select}>
+              &lt;option value="">Select...&lt;/option>
+              {inventoryItems.map((item) => (
+                &lt;option key={item.inventory_id} value={item.inventory_id}>
+                  {item.name}
+                &lt;/option>
+              ))}
+            &lt;/select>
+            &lt;label className={styles.label}>Inventory ID:&lt;/label>
+            &lt;input type="text" value={inventoryId} readOnly className={styles.input} />
+            &lt;label className={styles.label}>Item Name:&lt;/label>
+            &lt;input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className={styles.input}
+            />
+            &lt;label className={styles.label}>Quantity:&lt;/label>
+            &lt;input
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(e.target.value)}
+              className={styles.input}
+            />
+            &lt;button className={styles.button} onClick={addInventory}>
+              Add Inventory Item
+            &lt;/button>
+            &lt;button className={styles.button} onClick={editInventory}>
+              Edit Inventory Item
+            &lt;/button>
+            &lt;button className={styles.button} onClick={deleteInventory}>
+              Delete Inventory Item
+            &lt;/button>
+          &lt;/div>
+
+          {Inventorymessage &amp;&amp; &lt;p className = {styles.message}>{Inventorymessage}&lt;/p>}
+        &lt;/div>
+      &lt;/div>
+
+      {/* Footer */}
+      &lt;footer className={styles.footer}>
+        &lt;a href="/ManagerView" className={styles.link}>
+          Back to Manager Dashboard
+        &lt;/a>
+      &lt;/footer>
+    &lt;/div>
+  );
+}
+
+export default EditMenuAndPrices;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#EditMenuAndPrices">EditMenuAndPrices</a></li><li><a href="global.html#EmployeeManagement">EmployeeManagement</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#ManagerView">ManagerView</a></li><li><a href="global.html#Page">Page</a></li><li><a href="global.html#ReportsView">ReportsView</a></li><li><a href="global.html#addEmployee">addEmployee</a></li><li><a href="global.html#addInventory">addInventory</a></li><li><a href="global.html#addMenu">addMenu</a></li><li><a href="global.html#addToCart">addToCart</a></li><li><a href="global.html#averageRating">averageRating</a></li><li><a href="global.html#decreaseContrast">decreaseContrast</a></li><li><a href="global.html#deleteEmployee">deleteEmployee</a></li><li><a href="global.html#deleteInventory">deleteInventory</a></li><li><a href="global.html#deleteMenu">deleteMenu</a></li><li><a href="global.html#editEmployee">editEmployee</a></li><li><a href="global.html#editInventory">editInventory</a></li><li><a href="global.html#editPrices">editPrices</a></li><li><a href="global.html#fetchPrice">fetchPrice</a></li><li><a href="global.html#fetchWeather">fetchWeather</a></li><li><a href="global.html#filteredReviews">filteredReviews</a></li><li><a href="global.html#filteredReviewsaverage">filteredReviewsaverage</a></li><li><a href="global.html#getPriceFromDB">getPriceFromDB</a></li><li><a href="global.html#handleAddItem">handleAddItem</a></li><li><a href="global.html#handleAddReview">handleAddReview</a></li><li><a href="global.html#handleConfirm">handleConfirm</a></li><li><a href="global.html#handleEmployeeLogin">handleEmployeeLogin</a></li><li><a href="global.html#handleEmployeeSelect">handleEmployeeSelect</a></li><li><a href="global.html#handleGenerateChart">handleGenerateChart</a></li><li><a href="global.html#handleGenerateMonthlySalesHistory">handleGenerateMonthlySalesHistory</a></li><li><a href="global.html#handleGeneratePopularItems">handleGeneratePopularItems</a></li><li><a href="global.html#handleGenerateProductUsage">handleGenerateProductUsage</a></li><li><a href="global.html#handleGenerateSalesReport">handleGenerateSalesReport</a></li><li><a href="global.html#handleGoogleLoginResponse">handleGoogleLoginResponse</a></li><li><a href="global.html#handleInventorySelect">handleInventorySelect</a></li><li><a href="global.html#handleItemClick">handleItemClick</a></li><li><a href="global.html#handleManagerLogin">handleManagerLogin</a></li><li><a href="global.html#handleMenuItemSelect">handleMenuItemSelect</a></li><li><a href="global.html#handlePaymentChange">handlePaymentChange</a></li><li><a href="global.html#handlePriceItemSelect">handlePriceItemSelect</a></li><li><a href="global.html#handleReload">handleReload</a></li><li><a href="global.html#handleRemoveItem">handleRemoveItem</a></li><li><a href="global.html#increaseContrast">increaseContrast</a></li><li><a href="global.html#loadEmployee">loadEmployee</a></li><li><a href="global.html#loadInventory">loadInventory</a></li><li><a href="global.html#loadMenu">loadMenu</a></li><li><a href="global.html#loadPrices">loadPrices</a></li><li><a href="global.html#placeOrder">placeOrder</a></li><li><a href="global.html#processCart">processCart</a></li><li><a href="global.html#renderContent">renderContent</a></li><li><a href="global.html#submitOrder">submitOrder</a></li><li><a href="global.html#zoomIn">zoomIn</a></li><li><a href="global.html#zoomOut">zoomOut</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Dec 11 2024 20:00:50 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

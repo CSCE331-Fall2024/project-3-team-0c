@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: CashierView/page.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: CashierView/page.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+     * @file CashierView
+     * @description sets up format and functionality of the cashier view
+     * @author Grace Ung, Daniel Fuhrmann
+     */
+"use client"
+import React, { useState, useEffect } from 'react';
+import styles from './CashierView.module.css';
+
+
+
+const CashierView = () => {
+  // handle adding and removing items to the cart
+
+  const [cart, setCart] = useState([]);
+  const [bowlPrice, setBowlPrice] = useState(null);
+  const [platePrice, setPlatePrice] = useState(null);
+  const [biggerPlatePrice, setBiggerPlatePrice] = useState(null);
+  const [appetizersPrice, setAppetizersPrice] = useState(null);
+  const [drinkPrice, setDrinkPrice] = useState(null);
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  /**
+     * @function handleAddItem 
+     * @description Adds selected menu item to the cart
+     * @param {Object} item menu item being added to cart
+     * @author Grace Ung
+     */
+  const handleAddItem = (item) => { // add item to the cart
+    setCart([...cart, item]);
+    setTotalPrice(item.price);
+  };
+
+  /**
+     * @function handleRemoveItem 
+     * @description Removes selected menu item to the cart
+     * @param {Object} item menu item being removed from cart
+     * @author Grace Ung
+     */
+  const handleRemoveItem = (index) => {
+    const newCart = [...cart];
+    newCart.splice(index, 1);
+    setCart(newCart);
+  };
+
+  /**
+     * @function fetchPrice 
+     * @description Gets the price from the database
+     * @param {Object} itemName menu item price being fetched
+     * @param {Object} setState sets the state for the item 
+     * @author Daniel Furhmann
+     */
+  const fetchPrice = async (itemName, setState) => { // get the price of each product
+    try {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/getPrice", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: itemName }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch price for ${itemName}`);
+      }
+
+      const data = await response.json();
+      setState(data.price); // Update the corresponding state
+    } catch (error) {
+      console.error(`An error occurred requesting ${itemName} price:`, error.message);
+    }
+  };
+
+
+  /**
+     * @function processCart 
+     * @description Processes the elements in the cart
+     * @param {Object} orderID the order ID of the cart 
+     * @author Daniel Furhmann
+     */
+  async function processCart(orderID) {
+    for (let index = 0; index &lt; cart.length; index++) {
+      let item = cart[index];
+      if (item.name === 'Bowl' || item.name === 'Plate' || item.name === 'Bigger Plate') {
+        // TODO check if it orderItem has a menu item already - if so submit order
+        if (globalThis.orderItem.hasOwnProperty("menuItem1")) {
+          // console.log("Spot A");
+          try {
+            const orderItemResponse = await fetch("https://project-3-team-0c-n4yn.onrender.com/addCustomerOrderItem", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(globalThis.orderItem)  // FIXME
+            });
+            const orderItemResult = await orderItemResponse.json();
+            if (!orderItemResult.success) {
+              console.error(orderItemResult);
+            }
+          } catch (error) {
+            console.error(error.message);
+          }
+        }
+
+
+        // globalThis.orderItem = {};
+        for (const key in globalThis.orderItem) {
+          delete globalThis.orderItem[key];
+        }
+
+        // TODO Get PriceID
+        let priceID;
+        try {
+          const priceIDResponse = await fetch("https://project-3-team-0c-n4yn.onrender.com/getPriceID", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ "name": item.type })
+          });
+          const priceIDResult = await priceIDResponse.json();
+          if (!priceIDResult.success) {
+            console.error(priceIDResult);
+          }
+          else {
+            priceID = priceIDResult.price_ID;
+          }
+        } catch (error) {
+          console.error(error.message);
+        }
+        // console.log(priceID);
+        // TODO Add menu item to order item
+        globalThis.orderItem["orderID"] = orderID;
+        globalThis.orderItem["priceID"] = priceID;
+      }
+      else {
+        let itemMenuID;
+        try {
+          const itemIDResponse = await fetch("https://project-3-team-0c-n4yn.onrender.com/getMenuID", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ "itemName": item.name })
+          });
+          const itemIDResult = await itemIDResponse.json();
+          // console.log(itemIDResult);
+          if (!itemIDResult.success) {
+            console.error(itemIDResult);
+          }
+          else {
+            itemMenuID = itemIDResult.menuItemID;
+          }
+        } catch (error) {
+          console.error(error.message);
+        }
+
+        // TODO add menu item to orderItem
+        if (globalThis.orderItem.hasOwnProperty("menuItem1")) {
+          if (globalThis.orderItem.hasOwnProperty("menuItem2")) {
+            if (globalThis.orderItem.hasOwnProperty("menuItem3")) {
+              if (!globalThis.orderItem.hasOwnProperty("menuItem4")) {
+                globalThis.orderItem["menuItem4"] = itemMenuID;
+              }
+            }
+            else {
+              globalThis.orderItem["menuItem3"] = itemMenuID;
+            }
+          }
+          else {
+            globalThis.orderItem["menuItem2"] = itemMenuID;
+          }
+        }
+        else {
+          globalThis.orderItem["menuItem1"] = itemMenuID;
+        }
+      }
+    }
+    return globalThis.orderItem;
+  };
+
+  /**
+   * @function submitOrder
+   * @description Submits the order
+   * @author Daniel Furhmann
+   */
+  const submitOrder = async () => {
+    globalThis.orderItem = { "orderID": -1 };
+    // TODO: Create empty order
+    try {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/createCustomerOrder", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+      const createResult = await response.json();
+      if (!createResult.success) {
+        console.error(createResult);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+
+
+
+    // TODO: Get Latest Order_ID
+    let orderID;
+    try {
+      const orderIDResponse = await fetch("https://project-3-team-0c-n4yn.onrender.com/getLatestOrderID", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+      const orderIDResult = await orderIDResponse.json();
+      if (!orderIDResult.success) {
+        console.error(orderIDResult);
+      }
+      else {
+        orderID = orderIDResult.orderID;
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+
+    // TODO: Add order items to Order
+
+    const processCartResult = await processCart(orderID);
+
+
+    try {
+      const orderItemResponse = await fetch("https://project-3-team-0c-n4yn.onrender.com/addCustomerOrderItem", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(processCartResult)  // FIXME
+      });
+      const orderItemResult = await orderItemResponse.json();
+      if (!orderItemResult.success) {
+        console.error(orderItemResult);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+
+    location.reload();
+  };
+
+  // Effect to fetch all prices on component mount
+  useEffect(() => {
+    fetchPrice("Bowl", setBowlPrice);
+    fetchPrice("Plate", setPlatePrice);
+    fetchPrice("Bigger Plate", setBiggerPlatePrice);
+    fetchPrice("Appetizer", setAppetizersPrice);
+    fetchPrice("Drink", setDrinkPrice);
+  }, []); // Run once on mount
+
+  // layout and design for the cashier view
+  return (
+    &lt;div className={styles['container']}>
+      &lt;div className={styles['leftPane']}>
+        {/* receipt and layout */}
+        &lt;h2>Receipt&lt;/h2>
+        &lt;ul>
+          {cart.map((item, index) => (
+            &lt;li key={index} className={styles.listItem}>
+              &lt;div className={styles.itemInfo}>
+                &lt;span className={styles.itemName}>{item.name}&lt;/span>
+                &lt;span className={styles.dashes}>&lt;/span>
+                &lt;span className={styles.price}>{item.price}&lt;/span>
+              &lt;/div>
+              &lt;button
+                className={styles.deleteButton}
+                onClick={() => handleRemoveItem(index)}
+              >
+                Remove
+              &lt;/button>
+            &lt;/li>
+          ))}
+        &lt;/ul>
+        {/* Display total price */}
+        &lt;div className={styles.totalPrice}>
+          &lt;button onClick={() => submitOrder()}>Submit&lt;/button>
+
+        &lt;/div>
+      &lt;/div>
+      &lt;div className={styles['rightPane']}>
+        {/* menu buttons and layout */}
+        &lt;h2>Menu&lt;/h2>
+        &lt;div className={styles['buttonRow']}>
+          &lt;button className={styles['buttonCombo']} onClick={() => handleAddItem({ name: 'Bowl', price: bowlPrice, type: 'Bowl' })}>Bowl&lt;/button>
+          &lt;button className={styles['buttonCombo']} onClick={() => handleAddItem({ name: 'Plate', price: platePrice, type: 'Plate' })}>Plate&lt;/button>
+          &lt;button className={styles['buttonCombo']} onClick={() => handleAddItem({ name: 'Bigger Plate', price: biggerPlatePrice, type: 'Bigger Plate' })}>Bigger Plate&lt;/button>
+        &lt;/div>
+        &lt;div className={styles['buttonRow']}>
+          &lt;button className={styles['buttonSide']} onClick={() => handleAddItem({ name: 'White Steamed Rice' })}>White Rice&lt;/button>
+          &lt;button className={styles['buttonSide']} onClick={() => handleAddItem({ name: 'Fried Rice' })}>Fried Rice&lt;/button>
+          &lt;button className={styles['buttonSide']} onClick={() => handleAddItem({ name: 'Chow Mein' })}>Chow Mein&lt;/button>
+          &lt;button className={styles['buttonSide']} onClick={() => handleAddItem({ name: 'Mixed Vegetables' })}>Mixed Vegetables&lt;/button>
+        &lt;/div>
+        &lt;div className={styles['buttonRow']}>
+          &lt;button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Orange Chicken' })}>Orange Chicken&lt;/button>
+          &lt;button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Honey Sesame Chicken' })}>Honey Sesame Chicken&lt;/button>
+          &lt;button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Broccoli Beef' })}>Broccoli Beef&lt;/button>
+          &lt;button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Kung Pao Chicken' })}>Kung Pao Chicken&lt;/button>
+          &lt;button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Black Pepper Angus Steak' })}>Black Pepper Angus Steak&lt;/button>
+        &lt;/div>
+        &lt;div className={styles['buttonRow']}>
+          &lt;button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'SweetFire Chicken Breast' })}>Sweet Fire Chicken Breast&lt;/button>
+          &lt;button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Grilled Teriyaki Chicken' })}>Grilled Teriyaki Chicken&lt;/button>
+          &lt;button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Mushroom Chicken' })}>Mushroom Chicken&lt;/button>
+          &lt;button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Beijing Beef' })}>Beijing Beef&lt;/button>
+          &lt;button className={styles['buttonEntree']} onClick={() => handleAddItem({ name: 'Honey Walnut Shrimp' })}>Honey Walnut Shrimp&lt;/button>
+        &lt;/div>
+        &lt;div className={styles['buttonRow']}>
+          &lt;button className={styles['buttonApp']} onClick={() => handleAddItem({ name: 'Veggie Spring Roll', price: appetizersPrice })}>Veggie Spring Roll&lt;/button>
+          &lt;button className={styles['buttonApp']} onClick={() => handleAddItem({ name: 'Chicken Egg Roll', price: appetizersPrice })}>Chicken Egg Roll&lt;/button>
+          &lt;button className={styles['buttonApp']} onClick={() => handleAddItem({ name: 'Cream Cheese Rangoon', price: appetizersPrice })}>Cream Cheese Rangoon&lt;/button>
+        &lt;/div>
+        &lt;div className={styles['buttonRow']}>
+          &lt;button className={styles['buttonDrink']} onClick={() => handleAddItem({ name: 'Water Bottle', price: drinkPrice })}>Water Bottle&lt;/button>
+          &lt;button className={styles['buttonDrink']} onClick={() => handleAddItem({ name: 'Sprite', price: drinkPrice })}>Sprite&lt;/button>
+          &lt;button className={styles['buttonDrink']} onClick={() => handleAddItem({ name: 'Root Beer', price: drinkPrice })}>Root Beer&lt;/button>
+          &lt;button className={styles['buttonDrink']} onClick={() => handleAddItem({ name: 'Mexican Coke', price: drinkPrice })}>Mexican Coke&lt;/button>
+          &lt;button className={styles['buttonDrink']} onClick={() => handleAddItem({ name: 'Coke', price: drinkPrice })}>Coke&lt;/button>
+        &lt;/div>
+        &lt;div className={styles['buttonRow']}>
+          &lt;button className={styles['buttonDrink']} onClick={() => handleAddItem({ name: 'Lemonade', price: drinkPrice })}>Lemonade&lt;/button>
+          &lt;button className={styles['buttonDrink']} onClick={() => handleAddItem({ name: 'Fanta', price: drinkPrice })}>Fanta&lt;/button>
+          &lt;button className={styles['buttonDrink']} onClick={() => handleAddItem({ name: 'Dr Pepper', price: drinkPrice })}>Dr Pepper&lt;/button>
+          &lt;button className={styles['buttonDrink']} onClick={() => handleAddItem({ name: 'Diet Coke', price: drinkPrice })}>Diet Coke&lt;/button>
+          &lt;button className={styles['buttonDrink']} onClick={() => handleAddItem({ name: 'Apple Juice', price: drinkPrice })}>Apple Juice&lt;/button>
+        &lt;/div>
+      &lt;/div>
+    &lt;/div>
+  );
+};
+
+export default CashierView;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#EditMenuAndPrices">EditMenuAndPrices</a></li><li><a href="global.html#EmployeeManagement">EmployeeManagement</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#ManagerView">ManagerView</a></li><li><a href="global.html#Page">Page</a></li><li><a href="global.html#ReportsView">ReportsView</a></li><li><a href="global.html#addEmployee">addEmployee</a></li><li><a href="global.html#addInventory">addInventory</a></li><li><a href="global.html#addMenu">addMenu</a></li><li><a href="global.html#addToCart">addToCart</a></li><li><a href="global.html#averageRating">averageRating</a></li><li><a href="global.html#decreaseContrast">decreaseContrast</a></li><li><a href="global.html#deleteEmployee">deleteEmployee</a></li><li><a href="global.html#deleteInventory">deleteInventory</a></li><li><a href="global.html#deleteMenu">deleteMenu</a></li><li><a href="global.html#editEmployee">editEmployee</a></li><li><a href="global.html#editInventory">editInventory</a></li><li><a href="global.html#editPrices">editPrices</a></li><li><a href="global.html#fetchPrice">fetchPrice</a></li><li><a href="global.html#fetchWeather">fetchWeather</a></li><li><a href="global.html#filteredReviews">filteredReviews</a></li><li><a href="global.html#filteredReviewsaverage">filteredReviewsaverage</a></li><li><a href="global.html#getPriceFromDB">getPriceFromDB</a></li><li><a href="global.html#handleAddItem">handleAddItem</a></li><li><a href="global.html#handleAddReview">handleAddReview</a></li><li><a href="global.html#handleConfirm">handleConfirm</a></li><li><a href="global.html#handleEmployeeLogin">handleEmployeeLogin</a></li><li><a href="global.html#handleEmployeeSelect">handleEmployeeSelect</a></li><li><a href="global.html#handleGenerateChart">handleGenerateChart</a></li><li><a href="global.html#handleGenerateMonthlySalesHistory">handleGenerateMonthlySalesHistory</a></li><li><a href="global.html#handleGeneratePopularItems">handleGeneratePopularItems</a></li><li><a href="global.html#handleGenerateProductUsage">handleGenerateProductUsage</a></li><li><a href="global.html#handleGenerateSalesReport">handleGenerateSalesReport</a></li><li><a href="global.html#handleGoogleLoginResponse">handleGoogleLoginResponse</a></li><li><a href="global.html#handleInventorySelect">handleInventorySelect</a></li><li><a href="global.html#handleItemClick">handleItemClick</a></li><li><a href="global.html#handleManagerLogin">handleManagerLogin</a></li><li><a href="global.html#handleMenuItemSelect">handleMenuItemSelect</a></li><li><a href="global.html#handlePaymentChange">handlePaymentChange</a></li><li><a href="global.html#handlePriceItemSelect">handlePriceItemSelect</a></li><li><a href="global.html#handleReload">handleReload</a></li><li><a href="global.html#handleRemoveItem">handleRemoveItem</a></li><li><a href="global.html#increaseContrast">increaseContrast</a></li><li><a href="global.html#loadEmployee">loadEmployee</a></li><li><a href="global.html#loadInventory">loadInventory</a></li><li><a href="global.html#loadMenu">loadMenu</a></li><li><a href="global.html#loadPrices">loadPrices</a></li><li><a href="global.html#placeOrder">placeOrder</a></li><li><a href="global.html#processCart">processCart</a></li><li><a href="global.html#renderContent">renderContent</a></li><li><a href="global.html#submitOrder">submitOrder</a></li><li><a href="global.html#zoomIn">zoomIn</a></li><li><a href="global.html#zoomOut">zoomOut</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Dec 11 2024 20:00:50 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

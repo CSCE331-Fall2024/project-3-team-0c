@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: CustomerView/page.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: CustomerView/page.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+     * @file CustomerView
+     * @description sets up format and functionality of the customer view
+     * @author Grace Ung, Adarsh Vadlapatla
+     */
+"use client";
+import React, { useEffect, useState } from 'react';
+import styles from './CustomerViewStyle.module.css'; // Import CSS module
+import MainMenuComponent from './CustomerComponents/MainMenuComponent';
+import AppetizersComponent from './CustomerComponents/AppetizersComponent';
+import DrinksComponent from './CustomerComponents/DrinksComponent';
+import CartComponent from './CustomerComponents/CartComponent';
+import Image from 'next/image';
+
+const CustomerView = () => {
+    const [time, setTime] = useState(new Date().toLocaleTimeString());
+    const [activeSection, setActiveSection] = useState('home');
+    const [cart, setCartItems] = useState([]);
+    const [zoomLevel, setZoomLevel] = useState(1);
+    const [contrast, setContrast] = useState(1); // Default contrast value
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+        }, 0);
+        
+        return () => clearInterval(timer);
+    }, []);
+    
+   
+
+    useEffect(() => {
+        // Force a small state update after initial render to ensure everything is ready
+        setCartItems([]);  // Clear the cart if needed on mount, or make sure it's initialized
+    }, []);
+
+    /**
+     * @function addToCart
+     * @description Adds selected menu items to a global cart
+     * @param {Object} item menu item being added to cart
+     * @author Grace Ung
+     */
+    const addToCart = (item) => {
+        setCartItems([...cart, item]);
+    };
+
+    /**
+     * @function zoomIn
+     * @description Enlarge the view of the screen
+     * @author Grace Ung
+     */
+    const zoomIn = () => {
+        setZoomLevel(prevZoom => Math.min(prevZoom + 0.1, 3)); // Max zoom level = 3
+    };
+
+    /**
+     * @function zoomOut
+     * @description Minimize the view of the screen
+     * @author Grace Ung
+     */
+    const zoomOut = () => {
+        setZoomLevel(prevZoom => Math.max(prevZoom - 0.1, 0.5)); // Min zoom level = 0.5
+    };
+
+    // Increase contrast
+    /**
+     * @function increaseContrast
+     * @description Increase the contrast of the screen
+     * @author Adarsh Vadlapatla
+     */
+    const increaseContrast = () => {
+        setContrast(prevContrast => Math.min(prevContrast + 0.1, 2)); // Max contrast = 2
+    };
+
+    // Decrease contrast
+    /**
+     * @function decreaseContrast
+     * @description decrease the contrast of the screen
+     * @author Adarsh Vadlapatla
+     */
+    const decreaseContrast = () => {
+        setContrast(prevContrast => Math.max(prevContrast - 0.1, 0.5)); // Min contrast = 0.5
+    };
+
+    /*
+    * Provide instructions for each type of order on each rednering clicked
+    * based on the tab clicked provide different food options
+    */
+   /**
+     * @function renderContent
+     * @description Changes the look of the screen
+     * @author Grace Ung
+     */
+    const renderContent = () => {
+        let instructionmessage = "";
+        switch (activeSection) {
+            case 'Bowl':
+                instructionmessage = "Bowl"
+                return &lt;MainMenuComponent key={activeSection} message={instructionmessage} addToCart={addToCart}/>;
+
+            case 'Plate':
+                instructionmessage = "Plate"
+                return &lt;MainMenuComponent message={instructionmessage} addToCart={addToCart} />;
+            case 'Bigger Plate':
+                instructionmessage = "Bigger Plate"
+                return &lt;MainMenuComponent message={instructionmessage} addToCart={addToCart} />;
+            case 'Appetizers':
+                instructionmessage = "Appetizer"
+                return &lt;AppetizersComponent message={instructionmessage} addToCart={addToCart} />;
+            case 'Drinks':
+                instructionmessage = "Drink"
+                return &lt;DrinksComponent message={instructionmessage} addToCart={addToCart} />;
+            case 'A La Carte':
+                instructionmessage = "A La Carte"
+                return &lt;MainMenuComponent message={instructionmessage} addToCart={addToCart} />;
+            case 'Go To Cart':
+                instructionmessage = "Checkout"
+                return &lt;CartComponent message={instructionmessage} cartItems={cart} setCartItems={setCartItems}/>;
+            default:
+                instructionmessage = "Bowl"
+                return &lt;MainMenuComponent message={instructionmessage} addToCart={addToCart}/>;
+        }
+    };
+
+    /*
+    * create customer view template 
+    * all items are available with organization tabs for bowl, plate, etc.
+    */
+    return (
+        &lt;div className={styles.customerView} style={{
+            transform: `scale(${zoomLevel})`,
+            transformOrigin: "0 0", // Ensures scaling starts from the top-left
+            width: `${100 / zoomLevel}%`, // Adjust width dynamically
+            height: `${100 / zoomLevel}%`, // Adjust height dynamically
+            filter: `contrast(${contrast})`, // Apply contrast filter
+        }}>
+            &lt;header className={styles.header}>
+                &lt;div className={styles.time}>{time}&lt;/div>
+                &lt;h1 className={styles.title}>Customer View&lt;/h1>
+                &lt;button onClick={zoomIn}>
+                        &lt;Image
+                            src="/photos/zoom-in.png"
+                            alt="Zoom In"
+                            className={styles['zoom-icon']}
+                            width={24}
+                            height={24}
+                        />
+                    &lt;/button>
+                    &lt;button onClick={zoomOut}>
+                        &lt;Image
+                            src="/photos/zoom-out.png"
+                            alt="Zoom Out"
+                            className={styles['zoom-icon']}
+                            width={24}
+                            height={24}
+                        />
+                    &lt;/button>
+                    &lt;div className={styles.adjustments}>
+                &lt;button onClick={increaseContrast} className={styles.adjustButton}>Increase Contrast&lt;/button>
+                &lt;button onClick={decreaseContrast} className={styles.adjustButton}>Decrease Contrast&lt;/button>
+                &lt;button  onClick={() => (window.location.href = "..")} className={styles.adjustButton}>Go Back&lt;/button>
+            &lt;/div>
+            &lt;/header>
+            &lt;div className={styles.mainView}>
+                &lt;nav className={styles.navigation}>
+                    &lt;button className={styles.navButton} onClick={() => setActiveSection('Bowl')}>Bowl&lt;/button>
+                    &lt;button className={styles.navButton} onClick={() => setActiveSection('Plate')}>Plate&lt;/button>
+                    &lt;button className={styles.navButton} onClick={() => setActiveSection('Bigger Plate')}>Bigger Plate&lt;/button>
+                    &lt;button className={styles.navButton} onClick={() => setActiveSection('Appetizers')}>Appetizers&lt;/button>
+                    &lt;button className={styles.navButton} onClick={() => setActiveSection('Drinks')}>Drinks&lt;/button>
+                    &lt;button className={styles.navButton} onClick={() => setActiveSection('A La Carte')}>A la Carte&lt;/button>
+                    &lt;button className={styles.navButton} onClick={() => setActiveSection('Go To Cart')}>Go To Cart&lt;/button>
+                &lt;/nav>
+                &lt;div className={styles.background_img}>
+                    &lt;div className={styles.dataContent}>
+                        {renderContent()}
+                    &lt;/div>
+                &lt;/div>
+            &lt;/div>
+           
+        &lt;/div>
+    );
+};
+
+export default CustomerView;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#EditMenuAndPrices">EditMenuAndPrices</a></li><li><a href="global.html#EmployeeManagement">EmployeeManagement</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#ManagerView">ManagerView</a></li><li><a href="global.html#Page">Page</a></li><li><a href="global.html#ReportsView">ReportsView</a></li><li><a href="global.html#addEmployee">addEmployee</a></li><li><a href="global.html#addInventory">addInventory</a></li><li><a href="global.html#addMenu">addMenu</a></li><li><a href="global.html#addToCart">addToCart</a></li><li><a href="global.html#averageRating">averageRating</a></li><li><a href="global.html#decreaseContrast">decreaseContrast</a></li><li><a href="global.html#deleteEmployee">deleteEmployee</a></li><li><a href="global.html#deleteInventory">deleteInventory</a></li><li><a href="global.html#deleteMenu">deleteMenu</a></li><li><a href="global.html#editEmployee">editEmployee</a></li><li><a href="global.html#editInventory">editInventory</a></li><li><a href="global.html#editPrices">editPrices</a></li><li><a href="global.html#fetchPrice">fetchPrice</a></li><li><a href="global.html#fetchWeather">fetchWeather</a></li><li><a href="global.html#filteredReviews">filteredReviews</a></li><li><a href="global.html#filteredReviewsaverage">filteredReviewsaverage</a></li><li><a href="global.html#getPriceFromDB">getPriceFromDB</a></li><li><a href="global.html#handleAddItem">handleAddItem</a></li><li><a href="global.html#handleAddReview">handleAddReview</a></li><li><a href="global.html#handleConfirm">handleConfirm</a></li><li><a href="global.html#handleEmployeeLogin">handleEmployeeLogin</a></li><li><a href="global.html#handleEmployeeSelect">handleEmployeeSelect</a></li><li><a href="global.html#handleGenerateChart">handleGenerateChart</a></li><li><a href="global.html#handleGenerateMonthlySalesHistory">handleGenerateMonthlySalesHistory</a></li><li><a href="global.html#handleGeneratePopularItems">handleGeneratePopularItems</a></li><li><a href="global.html#handleGenerateProductUsage">handleGenerateProductUsage</a></li><li><a href="global.html#handleGenerateSalesReport">handleGenerateSalesReport</a></li><li><a href="global.html#handleGoogleLoginResponse">handleGoogleLoginResponse</a></li><li><a href="global.html#handleInventorySelect">handleInventorySelect</a></li><li><a href="global.html#handleItemClick">handleItemClick</a></li><li><a href="global.html#handleManagerLogin">handleManagerLogin</a></li><li><a href="global.html#handleMenuItemSelect">handleMenuItemSelect</a></li><li><a href="global.html#handlePaymentChange">handlePaymentChange</a></li><li><a href="global.html#handlePriceItemSelect">handlePriceItemSelect</a></li><li><a href="global.html#handleReload">handleReload</a></li><li><a href="global.html#handleRemoveItem">handleRemoveItem</a></li><li><a href="global.html#increaseContrast">increaseContrast</a></li><li><a href="global.html#loadEmployee">loadEmployee</a></li><li><a href="global.html#loadInventory">loadInventory</a></li><li><a href="global.html#loadMenu">loadMenu</a></li><li><a href="global.html#loadPrices">loadPrices</a></li><li><a href="global.html#placeOrder">placeOrder</a></li><li><a href="global.html#processCart">processCart</a></li><li><a href="global.html#renderContent">renderContent</a></li><li><a href="global.html#submitOrder">submitOrder</a></li><li><a href="global.html#zoomIn">zoomIn</a></li><li><a href="global.html#zoomOut">zoomOut</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Dec 11 2024 20:00:50 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

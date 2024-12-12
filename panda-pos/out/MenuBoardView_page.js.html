@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: MenuBoardView/page.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: MenuBoardView/page.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+     * @file MenuBoardView
+     * @description sets up format and functionality of the menu board view
+     * @author Grace Ung
+     */
+"use client";
+import React from 'react';
+import { useEffect, useState } from 'react';
+import styles from './MenuBoardView.module.css';
+
+const MenuBoardView = () => {
+    // State to manage which content to display
+    const [showMainMenu, setShowMainMenu] = useState(true);
+    const [bowlPrice, setBowlPrice] = useState(null);
+    const [platePrice, setPlatePrice] = useState(null);
+    const [biggerPlatePrice, setBiggerPlatePrice] = useState(null);
+    const [appetizersPrice, setAppetizersPrice] = useState(null);
+    const [drinkPrice, setDrinkPrice] = useState(null);
+
+
+    // Effect to switch content every 8 seconds
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setShowMainMenu((prev) => !prev); // Toggle the content
+        }, 8000); // Switch every 8 seconds
+
+        // Cleanup the interval on unmount
+        return () => clearInterval(interval);
+    }, []);
+
+    /**
+     * @function fetchPrice
+     * @description Gets the price from the backend
+     * @param {Object} itemName menu item of the price needed
+     * @param {Object} setState variable to hold the price fetched
+     * @author Daniel Furhmann
+     */
+    const fetchPrice = async (itemName, setState) => {
+        try {
+            const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/getPrice", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ name: itemName }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch price for ${itemName}`);
+            }
+
+            const data = await response.json();
+            setState(data.price); // Update the corresponding state
+        } catch (error) {
+            console.error(`An error occurred requesting ${itemName} price:`, error.message);
+        }
+    };
+
+    // Effect to fetch all prices on component mount
+    useEffect(() => {
+        fetchPrice("Bowl", setBowlPrice);
+        fetchPrice("Plate", setPlatePrice);
+        fetchPrice("Bigger Plate", setBiggerPlatePrice);
+        fetchPrice("Appetizer", setAppetizersPrice);
+        fetchPrice("Drink", setDrinkPrice);
+    }, []); // Run once on mount
+    
+    return (
+        &lt;div className={styles.menuItems}>
+            {showMainMenu ? (
+                &lt;>
+                    &lt;div className={styles.MenuBoardView}>
+                        &lt;header className={styles.header}>
+                            &lt;div className={styles.menuPrice}>Bowl: {bowlPrice !== null ? bowlPrice : "Loading..."} - 1 entree + 1 side&lt;/div>
+                            &lt;div className={styles.menuPrice}>Plate: {platePrice !== null ? platePrice : "Loading..."} - 1 entree + 2 sides&lt;/div>
+                            &lt;div className={styles.menuPriceNoBorder}>Bigger Plate: {biggerPlatePrice !== null ? biggerPlatePrice : "Loading..."} - 1 entree + 3 sides&lt;/div>
+                        &lt;/header>
+                        &lt;div className={styles.rows}>
+                            &lt;div className={styles.text}>Entrees:&lt;/div>
+                            &lt;div className={styles.row}>
+                                &lt;div className={styles.item}>
+                                    &lt;img src="/photos/Sides_WhiteSteamedRice.png" alt="White Rice" />
+                                    &lt;span className={styles.caption}>White Rice&lt;/span>
+                                &lt;/div>
+                                &lt;div className={styles.item}>
+                                    &lt;img src="/photos/Sides_FriedRice.png" alt="Fried Rice" />
+                                    &lt;span className={styles.caption}>Fried Rice&lt;/span>
+                                &lt;/div>
+                                &lt;div className={styles.item}>
+                                    &lt;img src="/photos/Sides_ChowMein.png" alt="Chow Mein" />
+                                    &lt;span className={styles.caption}>Chow Mein&lt;/span>
+                                &lt;/div>
+                                &lt;div className={styles.item}>
+                                    &lt;img src="/photos/Vegetables_SuperGreens.png" alt="Super Greens" />
+                                    &lt;span className={styles.caption}>Super Greens&lt;/span>
+                                &lt;/div>
+                            &lt;/div>
+                        &lt;/div>
+                        &lt;div className={styles.rows}>
+                            &lt;div className={styles.text}>Sides:&lt;/div>
+                            &lt;div className={styles.row}>
+                                &lt;div className={styles.item}>
+                                    &lt;img src="/photos/Beef_BeijingBeef.png" alt="Beijing Beef" />
+                                    &lt;span className={styles.caption}>Beijing Beef&lt;/span>
+                                &lt;/div>
+                                &lt;div className={styles.item}>
+                                    &lt;img src="/photos/Beef_BroccoliBeef.png" alt="Broccoli Beef" />
+                                    &lt;span className={styles.caption}>Broccoli Beef&lt;/span>
+                                &lt;/div>
+                                &lt;div className={styles.item}>
+                                    &lt;img src="/photos/Chicken_GrilledTeriyakiChicken.png" alt="Grilled Teriyaki Chicken" />
+                                    &lt;span className={styles.caption}>Grilled Teriyaki Chicken&lt;/span>
+                                &lt;/div>
+                                &lt;div className={styles.item}>
+                                    &lt;img src="/photos/Chicken_KungPaoChicken.png" alt="Kung Pao Chicken" />
+                                    &lt;span className={styles.caption}>Kung Pao Chicken&lt;/span>
+                                &lt;/div>
+                                &lt;div className={styles.item}>
+                                    &lt;img src="/photos/Chicken_MushroomChicken.png" alt="Mushroom Chicken" />
+                                    &lt;span className={styles.caption}>Mushroom Chicken&lt;/span>
+                                &lt;/div>
+                                &lt;div className={styles.item}>
+                                    &lt;img src="/photos/Chicken_OrangeChicken.png" alt="Orange Chicken" />
+                                    &lt;span className={styles.caption}>Orange Chicken&lt;/span>
+                                &lt;/div>
+                                &lt;div className={styles.item}>
+                                    &lt;img src="/photos/ChickenBreast_HoneySesameChickenBreast.png" alt="Honey Sesame Chicken Breast" />
+                                    &lt;span className={styles.caption}>Honey Sesame Chicken Breast&lt;/span>
+                                &lt;/div>
+                                &lt;div className={styles.item}>
+                                    &lt;img src="/photos/ChickenBreast_StringBeanChickenBreast.png" alt="String Bean Chicken Breast" />
+                                    &lt;span className={styles.caption}>String Bean Chicken Breast&lt;/span>
+                                &lt;/div>
+                                &lt;div className={styles.item}>
+                                    &lt;img src="/photos/ChickenBreast_SweetFireChickenBreast.png" alt="Sweet Fire Chicken Breast" />
+                                    &lt;span className={styles.caption}>Sweet Fire Chicken Breast&lt;/span>
+                                &lt;/div>
+                                &lt;div className={styles.item}>
+                                    &lt;img src="/photos/Seafood_HoneyWalnutShrimp.png" alt="Honey Walnut Shrimp" />
+                                    &lt;span className={styles.caption}>Honey Walnut Shrimp&lt;/span>
+                                &lt;/div>
+                            &lt;/div>
+                        &lt;/div>
+                        &lt;button  onClick={() => (window.location.href = "..")} className={styles.adjustButton}>Go Back&lt;/button>
+                    &lt;/div>
+                &lt;/>
+            ) : (
+                &lt;>
+                    &lt;div className={styles.MenuBoardView}>
+                        &lt;header className={styles.header}>
+                            &lt;div className={styles.menuPrice}>Appetizers: {appetizersPrice !== null ? appetizersPrice : "Loading..."}&lt;/div>
+                            &lt;div className={styles.menuPriceNoBorder}>Drinks: {drinkPrice !== null ? drinkPrice : "Loading..."}&lt;/div>
+                        &lt;/header>
+                        &lt;div className={styles.rows}>
+                            &lt;div className={styles.text}>Appetizers:&lt;/div>
+                            &lt;div className={styles.row}>
+                                &lt;div className={styles.item}>
+                                    &lt;img src="photos/crabrangoon.png" alt="Crab Rangoon" />
+                                    &lt;span className={styles.caption}>Crab Rangoon&lt;/span>
+                                &lt;/div>
+                                &lt;div className={styles.item}>
+                                    &lt;img src="/photos/veggie.png" alt="Veggie Egg Roll" />
+                                    &lt;span className={styles.caption}>Veggie Egg Roll&lt;/span>
+                                &lt;/div>
+                                &lt;div className={styles.item}>
+                                    &lt;img src="/photos/chicken_egg_roll.png" alt="Chicken Egg Roll" />
+                                    &lt;span className={styles.caption}>Chicken Egg Roll&lt;/span>
+                                &lt;/div>
+                            &lt;/div>
+                        &lt;/div>
+                        &lt;div className={styles.displayItems}>
+                            &lt;div className={styles.rows}>
+                                &lt;div className={styles.text}>Drinks:&lt;/div>
+                                &lt;div className={styles.row}>
+                                    &lt;div className={styles.item}>
+                                        &lt;img src="/photos/coke.png" alt="Coke" />
+                                        &lt;span className={styles.caption}>Coke&lt;/span>
+                                    &lt;/div>
+                                    &lt;div className={styles.item}>
+                                        &lt;img src="/photos/dietcoke.png" alt="Diet Coke" />
+                                        &lt;span className={styles.caption}>Diet Coke&lt;/span>
+                                    &lt;/div>
+                                    &lt;div className={styles.item}>
+                                        &lt;img src="/photos/drpepper.png" alt="Dr. Pepper" />
+                                        &lt;span className={styles.caption}>Dr. Pepper&lt;/span>
+                                    &lt;/div>
+                                    &lt;div className={styles.item}>
+                                        &lt;img src="/photos/fanta.png" alt="Fanta" />
+                                        &lt;span className={styles.caption}>Fanta&lt;/span>
+                                    &lt;/div>
+                                    &lt;div className={styles.item}>
+                                        &lt;img src="/photos/lemonade.png" alt="Lemonade" />
+                                        &lt;span className={styles.caption}>Lemonade&lt;/span>
+                                    &lt;/div>
+                                    &lt;div className={styles.item}>
+                                        &lt;img src="/photos/rootbeer.png" alt="Root Beer" />
+                                        &lt;span className={styles.caption}>Root Beer&lt;/span>
+                                    &lt;/div>
+                                    &lt;div className={styles.item}>
+                                        &lt;img src="/photos/Sprite.png" alt="Sprite" />
+                                        &lt;span className={styles.caption}>Spritet&lt;/span>
+                                    &lt;/div>
+                                    &lt;div className={styles.item}>
+                                        &lt;img src="/photos/mexcoke.png" alt="Mexican Coke" />
+                                        &lt;span className={styles.caption}>Mexican Coke&lt;/span>
+                                    &lt;/div>
+                                    &lt;div className={styles.item}>
+                                        &lt;img src="/photos/applejuice.png" alt="Apple Juice" />
+                                        &lt;span className={styles.caption}>Apple Juice&lt;/span>
+                                    &lt;/div>
+                                    &lt;div className={styles.item}>
+                                        &lt;img src="/photos/waterbottle.png" alt="Water Bottle" />
+                                        &lt;span className={styles.caption}>Water Bottle&lt;/span>
+                                    &lt;/div>
+                                &lt;/div>
+                            &lt;/div>
+                        &lt;/div>
+                        &lt;button  onClick={() => (window.location.href = "..")} className={styles.adjustButton}>Go Back&lt;/button>
+                    &lt;/div>
+                &lt;/>
+            )}
+        &lt;/div>
+    );
+
+};
+
+export default MenuBoardView;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#EditMenuAndPrices">EditMenuAndPrices</a></li><li><a href="global.html#EmployeeManagement">EmployeeManagement</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#ManagerView">ManagerView</a></li><li><a href="global.html#Page">Page</a></li><li><a href="global.html#ReportsView">ReportsView</a></li><li><a href="global.html#addEmployee">addEmployee</a></li><li><a href="global.html#addInventory">addInventory</a></li><li><a href="global.html#addMenu">addMenu</a></li><li><a href="global.html#addToCart">addToCart</a></li><li><a href="global.html#averageRating">averageRating</a></li><li><a href="global.html#decreaseContrast">decreaseContrast</a></li><li><a href="global.html#deleteEmployee">deleteEmployee</a></li><li><a href="global.html#deleteInventory">deleteInventory</a></li><li><a href="global.html#deleteMenu">deleteMenu</a></li><li><a href="global.html#editEmployee">editEmployee</a></li><li><a href="global.html#editInventory">editInventory</a></li><li><a href="global.html#editPrices">editPrices</a></li><li><a href="global.html#fetchPrice">fetchPrice</a></li><li><a href="global.html#fetchWeather">fetchWeather</a></li><li><a href="global.html#filteredReviews">filteredReviews</a></li><li><a href="global.html#filteredReviewsaverage">filteredReviewsaverage</a></li><li><a href="global.html#getPriceFromDB">getPriceFromDB</a></li><li><a href="global.html#handleAddItem">handleAddItem</a></li><li><a href="global.html#handleAddReview">handleAddReview</a></li><li><a href="global.html#handleConfirm">handleConfirm</a></li><li><a href="global.html#handleEmployeeLogin">handleEmployeeLogin</a></li><li><a href="global.html#handleEmployeeSelect">handleEmployeeSelect</a></li><li><a href="global.html#handleGenerateChart">handleGenerateChart</a></li><li><a href="global.html#handleGenerateMonthlySalesHistory">handleGenerateMonthlySalesHistory</a></li><li><a href="global.html#handleGeneratePopularItems">handleGeneratePopularItems</a></li><li><a href="global.html#handleGenerateProductUsage">handleGenerateProductUsage</a></li><li><a href="global.html#handleGenerateSalesReport">handleGenerateSalesReport</a></li><li><a href="global.html#handleGoogleLoginResponse">handleGoogleLoginResponse</a></li><li><a href="global.html#handleInventorySelect">handleInventorySelect</a></li><li><a href="global.html#handleItemClick">handleItemClick</a></li><li><a href="global.html#handleManagerLogin">handleManagerLogin</a></li><li><a href="global.html#handleMenuItemSelect">handleMenuItemSelect</a></li><li><a href="global.html#handlePaymentChange">handlePaymentChange</a></li><li><a href="global.html#handlePriceItemSelect">handlePriceItemSelect</a></li><li><a href="global.html#handleReload">handleReload</a></li><li><a href="global.html#handleRemoveItem">handleRemoveItem</a></li><li><a href="global.html#increaseContrast">increaseContrast</a></li><li><a href="global.html#loadEmployee">loadEmployee</a></li><li><a href="global.html#loadInventory">loadInventory</a></li><li><a href="global.html#loadMenu">loadMenu</a></li><li><a href="global.html#loadPrices">loadPrices</a></li><li><a href="global.html#placeOrder">placeOrder</a></li><li><a href="global.html#processCart">processCart</a></li><li><a href="global.html#renderContent">renderContent</a></li><li><a href="global.html#submitOrder">submitOrder</a></li><li><a href="global.html#zoomIn">zoomIn</a></li><li><a href="global.html#zoomOut">zoomOut</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Dec 11 2024 20:00:50 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

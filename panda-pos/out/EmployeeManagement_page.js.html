@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: EmployeeManagement/page.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: EmployeeManagement/page.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+     * @file EmployeeManagement
+     * @description sets up format and functionality of the employee managment 
+     * @author Jaden Ninan, Adarsh Vadlapatla
+     */
+"use client";
+import React, { useState, useEffect } from "react";
+import styles from "./employee.module.css";
+import { useRouter } from 'next/navigation';
+
+/**
+ * @function EmployeeManagement
+ * @description Provides UI for interacting with employee details and integrates with backend API calls.
+ */
+function EmployeeManagement() {
+  const router = useRouter();
+  const [firstName, setfirstName] = useState("");
+  const [lastName, setlastName] = useState("");
+  const [payRate, setpayRate] = useState("");
+  const [lastLogin, setlastLogin] = useState("");
+  const [password, setpassword] = useState("");
+  const [isManager, setisManager] = useState(false);
+  const [message, setMessage] = useState("");
+
+  
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [employees, setEmployees] = useState([]);   
+  const [isLoading, setIsLoading] = useState(true); 
+
+  /**
+   * @function loadEmployee
+   * @description Fetches the list of employees from the server
+   * @returns {Promise&lt;Object[]>} List of employee data or an empty array if an error occurs
+   * @author Jaden Ninan
+   */
+  const loadEmployee = async () => {
+    try {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/employeeLoad", { //calling backend function from server.js
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log("Fetched Employee Data:", data); // Log the fetched data to check structure
+      return data; 
+    } catch (error) {
+      console.error("Error occurred while fetching employee data:", error);
+      return []; 
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await loadEmployee(); 
+      console.log("Fetched Employees:", result); 
+
+      if (Array.isArray(result)) {
+        setEmployees(result); 
+      } else {
+        setEmployees([]); 
+      }
+
+      setIsLoading(false); 
+    };
+
+    fetchData();
+  }, []); 
+
+  console.log(employees);
+
+  /**
+   * @function handleEmployeeSelect
+   * @description Handles the selection of an employee from the dropdown and populates the form with their details
+   * @param {Object} e The event object triggered by the dropdown selection
+   * @author Adarsh Vadlapatla
+   */
+  const handleEmployeeSelect = (e) => {
+    const employeeId = e.target.value;
+    const employee = employees.find((emp) => emp.employee_id === parseInt(employeeId)); 
+    setSelectedEmployee(employee);
+
+    if (employee) {
+      // Populate form fields with the selected employee's data
+      setfirstName(employee.first_name);
+      setlastName(employee.last_name);
+      setpayRate(employee.payrate);
+      setlastLogin(employee.last_login);
+      setpassword(employee.password);
+      setisManager(employee.is_manager);
+    }
+  };
+
+  /**
+   * @function editEmployee
+   * @description Request the server to update the details of the selected employee
+   * @author Jaden Ninan
+   */
+  const editEmployee = async () => {
+    try {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/updateEmployee", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ firstName, lastName, payRate, lastLogin, password, isManager }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setMessage("Employee Information Edited");
+      }
+    } catch (error) {
+      setMessage("An error occurred. Please try again.");
+    }
+  };
+
+  /**
+   * @function addEmployee
+   * @description Request the server to add a new employee
+   * @author Jaden Ninan
+   */
+  const addEmployee = async () => {
+    try {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/addEmployee", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ firstName, lastName, payRate, lastLogin, password, isManager }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setMessage("New Employee Added");
+      }
+    } catch (error) {
+      setMessage("An error occurred. Please try again.");
+      console.error(error);
+    }
+  };
+
+  /**
+   * @function deleteEmployee
+   * @description Request the server to delete the selected employee
+   * @author Jaden Ninan
+   */
+  const deleteEmployee = async () => {
+    try {
+      const response = await fetch("https://project-3-team-0c-n4yn.onrender.com/deleteEmployee", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ firstName }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setMessage("Employee Deleted");
+      }
+    } catch (error) {
+      setMessage("An error occurred. Please try again.");
+      console.error(error);
+    }
+  };
+
+  /**
+   * @function handleReload
+   * @description Reloads the employee list by calling loadEmployee again
+   * @author Adarsh Vadlapatla
+   */
+  const handleReload = () => {
+    loadEmployee(); 
+  };
+
+
+  /**
+   * frontend html to create form display to interact with employee database details for manager
+   */
+  return (
+    &lt;div className={styles.container}>
+      &lt;h1 className={styles.header}>Employee Management&lt;/h1>
+      
+      
+    
+      {/* Employee Dropdown */}
+      &lt;div className={styles.form}>
+     
+        &lt;label>
+          Select Employee:
+          &lt;select className={styles.input} onChange={handleEmployeeSelect} disabled={isLoading}>
+            &lt;option value="">Select an employee&lt;/option>
+            {isLoading ? (
+              &lt;option value="" disabled>Loading employees...&lt;/option>
+            ) : (
+              Array.isArray(employees) &amp;&amp; employees.length > 0 ? (
+                // Using a for loop instead of map
+                (() => {
+                  const options = [];
+                  console.log(employees); // Logs employees to console
+                  for (let i = 0; i &lt; employees.length; i++) {
+                    const emp = employees[i];
+                    options.push(
+                      &lt;option key={emp.employee_id} value={emp.employee_id}>
+                        {emp.first_name} {emp.last_name}
+                      &lt;/option>
+                    );
+                  }
+                  return options;
+                })()
+              ) : (
+                &lt;option value="" disabled>No employees available&lt;/option>
+              )
+            )}
+          &lt;/select>
+        &lt;/label>
+
+        {/* Display employee details */}
+        {selectedEmployee &amp;&amp; (
+          &lt;>
+            &lt;h3>Employee Details&lt;/h3>
+            &lt;label>
+              First Name:
+              &lt;input
+                type="text"
+                value={firstName}
+                onChange={(e) => setfirstName(e.target.value)}
+                className={styles.input}
+              />
+            &lt;/label>
+            &lt;label>
+              Last Name:
+              &lt;input
+                type="text"
+                value={lastName}
+                onChange={(e) => setlastName(e.target.value)}
+                className={styles.input}
+              />
+            &lt;/label>
+            &lt;label>
+              Pay Rate:
+              &lt;input
+                type="text"
+                value={payRate}
+                onChange={(e) => setpayRate(e.target.value)}
+                className={styles.input}
+              />
+            &lt;/label>
+            &lt;label>
+              Last Login:
+              &lt;input
+                type="text"
+                value={lastLogin}
+                onChange={(e) => setlastLogin(e.target.value)}
+                className={styles.input}
+              />
+            &lt;/label>
+            &lt;label>
+              Password:
+              &lt;input
+                type="text"
+                value={password}
+                onChange={(e) => setpassword(e.target.value)}
+                className={styles.input}
+              />
+            &lt;/label>
+            &lt;label>
+              Is Manager:
+              &lt;input
+                type="checkbox"
+                checked={isManager}
+                onChange={(e) => setisManager(e.target.checked)} // Toggle with checked
+              />
+            &lt;/label>
+          &lt;/>
+        )}
+
+        {/* Action Buttons */}
+        &lt;div className={styles.buttonGroup}>
+          &lt;button className={styles.button} onClick={editEmployee}>Edit&lt;/button>
+          &lt;button className={styles.button} onClick={deleteEmployee}>Delete&lt;/button>
+          &lt;button className={styles.button} onClick={addEmployee}>Add New Employee&lt;/button>
+        &lt;/div>
+      &lt;/div>
+
+      {/* Display message */}
+      {message &amp;&amp; &lt;p>{message}&lt;/p>}
+
+      &lt;footer className={styles.footer}>
+        &lt;a href="/ManagerView" className={styles.link}>Back to Manager Dashboard&lt;/a>
+      &lt;/footer>
+    &lt;/div>
+  );
+}
+
+export default EmployeeManagement;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#EditMenuAndPrices">EditMenuAndPrices</a></li><li><a href="global.html#EmployeeManagement">EmployeeManagement</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#ManagerView">ManagerView</a></li><li><a href="global.html#Page">Page</a></li><li><a href="global.html#ReportsView">ReportsView</a></li><li><a href="global.html#addEmployee">addEmployee</a></li><li><a href="global.html#addInventory">addInventory</a></li><li><a href="global.html#addMenu">addMenu</a></li><li><a href="global.html#addToCart">addToCart</a></li><li><a href="global.html#averageRating">averageRating</a></li><li><a href="global.html#decreaseContrast">decreaseContrast</a></li><li><a href="global.html#deleteEmployee">deleteEmployee</a></li><li><a href="global.html#deleteInventory">deleteInventory</a></li><li><a href="global.html#deleteMenu">deleteMenu</a></li><li><a href="global.html#editEmployee">editEmployee</a></li><li><a href="global.html#editInventory">editInventory</a></li><li><a href="global.html#editPrices">editPrices</a></li><li><a href="global.html#fetchPrice">fetchPrice</a></li><li><a href="global.html#fetchWeather">fetchWeather</a></li><li><a href="global.html#filteredReviews">filteredReviews</a></li><li><a href="global.html#filteredReviewsaverage">filteredReviewsaverage</a></li><li><a href="global.html#getPriceFromDB">getPriceFromDB</a></li><li><a href="global.html#handleAddItem">handleAddItem</a></li><li><a href="global.html#handleAddReview">handleAddReview</a></li><li><a href="global.html#handleConfirm">handleConfirm</a></li><li><a href="global.html#handleEmployeeLogin">handleEmployeeLogin</a></li><li><a href="global.html#handleEmployeeSelect">handleEmployeeSelect</a></li><li><a href="global.html#handleGenerateChart">handleGenerateChart</a></li><li><a href="global.html#handleGenerateMonthlySalesHistory">handleGenerateMonthlySalesHistory</a></li><li><a href="global.html#handleGeneratePopularItems">handleGeneratePopularItems</a></li><li><a href="global.html#handleGenerateProductUsage">handleGenerateProductUsage</a></li><li><a href="global.html#handleGenerateSalesReport">handleGenerateSalesReport</a></li><li><a href="global.html#handleGoogleLoginResponse">handleGoogleLoginResponse</a></li><li><a href="global.html#handleInventorySelect">handleInventorySelect</a></li><li><a href="global.html#handleItemClick">handleItemClick</a></li><li><a href="global.html#handleManagerLogin">handleManagerLogin</a></li><li><a href="global.html#handleMenuItemSelect">handleMenuItemSelect</a></li><li><a href="global.html#handlePaymentChange">handlePaymentChange</a></li><li><a href="global.html#handlePriceItemSelect">handlePriceItemSelect</a></li><li><a href="global.html#handleReload">handleReload</a></li><li><a href="global.html#handleRemoveItem">handleRemoveItem</a></li><li><a href="global.html#increaseContrast">increaseContrast</a></li><li><a href="global.html#loadEmployee">loadEmployee</a></li><li><a href="global.html#loadInventory">loadInventory</a></li><li><a href="global.html#loadMenu">loadMenu</a></li><li><a href="global.html#loadPrices">loadPrices</a></li><li><a href="global.html#placeOrder">placeOrder</a></li><li><a href="global.html#processCart">processCart</a></li><li><a href="global.html#renderContent">renderContent</a></li><li><a href="global.html#submitOrder">submitOrder</a></li><li><a href="global.html#zoomIn">zoomIn</a></li><li><a href="global.html#zoomOut">zoomOut</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Dec 11 2024 20:00:50 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
